@@ -17,8 +17,8 @@ class Estudiante(models.Model):
     correo = models.CharField(null=True, max_length=255)
     telefono = models.IntegerField(null=True, max_length=255)
     celular = models.IntegerField(null=True, max_length=255)
-    padre = models.ForeignKey(Padre,null=True,related_name='Padre N/D')
-    madre = models.ForeignKey(Padre,null=True,related_name='Madre N/D')
+    padre = models.ForeignKey(Padre,null=True)
+    madre = models.ForeignKey(Padre,null=True)
     estado_actual = models.IntegerField(null=True, max_length=255)
     
 class Clase(models.Model):
