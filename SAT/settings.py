@@ -46,6 +46,15 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+# URL of the login page.
+LOGIN_URL = '/login/'
+
+# URL of the logout page.
+LOGOUT_URL = '/logout/'
+
+# URL to redirect after login
+LOGIN_REDIRECT_URL = '/'
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = ''
