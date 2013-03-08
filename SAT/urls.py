@@ -18,7 +18,7 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
      
      url(r'^accounts/login/$',  login),
-     url(r'^accounts/login/$',  logout),
+     url(r'^accounts/logout/$',  logout),
 )
 
 # Add the static files pattern to the url.

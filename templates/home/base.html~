@@ -8,6 +8,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
     <!-- Common CSS Styles --> 
     <style type="text/css" title="currentStyle">
 	@import "{{ STATIC_URL }}CSS/Style.css";
@@ -42,6 +48,11 @@
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
+            </ul>
+            <ul class="n-logout nav pull-right">
+                <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{username}}</a></p></li>
+                <li class="divider-vertical"></li>
+                <li><a href=" /logout"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
