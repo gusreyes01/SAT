@@ -45,14 +45,14 @@
           <a class="brand" href="#">SAT</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a href=".">Home</a></li>
+              <li><a href="#about">Alumno</a></li>
+              <li><a href="/seleccion_muestra">Muestra</a></li>
             </ul>
             <ul class="n-logout nav pull-right">
                 <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{username}}</a></p></li>
                 <li class="divider-vertical"></li>
-                <li><a href=" /logout"> <i class="icon-eject icon-white"></i> Salir</a></li>
+                <li><a href=" accounts/logout"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -60,9 +60,11 @@
     </div>
     
     {% block content %}{% endblock %}  
-
-    
     
     </body>
-
+    
+    <footer>
+      <p>&copy; Tecnológico de Monterrey, Campus Monterrey 2013</p>
+    </footer>
+    
   </html>

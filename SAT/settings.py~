@@ -47,10 +47,10 @@ USE_L10N = True
 USE_TZ = True
 
 # URL of the login page.
-LOGIN_URL = '/login/'
+LOGIN_URL = 'accounts/login/'
 
 # URL of the logout page.
-LOGOUT_URL = '/logout/'
+LOGOUT_URL = 'accounts/logout/'
 
 # URL to redirect after login
 LOGIN_REDIRECT_URL = '/'

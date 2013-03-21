@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 #from django import forms
 
 # Create your models here.
@@ -39,9 +40,9 @@ class Inscrito(models.Model):
     grupo = models.CharField(null=False, max_length=255)
     
 class Antidoping(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id =  models.AutoField(primary_key=True)
     nombre = models.CharField(null=False, max_length=255)
-    inicio = models.DateField(null=False, max_length=255)
+    inicio = models.DateField(default=date.today)
     fin = models.DateField(null=False, max_length=255)
     estudianteMuestra = models.IntegerField(null=True, max_length=255)
     tamano_muestra = models.IntegerField(null=True, max_length=255)

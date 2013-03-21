@@ -17,6 +17,10 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
      url(r'^admin/', include(admin.site.urls)),
      
+     # Urls para el manejo de muestras.
+     url(r'^seleccion_muestra/$', 'app.views.seleccion_muestra', name='seleccion_muestra'),
+     
+     # Urls para iniciar y cerrar sesion.
      url(r'^accounts/login/$',  login),
      url(r'^accounts/logout/$',  logout),
 )
