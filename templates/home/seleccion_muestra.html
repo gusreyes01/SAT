@@ -32,10 +32,8 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
        <h3>Seleccionar alumnos para la muestra</h3>
-       	{% crispy forma %}
-
-       	{% crispy forma2 %}
-       	
+        {{ forma.errors }}
+       	{% crispy forma %}       	
       </div>
       <hr>
     </div> <!-- /container -->

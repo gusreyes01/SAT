@@ -31,12 +31,16 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-       <h3>Seleccionar alumnos para la muestra</h3>
-        {{ forma.errors }}
-       	{% crispy forma %}
-
-       	{% crispy forma2 %}
-       	
+      <a href="/seleccion_muestra">Crear Antidoping</a>
+      <table>
+      <tr>
+      <td>
+      {% for a in antidopings %}
+      {{a.nombre}}
+      {% endfor %}
+      </td>
+      </tr>
+      <table>
       </div>
       <hr>
     </div> <!-- /container -->

@@ -18,6 +18,10 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
      
      # Urls para el manejo de muestras.
+     url(r'^alta_estudiante/$', 'app.views.alta_estudiante', name='alta_estudiante'),
+     
+     # Urls para el manejo de muestras.
+     url(r'^muestra/$', 'app.views.muestra', name='muestra'),
      url(r'^seleccion_muestra/$', 'app.views.seleccion_muestra', name='seleccion_muestra'),
      
      # Urls para iniciar y cerrar sesion.

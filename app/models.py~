@@ -16,14 +16,16 @@ class Estudiante(models.Model):
     nombre = models.CharField(null=False, max_length=255)
     apellido = models.CharField(null=False, max_length=255)
     correo = models.CharField(null=True, max_length=255)
-    telefono = models.IntegerField(null=True, max_length=255)
-    celular = models.IntegerField(null=True, max_length=255)
+    telefono = models.CharField(null=True, max_length=255)
+    celular = models.CharField(null=True, max_length=255)
     padre = models.ForeignKey(Padre,null=True,related_name='Padre N/D')
     madre = models.ForeignKey(Padre,null=True,related_name='Madre N/D')
-    estado_actual = models.IntegerField(null=True, max_length=255)
+    color = models.IntegerField(null=True, max_length=255)
+    estado_institucion = models.IntegerField(null=True, max_length=255) 
     
 class Clase(models.Model):
-    crn = models.CharField(primary_key=True, max_length=255)
+    id = models.AutoField(primary_key=True, max_length=255)
+    clave_materia = models.CharField(null=False, max_length=255)
     nombre = models.CharField(null=False, max_length=255)
     
 class Grupo(models.Model):
@@ -42,8 +44,8 @@ class Inscrito(models.Model):
 class Antidoping(models.Model):
     id =  models.AutoField(primary_key=True)
     nombre = models.CharField(null=False, max_length=255)
-    inicio = models.DateField(_("Date"), auto_now_add=True)
-    fin = models.DateField(null=False, max_length=255)
+    muestra_inicio = models.DateField(default=date.today)
+    muestra_fin = models.DateField(default=date.today, max_length=255)
     estudianteMuestra = models.IntegerField(null=True, max_length=255)
     tamano_muestra = models.IntegerField(null=True, max_length=255)
     estado_antidoping = models.IntegerField(null=True, max_length=255)
