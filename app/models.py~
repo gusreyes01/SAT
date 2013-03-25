@@ -31,7 +31,11 @@ class Clase(models.Model):
 class Grupo(models.Model):
     id = models.IntegerField(primary_key=True)
     crn = models.ForeignKey(Clase,null=False)
-    horario = models.CharField(null=False, max_length=255)
+    horario_1 = models.CharField(null=False, max_length=255)
+    horario_2 = models.CharField(null=False, max_length=255)
+    horario_3 = models.CharField(null=False, max_length=255)
+    horario_4 = models.CharField(null=False, max_length=255)
+    horario_5 = models.CharField(null=False, max_length=255)
     salon = models.CharField(null=False, max_length=255)
     profesor = models.CharField(null=False, max_length=255)
     cantidad_alumnos = models.IntegerField(null=True, max_length=255)
@@ -45,7 +49,7 @@ class Antidoping(models.Model):
     id =  models.AutoField(primary_key=True)
     nombre = models.CharField(null=False, max_length=255)
     muestra_inicio = models.DateField(default=date.today)
-    muestra_fin = models.DateField(default=date.today, max_length=255)
+    muestra_fin = models.DateField(null=True,max_length=255)
     estudianteMuestra = models.IntegerField(null=True, max_length=255)
     tamano_muestra = models.IntegerField(null=True, max_length=255)
     estado_antidoping = models.IntegerField(null=True, max_length=255)
@@ -66,7 +70,8 @@ class EstudianteResultado(models.Model):
     notas = models.CharField(null=False, max_length=255)
 
 class Encuesta(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    folio = models.CharField(primary_key=True)
     respuestas = models.TextField(null=False)
     notas = models.CharField(null=True, max_length=255)
 

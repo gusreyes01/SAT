@@ -16,13 +16,19 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
      url(r'^admin/', include(admin.site.urls)),
+
+          # Urls exitoso
+     url(r'^success/$', 'app.views.success', name='success'),
      
      # Urls para el manejo de muestras.
+     url(r'^estudiante/$', 'app.views.estudiante', name='estudiante'),
      url(r'^alta_estudiante/$', 'app.views.alta_estudiante', name='alta_estudiante'),
      
      # Urls para el manejo de muestras.
      url(r'^muestra/$', 'app.views.muestra', name='muestra'),
      url(r'^seleccion_muestra/$', 'app.views.seleccion_muestra', name='seleccion_muestra'),
+     url(r'^perfil_muestra/(\d+)/$', 'app.views.perfil_muestra', name='perfil_muestra'),
+     url(r'^eliminar_muestra/(\d+)/$', 'app.views.eliminar_muestra', name='eliminar_muestra'),
      
      # Urls para iniciar y cerrar sesion.
      url(r'^accounts/login/$',  login),

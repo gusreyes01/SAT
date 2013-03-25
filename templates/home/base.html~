@@ -46,7 +46,7 @@
             <ul class="nav">
               <li class="active"><a href=".">Home</a></li>
               <li><a href="/alta_estudiante">Estudiante</a></li>
-              <li><a href="/seleccion_muestra">Muestra</a></li>
+              <li><a href="/muestra">Muestra</a></li>
             </ul>
             <ul class="n-logout nav pull-right">
                 <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{username}}</a></p></li>

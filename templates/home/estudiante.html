@@ -6,12 +6,6 @@
  <link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
  <link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
  <link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css">
- <style type="text/css">
- #icons{
-  float:right;
- }
- </style>
- 
  {% endblock %}
  
  {% block script %}
@@ -27,27 +21,20 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <a href="/seleccion_muestra"><input type="button" class="btn btn-primary" value="Crear Antidoping"></button></a>
+      <a href="/alta_estudiante"><input type="button" class="btn btn-primary" value="Alta Estudiante"></button></a>
       <table class="table table-hover">
       <tr>
-	<th>Nombre del Antidoping</th>
-	<th>Cantidad de Alumnos</th>
-	<th>Fecha de creación</th>
-	<th>Estado</th>
+        <th>Matrícula</th>
+	<th>Nombre</th>
+	<th>Apellido</th>
+	<th>Correo</th>
+	<th>Telefono</th>
       </tr>
-      {% for a in antidopings %}
+      {% for e in estudiantes %}
       <tr>
-	<td>{{a.nombre}}
-	<div id="icons">
-	  <a href="/perfil_muestra/{{a.id}}">
-	    <i class="icon-pencil"></i>
-	  </a>
-	  <a href="/eliminar_muestra/{{a.id}}">
-	    <i class="icon-trash"></i>
-	  </a>
-	</div></td>
-	<td>{{a.tamano_muestra}}</td>
-	<td>{{a.muestra_inicio}}</td>
+	<td>{{e.matricula}}</td>
+	<td>{{e.nombre}}</td>
+	<td>{{e.apellido}}</td>
       </tr>
       {% endfor %}
       <table>

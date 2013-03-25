@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home(request):
     return render_to_response('home/home.html', context_instance=RequestContext(request))
-
-
+    
 def login(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -31,6 +30,11 @@ def logout_view(request):
     # Redirect to a success page.
 
 @login_required
+def estudiante(request):
+    estudiantes = Estudiante.objects.all()  
+    return render_to_response('home/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
+    
+@login_required
 def alta_estudiante(request):
     if request.method == 'POST':
       # La forma ligada a los datos enviados en el POST
@@ -49,7 +53,25 @@ def alta_estudiante(request):
 def muestra(request):
     antidopings = Antidoping.objects.all()  
     return render_to_response('home/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
-    
+
+@login_required
+def success(request):
+    return render_to_response('home/success.html', context_instance=RequestContext(request))    
+
+@login_required
+def eliminar_muestra(request,id):
+   #+some code to check if New belongs to logged in user
+   a = Antidoping.objects.get(pk=id).delete()    
+   return redirect('/muestra/')
+
+@login_required
+def perfil_muestra(request,id):
+   #+some code to check if New belongs to logged in user
+   alumnos_antidoping = EstudianteMuestra.objects.filter(antidoping_id=id)
+   alumnos = Estudiante.objects.filter(matricula__in=alumnos_antidoping)
+   #filter(antidoping_id=id)
+   return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos}, context_instance=RequestContext(request))    
+   
 @login_required
 def seleccion_muestra(request):
     if request.method == 'POST':
@@ -62,7 +84,7 @@ def seleccion_muestra(request):
 	  seleccion_grupos = forma.cleaned_data['seleccion_grupos']
 	  forma.save()
 	  id_reciente = Antidoping.objects.latest('id')
-	  return redirect('/') # Redirect after POST
+	  return redirect('/success')  # Redirect after POST
     else:
         forma = CrearAntidoping() # An unbound form
         #forma2 = SeleccionMuestra() # An unbound form
