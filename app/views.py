@@ -67,10 +67,13 @@ def eliminar_muestra(request,id):
 @login_required
 def perfil_muestra(request,id):
    #+some code to check if New belongs to logged in user
-   alumnos_antidoping = EstudianteMuestra.objects.filter(antidoping_id=id)
-   alumnos = Estudiante.objects.filter(matricula__in=alumnos_antidoping)
-   #filter(antidoping_id=id)
-   return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos}, context_instance=RequestContext(request))    
+   antidoping = Antidoping.objects.get(pk=id)
+   
+   itemset_queryset = EstudianteMuestra.objects.filter(antidoping_id=1).values_list('inscrito_id', flat=True)
+   
+   alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)
+   
+   return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos,'antidoping': antidoping}, context_instance=RequestContext(request))    
    
 @login_required
 def seleccion_muestra(request):

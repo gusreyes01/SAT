@@ -25,17 +25,17 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <h3>Alumnos</h3>
+      <h3>Nombre : {{antidoping.nombre}}</h3>
+      <h4>Alumnos</h4>
       <table class="table table-hover">
       <tr>
-	<th>Nombre</th>
 	<th>Matricula</th>
+	<th>Nombre</th>
 	<th>Notificado</th>
-	<th>Estado</th>
       </tr>
       {% for a in alumnos %}
       <tr>
-	<td>{{a.nombre}}
+	<td>{{a.nombre}} {{a.apellido}} 
 	<div id="icons">
 	  <a href="/perfil_muestra">
 	    <i class="icon-pencil"></i>
@@ -50,26 +50,25 @@
       {% endfor %}
       <table>
       
-      <h3>Grupos</h3>
+      <h4>Grupos</h4>
       <table class="table table-hover">
       <tr>
 	<th>Nombre</th>
-	<th>Matricula</th>
 	<th>Notificado</th>
 	<th>Estado</th>
       </tr>
       {% for a in alumnos %}
       <tr>
-	<td>{{a.nombre}}
+	<td>
 	<div id="icons">
-	  <a href="/perfil_muestra">
+	  <a href="/perfil_alumno/{{a.id}}">
 	    <i class="icon-pencil"></i>
 	  </a>
-	  <a href="/eliminar_muestra/{{a.id}}">
+	  <a href="/eliminar_alumno/{{a.id}}">
 	    <i class="icon-trash"></i>
 	  </a>
 	</div></td>
-	<td>{{a.matricula}}</td>
+	<td></td>
 	<td></td>
       </tr>
       {% endfor %}

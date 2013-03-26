@@ -45,7 +45,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href=".">Home</a></li>
-              <li><a href="/alta_estudiante">Estudiante</a></li>
+              <li><a href="/estudiante">Estudiante</a></li>
               <li><a href="/muestra">Muestra</a></li>
             </ul>
             <ul class="n-logout nav pull-right">
