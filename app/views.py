@@ -33,10 +33,10 @@ def logout_view(request):
 def perfil_estudiante(request,id):
     estudiante = Estudiante.objects.get(pk = id)
     if request.method == 'POST':
-      form = AltaEstudiante(request.POST, instance=estudiante)
-      form.helper.form_action = reverse('perfil_estudiante', args=[id])
-      if form.is_valid():
-	form.save()
+      forma = AltaEstudiante(request.POST, instance=estudiante)
+      forma.helper.form_action = reverse('perfil_estudiante', args=[id])
+      if forma.is_valid():
+	forma.save()
 	return redirect('/estudiante/')  
     else:
       forma = AltaEstudiante(instance=estudiante)
@@ -44,7 +44,7 @@ def perfil_estudiante(request,id):
    
 @login_required
 def estudiante(request):
-    estudiantes = Estudiante.objects.all()  
+    estudiantes = Estudiante.objects.all()[:1000]  
     return render_to_response('home/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
     
 @login_required
