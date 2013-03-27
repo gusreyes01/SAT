@@ -29,21 +29,20 @@ class Clase(models.Model):
     nombre = models.CharField(null=False, max_length=255)
     
 class Grupo(models.Model):
-    id = models.IntegerField(primary_key=True)
-    crn = models.ForeignKey(Clase,null=False)
-    horario_1 = models.CharField(null=False, max_length=255)
-    horario_2 = models.CharField(null=False, max_length=255)
-    horario_3 = models.CharField(null=False, max_length=255)
-    horario_4 = models.CharField(null=False, max_length=255)
-    horario_5 = models.CharField(null=False, max_length=255)
-    salon = models.CharField(null=False, max_length=255)
+    id = models.AutoField(primary_key=True)
+    crn = models.IntegerField(null=False, max_length=255)
+    clase = models.ForeignKey(Clase, null=False)
+    horario_1 = models.CharField(null=True, max_length=255)
+    horario_2 = models.CharField(null=True, max_length=255)
+    horario_3 = models.CharField(null=True, max_length=255)
+    horario_4 = models.CharField(null=True, max_length=255)
+    horario_5 = models.CharField(null=True, max_length=255)
     profesor = models.CharField(null=False, max_length=255)
-    cantidad_alumnos = models.IntegerField(null=True, max_length=255)
     
 class Inscrito(models.Model):
     id = models.IntegerField(primary_key=True)
-    estudiante = models.ForeignKey(Estudiante,null=False)
-    grupo = models.CharField(null=False, max_length=255)
+    estudiante = models.ForeignKey(Estudiante, null=False)
+    grupo = models.ForeignKey(Grupo, null=False)
     
 class Antidoping(models.Model):
     id =  models.AutoField(primary_key=True)
