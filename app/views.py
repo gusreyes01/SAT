@@ -28,7 +28,20 @@ def login(request):
 def logout_view(request):
     logout(request)
     # Redirect to a success page.
-
+   
+@login_required
+def perfil_estudiante(request,id):
+    estudiante = Estudiante.objects.get(pk = id)
+    if request.method == 'POST':
+      form = AltaEstudiante(request.POST, instance=estudiante)
+      form.helper.form_action = reverse('perfil_estudiante', args=[id])
+      if form.is_valid():
+	form.save()
+	return redirect('/estudiante/')  
+    else:
+      forma = AltaEstudiante(instance=estudiante)
+    return render_to_response('home/perfil_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
+   
 @login_required
 def estudiante(request):
     estudiantes = Estudiante.objects.all()  
@@ -66,13 +79,10 @@ def eliminar_muestra(request,id):
 
 @login_required
 def perfil_muestra(request,id):
-   #+some code to check if New belongs to logged in user
    antidoping = Antidoping.objects.get(pk=id)
-   
+   #Select
    itemset_queryset = EstudianteMuestra.objects.filter(antidoping_id=1).values_list('inscrito_id', flat=True)
-   
    alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)
-   
    return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos,'antidoping': antidoping}, context_instance=RequestContext(request))    
    
 @login_required

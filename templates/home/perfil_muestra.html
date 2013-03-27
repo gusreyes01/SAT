@@ -31,20 +31,24 @@
       <tr>
 	<th>Matricula</th>
 	<th>Nombre</th>
+	<th>Apellido</th>
 	<th>Notificado</th>
       </tr>
       {% for a in alumnos %}
       <tr>
-	<td>{{a.nombre}} {{a.apellido}} 
+	<td>{{a.matricula}}
 	<div id="icons">
-	  <a href="/perfil_muestra">
+	  <a href="/perfil_alumno">
 	    <i class="icon-pencil"></i>
 	  </a>
-	  <a href="/eliminar_muestra/{{a.id}}">
+	  <a href="/eliminar_alumno/{{a.id}}">
 	    <i class="icon-trash"></i>
 	  </a>
-	</div></td>
-	<td>{{a.matricula}}</td>
+	</div>
+	</td>
+	<td>{{a.nombre}}
+	</td>
+	<td>{{a.apellido}}</td>
 	<td></td>
       </tr>
       {% endfor %}
@@ -60,13 +64,6 @@
       {% for a in alumnos %}
       <tr>
 	<td>
-	<div id="icons">
-	  <a href="/perfil_alumno/{{a.id}}">
-	    <i class="icon-pencil"></i>
-	  </a>
-	  <a href="/eliminar_alumno/{{a.id}}">
-	    <i class="icon-trash"></i>
-	  </a>
 	</div></td>
 	<td></td>
 	<td></td>

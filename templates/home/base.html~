@@ -49,7 +49,7 @@
               <li><a href="/muestra">Muestra</a></li>
             </ul>
             <ul class="n-logout nav pull-right">
-                <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{username}}</a></p></li>
+                <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{user.username}}</a></p></li>
                 <li class="divider-vertical"></li>
                 <li><a href=" accounts/logout"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>

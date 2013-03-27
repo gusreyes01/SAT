@@ -6,6 +6,12 @@
  <link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
  <link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
  <link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+  #icons{
+    float:right;
+  }
+ </style>
+ 
  {% endblock %}
  
  {% block script %}
@@ -32,9 +38,16 @@
       </tr>
       {% for e in estudiantes %}
       <tr>
-	<td>{{e.matricula}}</td>
+	<td>{{e.matricula}}
+	<div id="icons">
+	  <a href="/perfil_estudiante/{{e.matricula}}">
+	    <i class="icon-pencil"></i>
+	  </a>
+	</div>
+	</td>
 	<td>{{e.nombre}}</td>
 	<td>{{e.apellido}}</td>
+	<td>{{e.correo}}</td>
       </tr>
       {% endfor %}
       <table>
