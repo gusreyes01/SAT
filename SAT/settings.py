@@ -1,4 +1,5 @@
 # Django settings for SAT project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,10 +13,13 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+PWD = os.path.dirname(os.path.realpath(__file__))
+DB = os.path.join(PWD,'database/satdb.sqlite')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/gustavo/Desktop/SAT/SAT/database/satdb.db',                      # Or path to database file if using sqlite3.
+        'NAME': DB,                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
