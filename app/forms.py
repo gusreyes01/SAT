@@ -43,7 +43,6 @@ class AltaEstudiante(ModelForm):
       self.helper.form_id = 'id-AltaEstudiante'
       self.helper.form_class = 'blueForms'
       self.helper.form_method = 'POST'
-      self.helper.form_action = 'alta_estudiante'
       self.helper.layout = Layout(
 	Div(
 	Div(

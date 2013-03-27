@@ -29,8 +29,8 @@ class AltaEstudiante(ModelForm):
   nombre = forms.CharField(error_messages=my_default_errors,label="Nombre",required=True)
   apellido = forms.CharField(error_messages=my_default_errors,label="Apellido",required=True)
   correo = forms.CharField(error_messages=my_default_errors,label="Correo",required=True)
-  telefono = forms.DecimalField(required = False,label="Telefono")
-  celular = forms.DecimalField(required = False,label="Celular")
+  telefono = forms.CharField(required = False,label="Telefono")
+  celular = forms.CharField(required = False,label="Celular")
   color = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_INSTITUCION)
   estado_institucion = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
   
