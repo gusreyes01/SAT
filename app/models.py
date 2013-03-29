@@ -47,8 +47,10 @@ class Inscrito(models.Model):
 class Antidoping(models.Model):
     id =  models.AutoField(primary_key=True)
     nombre = models.CharField(null=False, max_length=255)
-    muestra_inicio = models.DateField(default=date.today)
+    muestra_inicio = models.DateField(null=True,max_length=255)
     muestra_fin = models.DateField(null=True,max_length=255)
+    antidoping_inicio = models.DateField(default=date.today)
+    antidoping_fin = models.DateField(null=True,max_length=255)
     estudianteMuestra = models.IntegerField(null=True, max_length=255)
     tamano_muestra = models.IntegerField(null=True, max_length=255)
     estado_antidoping = models.IntegerField(null=True, max_length=255)
