@@ -78,8 +78,10 @@ def muestra(request):
 
 @login_required
 def eliminar_muestra(request,id):
-   #+some code to check if New belongs to logged in user
-   a = Antidoping.objects.get(pk=id).delete()    
+   antidoping_borrar = Antidoping.objects.get(pk=int(id))   # Obtener el antidoping a borrar.
+   antidoping_borrar.estudiantemuestra_set.all().delete()   # Borrar los alumnos de la muestra relacionados a él.
+   antidoping_borrar.delete()                               # Borrar el antidoping.
+
    return redirect('/muestra/')
 
 @login_required
@@ -100,7 +102,7 @@ def seleccion_muestra(request):
       if forma.is_valid():
 
         nuevo_antidoping = forma.save(commit=False)
-        nuevo_antidoping.antidoping_inicio = timezone.now()
+        # nuevo_antidoping.antidoping_inicio = timezone.now()
 
         alumnos_seleccionados = forma.cleaned_data['seleccion_alumnos'].split(',')
         alumnos_seleccionados = filter (lambda item: item != '', alumnos_seleccionados)
@@ -120,7 +122,7 @@ def seleccion_muestra(request):
 
         print "dia..", dia
         print "antidoping id..",nuevo_antidoping.pk 
-        print "hora de inicio.." ,nuevo_antidoping.antidoping_inicio
+        # print "hora de inicio.." ,nuevo_antidoping.antidoping_inicio
         print "dia de antidoping",dia
         print "hora inicio",inicio
         print "hora fin",fin
@@ -207,7 +209,7 @@ def seleccion_muestra(request):
         elementos_restantes = tamano_muestra - cantidad_total_muestra
 
         for gpo in muestra_grupos:
-          print "er:", elementos_restantes
+          # print "er:", elementos_restantes
           if(elementos_restantes >= 3 and elementos_restantes <= 5):
             tmp = sample(Inscrito.objects.filter(grupo=gpo), elementos_restantes)
             cantidad_tmp = elementos_restantes
@@ -218,20 +220,33 @@ def seleccion_muestra(request):
             tmp = sample(Inscrito.objects.filter(grupo=gpo), randint(3,5))
             cantidad_tmp = len(tmp)
             muestra_aleatorios = muestra_aleatorios + tmp
-          # cantidad_total_muestra = cantidad_total_muestra + cantidad_tmp
+
           elementos_restantes = elementos_restantes - cantidad_tmp
 
         cantidad_alumnos_aleatorios = len(muestra_aleatorios)
         cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
 
-        
+        # Guardar antidoping.
+        nuevo_antidoping.nombre = forma.cleaned_data['nombre']
+        nuevo_antidoping.muestra_inicio = inicio
+        nuevo_antidoping.muestra_fin = fin
+        nuevo_antidoping.antidoping_inicio = timezone.now()
+        nuevo_antidoping.tamano_muestra = cantidad_total_muestra
+        nuevo_antidoping.estado_antidoping = 0
+        nuevo_antidoping.notas = forma.cleaned_data['notas']
+        nuevo_antidoping.save()
+
+        # Guardar las personas de la muestra.
+        for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
+          tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
+          tmp.save() 
+
 
         return render_to_response('home/verificar_muestra.html',
           {
           'muestra': muestra_aleatorios, 
           'muestra_seleccionados': muestra_seleccionados, 
           'cantidad_total_muestra': cantidad_total_muestra,
-          # 'cantidad_total_aleatorios': cantidad_alumnos_aleatorios,
           'cantidad_total_seleccionados': cantidad_alumnos_seleccionados,
           'dia': dia, 
           'inicio': inicio, 
@@ -248,10 +263,21 @@ def seleccion_muestra(request):
 @login_required
 def alta_muestra(request):
   if request.method == 'POST':
-    print request.POST.getlist('eliminar-de-muestra')
-    muestra = Inscrito.objects.filter(pk__in=map(int, request.POST.getlist('eliminar-de-muestra')))
-    for m in muestra:
-      print m.estudiante.matricula, m.estudiante.nombre
+    lista_a_borrar = map(int, request.POST.getlist('eliminar-de-muestra'))
+    elementos_a_borrar = EstudianteMuestra.objects.filter(inscrito_id__in=lista_a_borrar)
+    if len(elementos_a_borrar) > 0:
+      antidoping_tmp = elementos_a_borrar[0].antidoping
+      antidoping_tmp.tamano_muestra = elementos_a_borrar[0].antidoping.tamano_muestra - len(lista_a_borrar)
+      antidoping_tmp.save()
+      
+    elementos_a_borrar.delete()
+
+
+
+    # muestra = EstudianteMuestra.objects.all()
+    # for m in muestra:
+    #   print m.estudiante.matricula, m.estudiante.nombre
+
     return redirect('/success')  # Redirect after POST
   else:
     # return render_to_response('home/home.html', context_instance=RequestContext(request))

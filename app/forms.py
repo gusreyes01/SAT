@@ -105,7 +105,7 @@ class AltaEstudiante(ModelForm):
       super(AltaEstudiante, self).__init__(*args, **kwargs)
   
 class CrearAntidoping(ModelForm):
-  nombre = forms.CharField(error_messages=my_default_errors,label="Crear Prueba")
+  nombre = forms.CharField(error_messages=my_default_errors,label="Nombre")
   tamano_muestra = forms.DecimalField(label="Tamaño de la muestra (máximo)")
   notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
   seleccion_alumnos = forms.CharField(widget=forms.Textarea, required=False, label="Selección de alumnos")
