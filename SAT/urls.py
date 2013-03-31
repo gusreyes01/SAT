@@ -18,7 +18,7 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
 
      # Url exitoso
-     url(r'^success/$', 'app.views.success', name='success'),
+     url(r'^success/$', 'app.views.success', name='success_muestra'),
      
      # Urls para el manejo de estudiantes.
      url(r'^estudiante/$', 'app.views.estudiante', name='estudiante'),
@@ -29,6 +29,7 @@ urlpatterns = patterns('',
      url(r'^muestra/$', 'app.views.muestra', name='muestra'),
      url(r'^seleccion_muestra/$', 'app.views.seleccion_muestra', name='seleccion_muestra'),
      url(r'^perfil_muestra/(\d+)/$', 'app.views.perfil_muestra', name='perfil_muestra'),
+     url(r'^alta_muestra/$', 'app.views.alta_muestra', name='alta_muestra'),
      url(r'^eliminar_muestra/(\d+)/$', 'app.views.eliminar_muestra', name='eliminar_muestra'),
      
      # Urls para iniciar y cerrar sesion.

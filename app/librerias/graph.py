@@ -5,7 +5,7 @@ import networkx as nx
 # Get parameters.
 # script, graph_input = argv
 
-def add_graph(graph_to_analyze):
+def add_graph(graph_to_analyze, weight=False):
 	# Load library.
 
 	DG=nx.DiGraph()
@@ -20,10 +20,13 @@ def add_graph(graph_to_analyze):
 		# Get edge properties.
 		source = edge[0]
 		destination = edge[1]
-		peso = edge[2]
 
-		# Add an edge to the networkx object.
-		DG.add_edge(source, destination, weight=peso)
+		if weight: 
+			peso = edge[2]
+			# Add an edge to the networkx object.
+			DG.add_edge(source, destination, weight=peso)
+		else:
+			DG.add_edge(source, destination)
 	
 	nodes = DG.nodes()
 

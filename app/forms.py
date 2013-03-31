@@ -25,12 +25,12 @@ COLOR = (
 )
 
 DIA_SEMANA = (
-    ('0', 'Lunes'),
-    ('1', 'Martes'),
-    ('2', 'Miércoles'),
-    ('3', 'Jueves'),
-    ('4', 'Viernes'),
-    ('5', 'Sábado'),
+    ('lunes', 'Lunes'),
+    ('martes', 'Martes'),
+    ('miercoles', 'Miércoles'),
+    ('jueves', 'Jueves'),
+    ('viernes', 'Viernes'),
+    ('sabado', 'Sábado'),
   )
 
 HORARIO = (
@@ -106,11 +106,11 @@ class AltaEstudiante(ModelForm):
   
 class CrearAntidoping(ModelForm):
   nombre = forms.CharField(error_messages=my_default_errors,label="Crear Prueba")
-  tamano_muestra = forms.DecimalField(label="Cuantos Alumnos")
-  notas = forms.CharField(error_messages=my_default_errors,label="Notas")
-  seleccion_alumnos = forms.CharField(widget=forms.Textarea, required=False)
-  seleccion_grupos = forms.CharField(widget=forms.Textarea, required=False)
-  dia = forms.ChoiceField(error_messages=my_default_errors,choices=DIA_SEMANA)
+  tamano_muestra = forms.DecimalField(label="Tamaño de la muestra (máximo)")
+  notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
+  seleccion_alumnos = forms.CharField(widget=forms.Textarea, required=False, label="Selección de alumnos")
+  seleccion_grupos = forms.CharField(widget=forms.Textarea, required=False, label="Selección de grupos")
+  dia = forms.ChoiceField(error_messages=my_default_errors,choices=DIA_SEMANA, label="Día")
   inicio = forms.ChoiceField(error_messages=my_default_errors,choices=HORARIO)
   fin = forms.ChoiceField(error_messages=my_default_errors,choices=HORARIO)
   
