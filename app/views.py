@@ -28,9 +28,17 @@ def login(request):
 def logout_view(request):
     logout(request)
     # Redirect to a success page.
-   
+
 @login_required
 def perfil_estudiante(request,id):
+    estudiante = Estudiante.objects.get(pk = id) 
+    #itemset_queryset = EstudianteResultado.objects.filter(estudiante_id=id).values_list('antidoping_id', flat=True)
+    resultados = EstudianteResultado.objects.filter(estudiante_id=id).select_related()
+    #antidopings = Antidoping.objects.filter(id__in=itemset_queryset)   
+    return render_to_response('home/estudiante/perfil_estudiante.html',{'estudiante': estudiante,'resultados': resultados}, context_instance=RequestContext(request))    
+        
+@login_required
+def edita_estudiante(request,id):
     estudiante = Estudiante.objects.get(pk = id)
     if request.method == 'POST':
       forma = AltaEstudiante(request.POST, instance=estudiante)
@@ -40,12 +48,12 @@ def perfil_estudiante(request,id):
 	return redirect('/estudiante/')  
     else:
       forma = AltaEstudiante(instance=estudiante)
-    return render_to_response('home/perfil_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
+    return render_to_response('home/estudiante/edita_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
    
 @login_required
 def estudiante(request):
-    estudiantes = Estudiante.objects.all()[:1000]  
-    return render_to_response('home/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
+    estudiantes = Estudiante.objects.all()[:100]  
+    return render_to_response('home/estudiante/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
     
 @login_required
 def alta_estudiante(request):
@@ -60,12 +68,12 @@ def alta_estudiante(request):
     else:
         forma = AltaEstudiante() # An unbound form
         #forma2 = SeleccionMuestra() # An unbound form
-    return render_to_response('home/alta_estudiante.html', { 'forma': forma} , context_instance=RequestContext(request))    
+    return render_to_response('home/estudiante/alta_estudiante.html', { 'forma': forma} , context_instance=RequestContext(request))    
     
 @login_required
 def muestra(request):
     antidopings = Antidoping.objects.all()  
-    return render_to_response('home/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
+    return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
 
 @login_required
 def success(request):
@@ -83,7 +91,10 @@ def perfil_muestra(request,id):
    #Select
    itemset_queryset = EstudianteMuestra.objects.filter(antidoping_id=1).values_list('inscrito_id', flat=True)
    alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)
-   return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos,'antidoping': antidoping}, context_instance=RequestContext(request))    
+   
+   alumnos_grupo = Inscrito.objects.filter(estudiante_id__in=itemset_queryset).values_list('grupo_id', flat=True)
+   grupos = Grupo.objects.filter(crn__in=alumnos_grupo).select_related()
+   return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'grupos': grupos,'antidoping': antidoping}, context_instance=RequestContext(request))    
    
 @login_required
 def seleccion_muestra(request):
@@ -101,4 +112,4 @@ def seleccion_muestra(request):
     else:
         forma = CrearAntidoping() # An unbound form
         #forma2 = SeleccionMuestra() # An unbound form
-    return render_to_response('home/seleccion_muestra.html', { 'forma': forma} , context_instance=RequestContext(request))
+    return render_to_response('home/muestra/seleccion_muestra.html', { 'forma': forma} , context_instance=RequestContext(request))

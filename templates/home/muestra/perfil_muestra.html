@@ -38,11 +38,8 @@
       <tr>
 	<td>{{a.matricula}}
 	<div id="icons">
-	  <a href="/perfil_alumno">
+	  <a href="/perfil_estudiante/{{a.matricula}}">
 	    <i class="icon-pencil"></i>
-	  </a>
-	  <a href="/eliminar_alumno/{{a.id}}">
-	    <i class="icon-trash"></i>
 	  </a>
 	</div>
 	</td>
@@ -57,20 +54,23 @@
       <h4>Grupos</h4>
       <table class="table table-hover">
       <tr>
-	<th>Nombre</th>
-	<th>Notificado</th>
-	<th>Estado</th>
+	<th>Grupo Id</th>
+	<th>CRN</th>
+	<th>Clase Id</th>
       </tr>
-      {% for a in alumnos %}
+      {% for g in grupos %}
       <tr>
 	<td>
-	</div></td>
-	<td></td>
-	<td></td>
+	</div>{{g.id}}</td>
+	<td>{{g.crn}}</td>
+	<td>{{g.clase.clave_materia}}</td>
       </tr>
       {% endfor %}
       <table>
       
+      <p>Notas :
+      {{antidoping.notas}}
+      </p>
       
       </div>
       <hr>
