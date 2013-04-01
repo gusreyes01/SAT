@@ -23,8 +23,7 @@ urlpatterns = patterns('',
      # Urls para el manejo de estudiantes.
      url(r'^estudiante/$', 'app.views.estudiante', name='estudiante'),
      url(r'^alta_estudiante/$', 'app.views.alta_estudiante', name='alta_estudiante'),
-     url(r'^perfil_estudiante/(\d+)/$', 'app.views.perfil_estudiante', name='perfil_estudiante'),
-     url(r'^eliminar_estudiante/$', 'app.views.eliminar_estudiante', name='eliminar_estudiante'),
+     url(r'^edita_estudiante/(\d+)/$', 'app.views.edita_estudiante', name='edita_estudiante'),
      
      # Urls para el manejo de muestras.
      url(r'^muestra/$', 'app.views.muestra', name='muestra'),

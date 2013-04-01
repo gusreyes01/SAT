@@ -5,6 +5,7 @@
  
  <link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
  <link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
+ <link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css">
  <style type="text/css">
  #icons{
   float:right;
@@ -17,6 +18,7 @@
  
  <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
  <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
+ <script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
  
  {% endblock %}
  
@@ -25,53 +27,28 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <h3>Nombre : {{antidoping.nombre}}</h3>
-      <h4>Alumnos</h4>
+      <a href="/seleccion_muestra"><input type="button" class="btn btn-primary" value="Crear Antidoping"></button></a>
+      <h2>Antidopings</h2>
       <table class="table table-hover">
       <tr>
-	<th>Matricula</th>
-	<th>Nombre</th>
-	<th>Apellido</th>
-	<th>Notificado</th>
-      </tr>
-      {% for a in alumnos %}
-      <tr>
-	<td>{{a.matricula}}
-	<div id="icons">
-	  <a href="/perfil_alumno">
-	    <i class="icon-pencil"></i>
-	  </a>
-	  <a href="/eliminar_alumno/{{a.id}}">
-	    <i class="icon-trash"></i>
-	  </a>
-	</div>
-	</td>
-	<td>{{a.nombre}}
-	</td>
-	<td>{{a.apellido}}</td>
-	<td></td>
-      </tr>
-      {% endfor %}
-      <table>
-      
-      <h4>Grupos</h4>
-      <table class="table table-hover">
-      <tr>
-	<th>Nombre</th>
-	<th>Notificado</th>
+	<th>Nombre del Antidoping</th>
+	<th>Cantidad de Alumnos</th>
+	<th>Fecha de creación</th>
 	<th>Estado</th>
       </tr>
-      {% for a in alumnos %}
+      {% for a in antidopings %}
       <tr>
-	<td>
+	<td><a href="/perfil_muestra/{{a.id}}">{{a.nombre}}</a>
+	<div id="icons">
+	  <a href="/eliminar_muestra/{{a.id}}">
+	    <i class="icon-trash"></i>
+	  </a>
 	</div></td>
-	<td></td>
-	<td></td>
+	<td>{{a.tamano_muestra}}</td>
+	<td>{{a.muestra_inicio}}</td>
       </tr>
       {% endfor %}
       <table>
-      
-      
       </div>
       <hr>
     </div> <!-- /container -->

@@ -28,6 +28,7 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
       <a href="/seleccion_muestra"><input type="button" class="btn btn-primary" value="Crear Antidoping"></button></a>
+      <h2>Muestras</h2>
       <table class="table table-hover">
       <tr>
 	<th>Nombre del Antidoping</th>
@@ -37,18 +38,14 @@
       </tr>
       {% for a in antidopings %}
       <tr>
-	<td>{{a.nombre}}
+	<td><a href="/perfil_muestra/{{a.id}}">{{a.nombre}}</a>
 	<div id="icons">
-	  <a href="/perfil_muestra/{{a.id}}">
-	    <i class="icon-pencil"></i>
-	  </a>
 	  <a href="/eliminar_muestra/{{a.id}}">
 	    <i class="icon-trash"></i>
 	  </a>
 	</div></td>
 	<td>{{a.tamano_muestra}}</td>
-	<td>Entre {{a.muestra_inicio}} y {{a.muestra_fin}}</td>
-	<td>{{a.estado_antidoping}}</td>
+	<td>{{a.muestra_inicio}}</td>
       </tr>
       {% endfor %}
       <table>
