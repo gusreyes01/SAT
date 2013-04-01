@@ -47,7 +47,8 @@
 	  </a>
 	</div></td>
 	<td>{{a.tamano_muestra}}</td>
-	<td>{{a.muestra_inicio}}</td>
+	<td>Entre {{a.muestra_inicio}} y {{a.muestra_fin}}</td>
+	<td>{{a.estado_antidoping}}</td>
       </tr>
       {% endfor %}
       <table>

@@ -24,6 +24,49 @@ COLOR = (
     ('5','NEGRO'),
 )
 
+DIA_SEMANA = (
+    ('lunes', 'Lunes'),
+    ('martes', 'Martes'),
+    ('miercoles', 'Miércoles'),
+    ('jueves', 'Jueves'),
+    ('viernes', 'Viernes'),
+    ('sabado', 'Sábado'),
+  )
+
+HORARIO = (
+    ('7', '7:00'),
+    ('7+', '7:30'),
+    ('8', '8:00'),
+    ('8+', '8:30'),
+    ('9', '9:00'),
+    ('9+', '9:30'),
+    ('10', '10:00'),
+    ('10+', '10:30'),
+    ('11', '11:00'),
+    ('11+', '11:30'),
+    ('12', '12:00'),
+    ('12+', '12:30'),
+    ('13', '13:00'),
+    ('13+', '13:30'),
+    ('14', '14:00'),
+    ('14+', '14:30'),
+    ('15', '15:00'),
+    ('15+', '15:30'),
+    ('16', '16:00'),
+    ('16+', '16:30'),
+    ('17', '17:00'),
+    ('17+', '17:30'),
+    ('18', '18:00'),
+    ('18+', '18:30'),
+    ('19', '19:00'),
+    ('19+', '19:30'),
+    ('20', '20:00'),
+    ('20+', '20:30'),
+    ('21', '21:00'),
+    ('21+', '21:30'),
+    ('22', '22:00'),
+  )
+
 class AltaEstudiante(ModelForm):
   matricula = forms.DecimalField(required = True,label="Matricula")
   nombre = forms.CharField(error_messages=my_default_errors,label="Nombre",required=True)
@@ -62,15 +105,18 @@ class AltaEstudiante(ModelForm):
       super(AltaEstudiante, self).__init__(*args, **kwargs)
   
 class CrearAntidoping(ModelForm):
-  nombre = forms.CharField(error_messages=my_default_errors,label="Crear Prueba",required=False)
-  tamano_muestra = forms.DecimalField(required = False,label="Cuantos Alumnos")
-  notas = forms.CharField(error_messages=my_default_errors,label="Notas",required=False)
-  seleccion_alumnos = forms.CharField(widget=forms.Textarea,required = False)
-  seleccion_grupos = forms.CharField(widget=forms.Textarea,required = False)
+  nombre = forms.CharField(error_messages=my_default_errors,label="Nombre")
+  tamano_muestra = forms.DecimalField(label="Tamaño de la muestra (máximo)")
+  notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
+  seleccion_alumnos = forms.CharField(widget=forms.Textarea, required=False, label="Selección de alumnos")
+  seleccion_grupos = forms.CharField(widget=forms.Textarea, required=False, label="Selección de grupos")
+  dia = forms.ChoiceField(error_messages=my_default_errors,choices=DIA_SEMANA, label="Día")
+  inicio = forms.ChoiceField(error_messages=my_default_errors,choices=HORARIO)
+  fin = forms.ChoiceField(error_messages=my_default_errors,choices=HORARIO)
   
   class Meta:
     model = Antidoping
-    exclude = ('muestra_inicio','muestra_fin','estudianteMuestra','estado_antidoping')
+    exclude = ('muestra_inicio', 'antidoping_inicio', 'antidoping_fin', 'muestra_fin', 'estudianteMuestra', 'estado_antidoping')
         
   def __init__(self, *args, **kwargs):
       self.helper = FormHelper()
@@ -83,10 +129,15 @@ class CrearAntidoping(ModelForm):
 	Div(
 	    'nombre',
 	    'seleccion_alumnos',
-	    css_class='span3'),
+	    css_class='span3'
+      ),
 	Div(
 	    'tamano_muestra',
-	    css_class='span3'),
+      'dia',
+      'inicio',
+      'fin',
+	    css_class='span3'
+      ),
 	Div(
 	    'notas',
 	    'seleccion_grupos',
