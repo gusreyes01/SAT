@@ -96,18 +96,17 @@ def eliminar_muestra(request,id):
 def perfil_muestra(request,id):
    antidoping = Antidoping.objects.get(pk=id)
    #Select
-   itemset_queryset = EstudianteMuestra.objects.filter(antidoping_id=1).values_list('inscrito_id', flat=True)
-   alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)
-<<<<<<< HEAD
+   #itemset_queryset = EstudianteMuestra.objects.filter(antidoping=antidoping).values_list('inscrito_id', flat=True)
+   #estudiantes_muestra = antidoping.estudiantemuestra_set.all()
+   alumnos = map(lambda x: x.inscrito.estudiante, antidoping.estudiantemuestra_set.all())
+   grupos = map(lambda x: x.inscrito.grupo, antidoping.estudiantemuestra_set.all())   
+   grupos = list(set(grupos))
+   #alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)   
    
-   alumnos_grupo = Inscrito.objects.filter(estudiante_id__in=itemset_queryset).values_list('grupo_id', flat=True)
-   grupos = Grupo.objects.filter(crn__in=alumnos_grupo).select_related()
+   #alumnos_grupo = Inscrito.objects.filter(estudiante_id__in=itemset_queryset).values_list('grupo_id', flat=True)
+   #grupos = Grupo.objects.filter(crn__in=alumnos_grupo).select_related()
    return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'grupos': grupos,'antidoping': antidoping}, context_instance=RequestContext(request))    
    
-=======
-   return render_to_response('home/perfil_muestra.html',{'alumnos': alumnos,'antidoping': antidoping}, context_instance=RequestContext(request))    
-
->>>>>>> f3817ad0b566eb906dc4ef43d5590591af5b7439
 @login_required
 def seleccion_muestra(request):
     if request.method == 'POST':
@@ -274,11 +273,8 @@ def seleccion_muestra(request):
     else:
         forma = CrearAntidoping() # An unbound form
         #forma2 = SeleccionMuestra() # An unbound form
-<<<<<<< HEAD
     return render_to_response('home/muestra/seleccion_muestra.html', { 'forma': forma} , context_instance=RequestContext(request))
-=======
-    return render_to_response('home/seleccion_muestra.html', {'forma': forma} , context_instance=RequestContext(request))
-
+    
 @login_required
 def alta_muestra(request):
   if request.method == 'POST':
@@ -305,4 +301,3 @@ def alta_muestra(request):
 @login_required
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))    
->>>>>>> f3817ad0b566eb906dc4ef43d5590591af5b7439

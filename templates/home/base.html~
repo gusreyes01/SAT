@@ -51,7 +51,7 @@
             <ul class="n-logout nav pull-right">
                 <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{user.username}}</a></p></li>
                 <li class="divider-vertical"></li>
-                <li><a href="{{LOGOUT_URL}}"> <i class="icon-eject icon-white"></i> Salir</a></li>
+                <li><a href="/accounts/logout/"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
