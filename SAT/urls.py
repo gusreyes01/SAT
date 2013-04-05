@@ -33,6 +33,9 @@ urlpatterns = patterns('',
      url(r'^alta_muestra/$', 'app.views.alta_muestra', name='alta_muestra'),
      url(r'^eliminar_muestra/(\d+)/$', 'app.views.eliminar_muestra', name='eliminar_muestra'),
      
+     # Url para crear cartas de notificacion
+     url(r'^carta_notificacion/(\d+)/$', 'app.views.obtener_carta', name='obtener_carta'),
+     
      # Urls para iniciar y cerrar sesion.
      url(r'^accounts/login/$',  login),
      url(r'^accounts/logout/$',  logout),
