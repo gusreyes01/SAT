@@ -70,9 +70,10 @@ class EstudianteResultado(models.Model):
 
 class Encuesta(models.Model):
     id = models.AutoField(primary_key=True)
-    folio = models.CharField(null=False,max_length=255)
+    folio = models.CharField(null=True, max_length=255)
     respuestas = models.TextField(null=False)
     notas = models.CharField(null=True, max_length=255)
+    #estudiante_resultado = models.ForeignKey(EstudianteResultado, null=True, related_name='estudiante_resultado')
 
 
     
