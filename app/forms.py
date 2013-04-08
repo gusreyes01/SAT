@@ -15,6 +15,27 @@ ESTADO_INSTITUCION = (
     ('1','INACTIVO'),
 )
 
+SEMESTRE = (
+    ('1', '1-3'),
+    ('2', '4-6'),
+    ('3', '7-8'),
+    ('4', '9'),
+)
+
+CONSUMIDO = (
+    ('1', 'Escuela'),
+    ('2', 'Trabajo'),
+    ('3', 'Fiesta'),
+    ('4', 'Otros'),
+)
+
+FRECUENCIA = (
+    ('1', '1 dia'),
+    ('2', '4 dias'),
+    ('3', '1 semana'),
+    ('4', '1 mes'),
+)
+
 COLOR = (
     ('0','GRIS'),
     ('1','VERDE'),
@@ -148,4 +169,51 @@ class CrearAntidoping(ModelForm):
       super(CrearAntidoping, self).__init__(*args, **kwargs)
 
 #class EstudiantesMuestra(ModelForm):
+
+
+class AplicacionEncuesta(ModelForm):
+  if Encuesta.objects.all():
+    fol_object = Encuesta.objects.all().order_by('id').reverse()[0]
+    fol_all = fol_object.folio
+    fol_sufix = fol_all[1:]
+    fol_sufix_next = int(fol_sufix) + 1
+    fol_next = 'e' + str(fol_sufix_next)
+  else:
+    fol_next = 'e1'
   
+  folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, initial=fol_next, label="Folio", required=False)
+  nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
+  apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
+  matricula = forms.DecimalField(required = True,label="Matricula")
+  correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
+  semestre = forms.ChoiceField(widget=forms.RadioSelect(), choices=SEMESTRE, required = True, label="Semestre")
+  #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
+  opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Opinion")
+  frecuencia = forms.ChoiceField(error_messages=my_default_errors, choices=FRECUENCIA, required = True, label="Frecuencia")
+  
+  class Meta:
+    model = Encuesta
+    exclude = ('respuestas', 'notas')
+        
+  def __init__(self, *args, **kwargs):
+      self.helper = FormHelper()
+      self.helper.form_id = 'id-AplicacionEncuesta'
+      self.helper.form_class = 'blueForms'
+      self.helper.form_method = 'POST'
+      self.helper.layout = Layout(
+	Div(
+	Div('folio',
+	    'nombres',
+	    'apellidos',
+	    'matricula',
+	    'correo',
+	    'semestre',
+	    css_class='span3'),
+	Div(#'consumido',
+	    'opinion',
+	    'frecuencia',
+	    css_class='span3'),css_class='row-fluid'),
+	ButtonHolder(
+	    Submit('submit', 'Crear', css_class='btn-success')
+	))
+      super(AplicacionEncuesta, self).__init__(*args, **kwargs)
