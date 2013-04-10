@@ -54,7 +54,19 @@
             <td><input type="checkbox" name="eliminar-de-muestra" value="{{inscrito.id}}" /> {{inscrito.estudiante.matricula}}</td>
             <td>{{inscrito.estudiante.nombre}} {{inscrito.estudiante.apellido}}</td>
             <td>{{inscrito.grupo.crn}}
-            <td>{{inscrito.grupo.horario_1}}</td>
+            {% if dia == "lunes"%}
+              <td>{{inscrito.grupo.horario_1}}</td>
+            {% elif dia == "martes"%}
+              <td>{{inscrito.grupo.horario_2}}</td>
+            {% elif dia == "miercoles"%}
+              <td>{{inscrito.grupo.horario_3}}</td>
+            {% elif dia == "jueves"%}
+              <td>{{inscrito.grupo.horario_4}}</td>
+            {% elif dia == "viernes"%}
+              <td>{{inscrito.grupo.horario_5}}</td>
+            {% elif dia == "sabado"%}
+              <td>{{inscrito.grupo.horario_5}}</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </table>
@@ -79,7 +91,19 @@
         	<td><input type="checkbox" name="eliminar-de-muestra" value="{{inscrito.id}}" /> {{inscrito.estudiante.matricula}}</td>
         	<td>{{inscrito.estudiante.nombre}} {{inscrito.estudiante.apellido}}</td>
         	<td>{{inscrito.grupo.crn}}
-          <td>{{inscrito.grupo.horario_1}}</td>
+          {% if dia == "lunes"%}
+            <td>{{inscrito.grupo.horario_1}}</td>
+          {% elif dia == "martes"%}
+            <td>{{inscrito.grupo.horario_2}}</td>
+          {% elif dia == "miercoles"%}
+            <td>{{inscrito.grupo.horario_3}}</td>
+          {% elif dia == "jueves"%}
+            <td>{{inscrito.grupo.horario_4}}</td>
+          {% elif dia == "viernes"%}
+            <td>{{inscrito.grupo.horario_5}}</td>
+          {% elif dia == "sabado"%}
+            <td>{{inscrito.grupo.horario_5}}</td>
+          {% endif %}
         </tr>
         {% endfor %}
       </table>

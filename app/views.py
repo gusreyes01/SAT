@@ -213,11 +213,17 @@ def seleccion_muestra(request):
         total_grupos = muestra_grupos + list(Grupo.objects.filter(pk__in=grupos_seleccionados))
         total_grupos = list(set(total_grupos))
         muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
-      
+        
+        for i in total_grupos:
+          print i.horario_2 
+
+        for i in muestra_seleccionados:
+          print i.estudiante.nombre + " %d" % i.grupo.crn 
+
         # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
         for inscrito in muestra_seleccionados:
           muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
-          muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
+          muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion, los grupos de los inscritos seleccionados.
 
         # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
         shuffle(muestra_grupos)
@@ -230,7 +236,6 @@ def seleccion_muestra(request):
         elementos_restantes = tamano_muestra - cantidad_total_muestra
 
         for gpo in muestra_grupos:
-          # print "er:", elementos_restantes
           if(elementos_restantes >= 3 and elementos_restantes <= 5):
             tmp = sample(Inscrito.objects.filter(grupo=gpo), elementos_restantes)
             cantidad_tmp = elementos_restantes
@@ -255,12 +260,12 @@ def seleccion_muestra(request):
         nuevo_antidoping.tamano_muestra = cantidad_total_muestra
         nuevo_antidoping.estado_antidoping = 0
         nuevo_antidoping.notas = forma.cleaned_data['notas']
-        nuevo_antidoping.save()
+        # nuevo_antidoping.save()
 
         # Guardar las personas de la muestra.
-        for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
-          tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
-          tmp.save() 
+        # for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
+        #   tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
+        #   tmp.save() 
 
 
         return render_to_response('home/verificar_muestra.html',
