@@ -36,12 +36,12 @@
       </tr>
       {% for a in alumnos %}
       <tr>
-	<td>{{a.matricula}}
-	<div id="icons">
-	  <a href="/perfil_estudiante/{{a.matricula}}">
-	    <i class="icon-pencil"></i>
-	  </a>
-	</div>
+	<td><a href="/perfil_estudiante/{{a.matricula}}">{{a.matricula}}</a>
+          <div id="icons">
+          <a href="/edita_estudiante/{{a.matricula}}">
+            <i class="icon-pencil"></i>
+          </a>
+        </div>
 	</td>
 	<td>{{a.nombre}}
 	</td>

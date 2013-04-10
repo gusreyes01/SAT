@@ -36,7 +36,7 @@
       <table id="tabla_antidopings" class="table table-hover">
       <thead>
 	  <tr>
-	    <th>Id Antidoping</th>
+	    <th>Antidoping</th>
 	    <th>Fecha</th>
 	    <th>Encuesta</th>
 	    <th>Notificacion</th>
@@ -48,11 +48,11 @@
 	{% for r in resultados %}
 	<tr>
 	  <td><a href="/perfil_muestra/{{r.antidoping_id}}">{{r.antidoping_id}}</a></td>
-	  <td>{{r.antidoping.muestra_inicio}}</td>
+	  <td>{{r.antidoping.antidoping_inicio}}</td>
 	  <td><a href="/encuesta/{{r.encuesta}}">{{r.encuesta}}</a></td>
 	  <td>{{r.notificacion}}</td>
 	  <td>{{r.estado}}</td>
-	  <td>{{r.estado}}</td>
+	  <td>{{r.notas}}</td>
 	</tr>
       {% endfor %}
       </tbody>
