@@ -65,9 +65,7 @@ def convierte_dia(dia):
         return "DOMINGO"
 
 # Crea una de las cartas, con la información de un alumno
-def carta_individual(materia, salon, horario, nombres, apellidos, matricula, tipo_seleccion, fecha, fecha_completa, styles, imagen):
-    
-    # Información de la institución
+def primera_carta(materia, salon, horario, nombres, apellidos, matricula, tipo_seleccion, fecha, fecha_completa, styles, imagen):
     nombre_escritor = "Ing. Jorge Cervantes Oviedo"
     cargo_escritor = "Director"
     departamento = "Departamente de Prevención de Adicciones en el Tec"
@@ -124,6 +122,60 @@ def carta_individual(materia, salon, horario, nombres, apellidos, matricula, tip
 
     texto = '<font size=10 color="gray">%s<br/>%s<br/>%s<br/>%s<br/></font>' %(campus, calle_campus, direccion_campus, telefono)
     hoja.append(Paragraph(texto, styles["Right"]))
+    hoja.append(PageBreak())
+    
+    return hoja
+
+# Crea una de las cartas, con la información de un alumno
+def segunda_carta(materia, salon, horario, nombres, apellidos, matricula, tipo_seleccion, fecha, fecha_completa, styles, imagen):
+    nombre_escritor = "Ing. Jorge Cervantes Oviedo"
+    cargo_escritor = "Director"
+    departamento = "Departamente de Prevención de Adicciones en el Tec"
+    campus = "Campus Monterrey"
+    calle_campus = "Eugenio Garza Sada 2501"
+    direccion_campus = "64849, Monterrey, N.L., México"
+    telefono = "Tel: " + "52/81 8358 2000"
+    nombre_alumno = nombres + " " + apellidos
+    salon_horario = salon + "    " + horario
+    
+    # Hoja donde se vacia la información
+    hoja=[]
+    
+    hoja.append(imagen)
+    texto = '<b><font size=12>%s<br/><br/>%s<br/>%s<br/>%s<br/>%s</font></b>' % (fecha, materia, salon_horario, nombre_alumno, matricula)
+    hoja.append(Paragraph(texto, styles["Right"]))
+    hoja.append(Spacer(1, 24))
+
+    texto = '<font size=12>SEGUNDA CARTA NOTIFICACIÓN</font>'
+    hoja.append(Paragraph(texto, styles["Center"]))
+    hoja.append(Spacer(1, 24))
+
+    texto = '<font size=12>Atentamente,</font>'
+    hoja.append(Paragraph(texto, styles["Justify"]))
+    hoja.append(Spacer(1, 36))
+
+    texto = '<font size=12>%s<br/>%s<br/>%s<br/>%s<br/></font>' %(nombre_escritor, cargo_escritor, departamento, campus)
+    hoja.append(Paragraph(texto, styles["Justify"]))
+    hoja.append(Spacer(1, 48))
+
+    hoja.append(Spacer(1, 264))
+
+    texto = '<font size=10 color="gray">%s<br/>%s<br/>%s<br/>%s<br/></font>' %(campus, calle_campus, direccion_campus, telefono)
+    hoja.append(Paragraph(texto, styles["Right"]))
+
+    hoja.append(PageBreak())
+    
+    return hoja
+
+# Crea una de las cartas, con la información de un alumno
+def tercera_carta(lista, styles):
+    # Hoja donde se vacia la información
+    hoja=[]
+    
+    for alumno in lista:
+        hoja.append(Paragraph(alumno, styles["Right"]))
+        hoja.append(Spacer(1, 12))
+
     hoja.append(PageBreak())
     
     return hoja
