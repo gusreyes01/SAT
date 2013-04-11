@@ -42,9 +42,14 @@ def logout_view(request):
 
 @login_required
 def perfil_estudiante(request,id):
-    estudiante = Estudiante.objects.get(pk = id) 
+    #estudiante = Estudiante.objects.get(pk = id) 
     #itemset_queryset = EstudianteResultado.objects.filter(estudiante_id=id).values_list('antidoping_id', flat=True)
-    resultados = EstudianteResultado.objects.filter(estudiante_id=id).select_related()
+    #resultados = EstudianteResultado.objects.filter(estudiante_id=id).select_related()
+    inscrito = Inscrito.objects.filter(estudiante=id)
+    resultados = EstudianteMuestra.objects.filter(inscrito__in=inscrito)
+    estudiante = Estudiante.objects.get(matricula=id)
+
+
     #antidopings = Antidoping.objects.filter(id__in=itemset_queryset)   
     return render_to_response('home/estudiante/perfil_estudiante.html',{'estudiante': estudiante,'resultados': resultados}, context_instance=RequestContext(request))    
         
@@ -298,8 +303,6 @@ def alta_muestra(request):
       
     elementos_a_borrar.delete()
 
-
-
     # muestra = EstudianteMuestra.objects.all()
     # for m in muestra:
     #   print m.estudiante.matricula, m.estudiante.nombre
@@ -362,52 +365,6 @@ def obtener_carta(request, id_antidoping, lista=None, notificacion=None):
 @login_required
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
-
-def obtener_carta(request, id_antidoping, lista=None, notificacion=None):  
-    lista = [{'nombres' : 'Eduardo', 'apellidos' : 'Lopez', 'salon': 'A-A3-301', 'horario': '10+/3', 'tipo_de_seleccion': 'seleccionado aleatoriamente', 'matricula': '1088069', 'materia' : 'Tecnologías de información emergentes'}, {'nombres' : 'Eduardo', 'apellidos' : 'Lopez', 'salon': 'A-A3-301', 'horario': '10+/3', 'tipo_de_seleccion': 'seleccionado aleatoriamente', 'matricula': '1088069', 'materia' : 'Tecnologías de información emergentes'}]
-    id_antidoping = "1"
-    
-    PWD = os.path.dirname(os.path.realpath(__file__))
-    LOGO = os.path.join(PWD, "static/itesm.jpg")
-    
-    # Documento donde se vaciara la plantilla
-    nombre_doc = "carta_aviso_" + id_antidoping + ".pdf"
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="' + nombre_doc
-    buffer = BytesIO()
-    
-    # Plantilla que se convertira en PDF
-    plantilla=[]
-    documento = SimpleDocTemplate(buffer,pagesize=letter,rightMargin=65,leftMargin=65,topMargin=20,bottomMargin=20)
-    
-    # Estilos del documento
-    styles=getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-    styles.add(ParagraphStyle(name='Right', alignment=TA_RIGHT))
-    styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
-
-    # Imagen de la institución
-    logo = LOGO
-    imagen = Image(logo, 3.3*inch, 1.5*inch)
-    imagen.hAlign = 'LEFT'
-    
-    fecha = obten_fecha()
-    fecha_completa = obten_fecha_completa().upper()
-
-    # Consulta cada elemento de la lista y lo convierte en una hoja que es enviada al documento
-    for alumno in lista:
-        hoja = carta_individual(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
-        plantilla += hoja
-    
-    # Vacia la plantilla en el documento    
-    documento.build(plantilla)
-    
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-    
-    return response
 
 login_required
 def aplicacion_encuesta(request):
