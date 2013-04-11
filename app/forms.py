@@ -170,7 +170,7 @@ class CrearAntidoping(ModelForm):
 
 #class EstudiantesMuestra(ModelForm):
 
-
+"""
 class AplicacionEncuesta(ModelForm):
   if Encuesta.objects.all():
     fol_object = Encuesta.objects.all().order_by('id').reverse()[0]
@@ -217,3 +217,4 @@ class AplicacionEncuesta(ModelForm):
 	    Submit('submit', 'Crear', css_class='btn-success')
 	))
       super(AplicacionEncuesta, self).__init__(*args, **kwargs)
+"""

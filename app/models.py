@@ -41,7 +41,7 @@ class Grupo(models.Model):
     profesor = models.CharField(null=False, max_length=255)
     
 class Inscrito(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, null=False)
     grupo = models.ForeignKey(Grupo, null=False)
     
