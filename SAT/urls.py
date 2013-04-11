@@ -34,6 +34,7 @@ urlpatterns = patterns('',
      url(r'^eliminar_muestra/(\d+)/$', 'app.views.eliminar_muestra', name='eliminar_muestra'),
      
      # Url para crear cartas de notificacion
+     # url(r'^carta_notificacion/(?P<string>[\w\-]+)', 'app.views.obtener_carta', name='obtener_carta'),
      url(r'^carta_notificacion/(\d+)/$', 'app.views.obtener_carta', name='obtener_carta'),
      
      # Urls para iniciar y cerrar sesion.
