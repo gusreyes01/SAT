@@ -45,7 +45,12 @@
 	  </a>
 	</div></td>
 	<td>{{a.tamano_muestra}}</td>
-	<td>{{a.muestra_inicio}}</td>
+	<td>{{a.antidoping_inicio}}</td>
+  {% if a.estado_antidoping == 0 %}
+  <td>Aplicando Pruebas</td>
+  {% else %}
+  <td><button class="btn btn-success">Terminado</button>  </td>
+  {% endif %}
       </tr>
       {% endfor %}
       <table>
