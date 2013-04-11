@@ -37,6 +37,7 @@ class Grupo(models.Model):
     horario_3 = models.CharField(null=True, max_length=255)
     horario_4 = models.CharField(null=True, max_length=255)
     horario_5 = models.CharField(null=True, max_length=255)
+    horario_6 = models.CharField(null=True, max_length=255)
     profesor = models.CharField(null=False, max_length=255)
     
 class Inscrito(models.Model):
@@ -52,8 +53,6 @@ class Antidoping(models.Model):
     muestra_fin = models.CharField(default='', null=False, max_length=255)
     antidoping_inicio = models.DateField(default=date.today)
     antidoping_fin = models.DateField(null=True,max_length=255)
-    # estudianteMuestra = models.IntegerField(null=True, max_length=255)
-    tamano_muestra = models.IntegerField(null=True, max_length=255)
     estado_antidoping = models.IntegerField(null=True, max_length=255)
     notas = models.CharField(null=False, max_length=255)
     
@@ -61,22 +60,9 @@ class EstudianteMuestra(models.Model):
     id = models.AutoField(primary_key=True)
     inscrito = models.ForeignKey(Inscrito,null=False)
     antidoping = models.ForeignKey(Antidoping,null=False)
-    
-class EstudianteResultado(models.Model):
-    id = models.IntegerField(primary_key=True)
-    antidoping = models.ForeignKey(Antidoping,null=False)
-    estudiante = models.ForeignKey(Estudiante,null=False)
-    encuesta = models.CharField(null=True, max_length=255)
-    notificacion = models.IntegerField(null=False, max_length=255)
-    estado = models.IntegerField(null=False, max_length=255)
-    notas = models.CharField(null=False, max_length=255)
-
-class Encuesta(models.Model):
-    id = models.AutoField(primary_key=True)
-    folio = models.CharField(null=True, max_length=255)
-    respuestas = models.TextField(null=False)
+    folio = models.CharField(null=False, max_length=255)
+    tipo_seleccion = models.IntegerField(null=True, max_length=255)
+    notificacion = models.IntegerField(null=True, max_length=255)
+    estado = models.IntegerField(null=True, max_length=255)
     notas = models.CharField(null=True, max_length=255)
-    #estudiante_resultado = models.ForeignKey(EstudianteResultado, null=True, related_name='estudiante_resultado')
-
-
-    
+    respuestas = models.TextField(null=True)

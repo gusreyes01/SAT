@@ -19,7 +19,7 @@ DB = os.path.join(PWD,'database/satdb.sqlite')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': satdb,                      # Or path to database file if using sqlite3.
+        'NAME': 'satdb',                      # Or path to database file if using sqlite3.
         'USER': 'satuser',                      # Not used with sqlite3.
         'PASSWORD': 'satpassword',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
