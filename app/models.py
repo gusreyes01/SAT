@@ -29,8 +29,7 @@ class Clase(models.Model):
     nombre = models.CharField(null=False, max_length=255)
     
 class Grupo(models.Model):
-    id = models.AutoField(primary_key=True)
-    crn = models.IntegerField(null=False, max_length=255)
+    crn = models.IntegerField(primary_key=True,null=False, max_length=255)
     clase = models.ForeignKey(Clase, null=False)
     horario_1 = models.CharField(null=True, max_length=255)
     horario_2 = models.CharField(null=True, max_length=255)
