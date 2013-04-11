@@ -16,24 +16,24 @@ ESTADO_INSTITUCION = (
 )
 
 SEMESTRE = (
-    ('1', '1-3'),
-    ('2', '4-6'),
-    ('3', '7-8'),
-    ('4', '9'),
+    ('1-3', '1'),
+    ('4-6', '2'),
+    ('7-8', '3'),
+    ('9', '4'),
 )
 
 CONSUMIDO = (
-    ('1', 'Escuela'),
-    ('2', 'Trabajo'),
-    ('3', 'Fiesta'),
-    ('4', 'Otros'),
+    ('Escuela', '1'),
+    ('Trabajo', '2'),
+    ('Fiesta', '3'),
+    ('Otros', '4'),
 )
 
 FRECUENCIA = (
-    ('1', '1 dia'),
-    ('2', '4 dias'),
-    ('3', '1 semana'),
-    ('4', '1 mes'),
+    ('1 dia', '1'),
+    ('4 dias', '2'),
+    ('1 semana', '3'),
+    ('1 mes', '4'),
 )
 
 COLOR = (
@@ -217,3 +217,42 @@ class AplicacionEncuesta(ModelForm):
 	    Submit('submit', 'Crear', css_class='btn-success')
 	))
       super(AplicacionEncuesta, self).__init__(*args, **kwargs)
+
+
+class EncuestaContestada(ModelForm):
+  folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
+  nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
+  apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
+  matricula = forms.DecimalField(required = True,label="Matricula")
+  correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
+  semestre = forms.ChoiceField(widget=forms.RadioSelect(), choices=SEMESTRE, required = True, label="Semestre")
+  #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
+  respuestas = forms.CharField(widget=forms.Textarea(), required = False,label="Respuestas")
+  frecuencia = forms.ChoiceField(error_messages=my_default_errors, choices=FRECUENCIA, required = True, label="Frecuencia")
+  
+  class Meta:
+    model = Encuesta
+    exclude = ('notas')
+        
+  def __init__(self, *args, **kwargs):
+      self.helper = FormHelper()
+      self.helper.form_id = 'id-EncuestaContestada'
+      self.helper.form_class = 'blueForms'
+      self.helper.form_method = 'POST'
+      self.helper.layout = Layout(
+	Div(
+	Div('folio',
+	    'nombres',
+	    'apellidos',
+	    'matricula',
+	    'correo',
+	    'semestre',
+	    css_class='span3'),
+	Div(#'consumido',
+	    'respuestas',
+	    'frecuencia',
+	    css_class='span3'),css_class='row-fluid'),
+	ButtonHolder(
+	    Submit('submit', 'Crear', css_class='btn-success')
+	))
+      super(EncuestaContestada, self).__init__(*args, **kwargs)

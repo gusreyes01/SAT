@@ -361,11 +361,19 @@ def obtener_carta(request, id_antidoping, lista=None, notificacion=None):
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
 
-login_required
+@login_required
+def autenticacion_encuesta(request):
+    folio = request.POST['folio']
+    if folio == 1:
+        return redirect('/aplicacion_encuesta/')
+        
+
+@login_required
 def aplicacion_encuesta(request):
     if request.method == 'POST':
         forma = AplicacionEncuesta(request.POST)
-        if forma.is_valid():            
+        if forma.is_valid():
+            
             folio = forma.cleaned_data['folio']
             nombres = forma.cleaned_data['nombres']
             apellidos = forma.cleaned_data['apellidos']
@@ -377,10 +385,12 @@ def aplicacion_encuesta(request):
             frecuencia = forma.cleaned_data['frecuencia']
             respuestas = "{\"nombres\":\"%s\", \"apellidos\":\"%s\",\"matricula\":\"%s\",\"correo\":\"%s\",\"semestre\":\"%s\",\"opinion\":\"%s\",\"frecuencia\":%s}" % (nombres, apellidos, matricula, correo, semestre, opinion, frecuencia)
             e = Encuesta()
-            e.folio = folio
-            e.respuestas = respuestas
-            e.notas = notas
-            e.save()
+            objeto = e.save(commit=False)
+            folio = ("E"+str(objeto.id))
+            objeto.folio = folio
+            objeto.respuestas = respuestas
+            objeto.notas = notas
+            objeto.save()
         return redirect('/aplicacion_encuesta/')
     else:
         forma = AplicacionEncuesta()
@@ -392,15 +402,16 @@ def encuesta(request):
     return render_to_response('encuestas/encuestas.html',{'encuestas': encuestas}, context_instance=RequestContext(request))
 
 @login_required
-def encuesta_estudiante(request,id):
-    en_es = Encuesta.objects.get(pk = id)
+def revisar_encuesta(request,id):
+    rev_enc = Encuesta.objects.get(pk = id)
+    json = rev_enc.respuestas
     if request.method == 'POST':
-        forma = AplicacionEncuesta(request.POST, instance=en_es)
-        forma.helper.form_action = reverse('encuesta_estudiante', args=[id])
+        forma = EncuestaContestada(request.POST, instance=rev_enc)
+        forma.helper.form_action = reverse('revisar_encuesta', args=[id])
         if forma.is_valid():
             forma.save()
-        return redirect('/encuesta_estudiante.html/')
+        return redirect('/revisar_encuesta/')
     else:
-        forma = AplicacionEncuesta(instance=en_es)
-    return render_to_response('encuestas/encuesta_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))
+        forma = EncuestaContestada(instance=rev_enc)
+    return render_to_response('encuestas/revisar_encuesta.html', {'forma': forma}, context_instance=RequestContext(request))
 

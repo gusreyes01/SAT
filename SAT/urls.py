@@ -41,11 +41,12 @@ urlpatterns = patterns('',
      url(r'^accounts/logout/$',  logout),
      
      # Urls para mostrar vista de encuesta.
+     url(r'^autenticacion_encuesta/$', 'app.views.autenticacion_encuesta', name='autenticacion_encuesta'),
      url(r'^aplicacion_encuesta/$', 'app.views.aplicacion_encuesta', name='aplicacion_encuesta'),
      
      # Urls para mostrar lista de encuestas contestadas.
      url(r'^encuestas_contestadas/$', 'app.views.encuesta', name='encuestas_contestadas'),
-     url(r'^encuesta_estudiante/(\d+)/$', 'app.views.encuesta_estudiante', name='encuesta_estudiante'),
+     url(r'^revisar_encuesta/(\d+)/$', 'app.views.revisar_encuesta', name='revisar_encuesta'),
 )
 
 # Add the static files pattern to the url.

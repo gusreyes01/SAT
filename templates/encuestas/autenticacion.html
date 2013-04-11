@@ -1,0 +1,20 @@
+{% extends "registration/base.html" %}
+
+{% block style %}{% endblock %}
+
+{% block script %}{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+      <form class="form-signin" method="POST" action="{% url app.views.autenticacion_encuesta %}" > {% csrf_token %}
+        <center><h2 class="form-signin-heading">Iniciar Encuesta</h2></center>
+        <input type="text" name="folio" class="input-block-level" placeholder="Folio">
+        <center><button class="btn btn-large btn-primary" type="submit">Entrar</button></center>
+        <input type="hidden" name="next" value="{{ next|escape }}" />
+      </form>
+
+    </div> <!-- /container -->
+
+{% endblock %}
