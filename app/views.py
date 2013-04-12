@@ -323,6 +323,10 @@ def obtener_carta(request, params):
     lista = []
     
     for est in estudiante_muestra:
+
+      # quitar comentario y identar esta lista.append
+      # if est.notificacion = 0:
+      
       dia = est.antidoping.dia
       if dia == "lunes":
         horario = est.inscrito.grupo.horario_1
@@ -384,6 +388,10 @@ def obtener_carta(request, params):
     elif notificacion== 2:
       for alumno in lista:
           hoja = segunda_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          plantilla += hoja
+    elif notificacion== 3:
+      for alumno in lista:
+          hoja = tercera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
           plantilla += hoja
     
     # Vacia la plantilla en el documento    
