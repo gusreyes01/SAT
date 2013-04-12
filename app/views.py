@@ -293,7 +293,7 @@ def alta_muestra(request):
     elementos_a_borrar = EstudianteMuestra.objects.filter(inscrito_id__in=lista_a_borrar)
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping
-      antidoping_tmp.tamano_muestra = elementos_a_borrar[0].antidoping.tamano_muestra - len(lista_a_borrar)
+      # antidoping_tmp.tamano_muestra = elementos_a_borrar[0].antidoping.tamano_muestra - len(lista_a_borrar)
       antidoping_tmp.save()
       
     elementos_a_borrar.delete()
@@ -313,20 +313,62 @@ def alta_muestra(request):
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
 
-def obtener_carta(request, id_antidoping, lista=None, notificacion=None):  
-    lista = [{'nombres' : 'Eduardo', 'apellidos' : 'Lopez', 'salon': 'A-A3-301', 'horario': '10+/3', 'tipo_de_seleccion': 'seleccionado aleatoriamente', 'matricula': '1088069', 'materia' : 'Tecnologías de información emergentes'}, {'nombres' : 'Eduardo', 'apellidos' : 'Lopez', 'salon': 'A-A3-301', 'horario': '10+/3', 'tipo_de_seleccion': 'seleccionado aleatoriamente', 'matricula': '1088069', 'materia' : 'Tecnologías de información emergentes'}]
-    id_antidoping = "1"
+@login_required
+def obtener_carta(request, id_antidoping, notificacion):
     
+    # params = "1-1"
+    # params_split = params.split("-")
+
+    notificacion = int(notificacion)
+    id_antidoping = int(id_antidoping)
+    # id_antidoping = int(params_split[0])
+    # notificacion = int(params_split[1])
+
+    anti = Antidoping.objects.get(pk=id_antidoping)
+    estudiante_muestra = EstudianteMuestra.objects.filter(antidoping=id_antidoping)
+
+    lista = []
+    
+    for est in estudiante_muestra:
+
+      # quitar comentario y identar esta lista.append
+      # if est.notificacion = 0:
+      
+      dia = est.antidoping.dia
+      if dia == "lunes":
+        horario = est.inscrito.grupo.horario_1
+      elif dia == "martes":
+        horario = est.inscrito.grupo.horario_2
+      elif dia == "miercoles":
+        horario = est.inscrito.grupo.horario_3
+      elif dia == "jueves":
+        horario = est.inscrito.grupo.horario_4
+      elif dia == "viernes":
+        horario = est.inscrito.grupo.horario_5
+      elif dia == "sabado":
+        horario = est.inscrito.grupo.horario_6
+      horario_split = horario.split("|")
+
+      est_dic = {}
+      est_dic['nombres'] = est.inscrito.estudiante.nombre
+      est_dic['apellidos'] = est.inscrito.estudiante.apellido
+      est_dic['matricula'] = est.inscrito.estudiante.matricula
+      est_dic['horario'] = horario_split[0]
+      est_dic['salon'] = horario_split[1]
+      est_dic['materia'] = est.inscrito.grupo.clase.nombre
+      est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
+      lista.append(est_dic)
+
     PWD = os.path.dirname(os.path.realpath(__file__))
     LOGO = os.path.join(PWD, "static/itesm.jpg")
     
     # Documento donde se vaciara la plantilla
-    nombre_doc = "carta_aviso_" + id_antidoping + ".pdf"
+    nombre_doc = "carta_notificacion_" + str(notificacion) + "_id_"+ str(id_antidoping) + ".pdf"
     
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="' + nombre_doc
     buffer = BytesIO()
-    
+
     # Plantilla que se convertira en PDF
     plantilla=[]
     documento = SimpleDocTemplate(buffer,pagesize=letter,rightMargin=65,leftMargin=65,topMargin=20,bottomMargin=20)
@@ -345,10 +387,19 @@ def obtener_carta(request, id_antidoping, lista=None, notificacion=None):
     fecha = obten_fecha()
     fecha_completa = obten_fecha_completa().upper()
 
-    # Consulta cada elemento de la lista y lo convierte en una hoja que es enviada al documento
-    for alumno in lista:
-        hoja = carta_individual(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
-        plantilla += hoja
+    # Consulta cada elemento de la lista y lo convierte en una hoja que es enviada al documento verificando el numero de carta
+    if notificacion== 1:
+      for alumno in lista:
+          hoja = primera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          plantilla += hoja
+    elif notificacion== 2:
+      for alumno in lista:
+          hoja = segunda_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          plantilla += hoja
+    elif notificacion== 3:
+      for alumno in lista:
+          hoja = tercera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          plantilla += hoja
     
     # Vacia la plantilla en el documento    
     documento.build(plantilla)
