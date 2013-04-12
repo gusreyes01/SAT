@@ -42,7 +42,7 @@ urlpatterns = patterns('',
      
      # Urls para mostrar vista de encuesta.
      url(r'^autenticacion_encuesta/$', 'app.views.autenticacion_encuesta', name='autenticacion_encuesta'),
-     url(r'^aplicacion_encuesta/$', 'app.views.aplicacion_encuesta', name='aplicacion_encuesta'),
+     url(r'^aplicacion_encuesta/(\w+)/$', 'app.views.aplicacion_encuesta', name='aplicacion_encuesta'),
      
      # Urls para mostrar lista de encuestas contestadas.
      url(r'^encuestas_contestadas/$', 'app.views.encuesta', name='encuestas_contestadas'),

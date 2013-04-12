@@ -14,6 +14,7 @@ from django.core.context_processors import csrf
 from django.utils import timezone
 from random import sample, shuffle, randint
 from app.cartas_notificacion import *
+from django.utils import simplejson
 
 # For debugging.
 import pdb
@@ -361,20 +362,27 @@ def obtener_carta(request, id_antidoping, lista=None, notificacion=None):
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
 
+#Vista que da acceso al alumno a su encuesta correspondiente
 @login_required
 def autenticacion_encuesta(request):
-    folio = request.POST['folio']
-    if folio == 1:
-        return redirect('/aplicacion_encuesta/')
-        
-
-@login_required
-def aplicacion_encuesta(request):
     if request.method == 'POST':
-        forma = AplicacionEncuesta(request.POST)
+        folio = request.POST['folio']
+        if Encuesta.objects.filter(folio=folio).exists():
+            return redirect('/aplicacion_encuesta/'+folio)
+        else:
+            return redirect('/autenticacion_encuesta/')
+    else:
+        return render_to_response('encuestas/autenticacion.html', context_instance=RequestContext(request))
+
+#Vista de la forma de encuesta a llenar
+@login_required
+def aplicacion_encuesta(request,id):
+    pre = Encuesta.objects.get(folio = id)
+    if request.method == 'POST':
+        forma = AplicacionEncuesta(request.POST, instance=pre)
+        forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
         if forma.is_valid():
-            
-            folio = forma.cleaned_data['folio']
+            #folio = forma.cleaned_data['folio']
             nombres = forma.cleaned_data['nombres']
             apellidos = forma.cleaned_data['apellidos']
             notas = "notas"
@@ -383,17 +391,15 @@ def aplicacion_encuesta(request):
             semestre = forma.cleaned_data['semestre']
             opinion = forma.cleaned_data['opinion']
             frecuencia = forma.cleaned_data['frecuencia']
-            respuestas = "{\"nombres\":\"%s\", \"apellidos\":\"%s\",\"matricula\":\"%s\",\"correo\":\"%s\",\"semestre\":\"%s\",\"opinion\":\"%s\",\"frecuencia\":%s}" % (nombres, apellidos, matricula, correo, semestre, opinion, frecuencia)
+            respuestas = {"nombres":"%s" % nombres, "apellidos":"%s" % apellidos, "matricula":"%s" % matricula, "correo":"%s" % correo, "semestre":"%s" % semestre, "opinion":"%s" % opinion, "frecuencia":"%s" % frecuencia}
+            respuestas = simplejson.dumps(respuestas)
             e = Encuesta()
-            objeto = e.save(commit=False)
-            folio = ("E"+str(objeto.id))
-            objeto.folio = folio
-            objeto.respuestas = respuestas
-            objeto.notas = notas
-            objeto.save()
-        return redirect('/aplicacion_encuesta/')
+            e.respuestas = respuestas
+            e.notas = notas
+            e.save()
+        return redirect('/')
     else:
-        forma = AplicacionEncuesta()
+        forma = AplicacionEncuesta(instance=pre)
     return render_to_response('encuestas/encuesta.html', { 'forma': forma}, context_instance=RequestContext(request))
 
 @login_required
@@ -405,6 +411,7 @@ def encuesta(request):
 def revisar_encuesta(request,id):
     rev_enc = Encuesta.objects.get(pk = id)
     json = rev_enc.respuestas
+    json = simplejson.loads(json)
     if request.method == 'POST':
         forma = EncuestaContestada(request.POST, instance=rev_enc)
         forma.helper.form_action = reverse('revisar_encuesta', args=[id])

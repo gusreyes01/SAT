@@ -170,18 +170,17 @@ class CrearAntidoping(ModelForm):
 
 #class EstudiantesMuestra(ModelForm):
 
-
 class AplicacionEncuesta(ModelForm):
-  if Encuesta.objects.all():
-    fol_object = Encuesta.objects.all().order_by('id').reverse()[0]
-    fol_all = fol_object.folio
-    fol_sufix = fol_all[1:]
-    fol_sufix_next = int(fol_sufix) + 1
-    fol_next = 'e' + str(fol_sufix_next)
-  else:
-    fol_next = 'e1'
+  #if Encuesta.objects.all():
+   # fol_object = Encuesta.objects.all().order_by('id').reverse()[0]
+    #fol_all = fol_object.folio
+    #fol_sufix = fol_all[1:]
+    #fol_sufix_next = int(fol_sufix) + 1
+    #fol_next = 'e' + str(fol_sufix_next)
+  #else:
+   # fol_next = 'e1'
   
-  folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, initial=fol_next, label="Folio", required=False)
+  folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
   nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
   apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
   matricula = forms.DecimalField(required = True,label="Matricula")
@@ -220,6 +219,7 @@ class AplicacionEncuesta(ModelForm):
 
 
 class EncuestaContestada(ModelForm):
+  #fol = Encuesta.objects.get(folio=folio)
   folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
   nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
   apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
