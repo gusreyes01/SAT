@@ -110,13 +110,14 @@ def perfil_muestra(request,id):
    #itemset_queryset = EstudianteMuestra.objects.filter(antidoping=antidoping).values_list('inscrito_id', flat=True)
    #estudiantes_muestra = antidoping.estudiantemuestra_set.all()
    alumnos = map(lambda x: x.inscrito.estudiante, antidoping.estudiantemuestra_set.all())
+   alumnos_muestra = EstudianteMuestra.objects.filter(inscrito_id__in=alumnos)
    grupos = map(lambda x: x.inscrito.grupo, antidoping.estudiantemuestra_set.all())   
    grupos = list(set(grupos))
    #alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)   
    
    #alumnos_grupo = Inscrito.objects.filter(estudiante_id__in=itemset_queryset).values_list('grupo_id', flat=True)
    #grupos = Grupo.objects.filter(crn__in=alumnos_grupo).select_related()
-   return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'grupos': grupos,'antidoping': antidoping}, context_instance=RequestContext(request))    
+   return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'grupos': grupos,'antidoping': antidoping,'alumnos_muestra':alumnos_muestra}, context_instance=RequestContext(request))    
    
 @login_required
 def seleccion_muestra(request):
