@@ -149,12 +149,12 @@ class CrearAntidoping(ModelForm):
 	Div(
 	Div(
 	    'nombre',
-	    'seleccion_alumnos',
+      'tamano_muestra',
+      'dia',
+      'seleccion_alumnos',
 	    css_class='span3'
       ),
 	Div(
-	    'tamano_muestra',
-      'dia',
       'inicio',
       'fin',
 	    css_class='span3'

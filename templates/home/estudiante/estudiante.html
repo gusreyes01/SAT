@@ -18,8 +18,6 @@
  {% endblock %}
  
  {% block script %}
- <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
- <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
  <script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
  <script src="{{ STATIC_URL }}JS/jquery.tablesorter.min.js" type="text/javascript" charset="utf-8"></script>
  <!-- tablesorter widget file - loaded after the plugin -->
@@ -33,37 +31,35 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <a href="/alta_estudiante"><input type="button" class="btn btn-primary" value="Alta Estudiante"></button></a>
-      <table id="tabla_estudiantes" class="table tablesorter">
-      <thead>
-	  <tr>
-	    <th>Matrícula</th>
-	    <th>Nombre</th>
-	    <th>Apellido</th>
-	    <th>Correo</th>
-	    <th>Telefono</th>
-	  </tr>
-      <thead>
-      <tbody>
-	{% for e in estudiantes %}
-	<tr>
-	  <td><a href="/perfil_estudiante/{{e.matricula}}">{{e.matricula}}</a>
-	  <div id="icons">
-	    <a href="/edita_estudiante/{{e.matricula}}">
-	      <i class="icon-pencil"></i>
-	    </a>
-	  </div>
-	  </td>
-	  <td>{{e.nombre}}</td>
-	  <td>{{e.apellido}}</td>
-	  <td>{{e.correo}}</td>
-	  <td>{{e.telefono}}</td>
-	</tr>
-      {% endfor %}
-      </tbody>
-      <table>
-      </div>
-      <hr>
+	      <a href="/alta_estudiante"><input type="button" class="btn btn-primary" value="Alta Estudiante"></button></a>
+	      <table id="tabla_estudiantes" class="table tablesorter">
+		      <thead>
+			  <tr>
+			    <th>Matrícula</th>
+			    <th>Nombre</th>
+			    <th>Apellido</th>
+			    <th>Correo</th>
+			    <th>Telefono</th>
+			  </tr>
+		      <thead>
+		      <tbody>
+				{% for e in estudiantes %}
+				<tr>
+				  <td>
+				  	  <a href="/perfil_estudiante/{{e.matricula}}">{{e.matricula}}</a>
+					  <div id="icons">
+					    <a href="/edita_estudiante/{{e.matricula}}"><i class="icon-pencil"></i></a>
+					  </div>
+				  </td>
+				  <td>{{e.nombre}}</td>
+				  <td>{{e.apellido}}</td>
+				  <td>{{e.correo}}</td>
+				  <td>{{e.telefono}}</td>
+				</tr>
+			      {% endfor %}
+			  </tbody>
+	      </table>
+      </div> <!-- /hero-unit -->
     </div> <!-- /container -->
  
  {% endblock %}
