@@ -14,7 +14,17 @@
  {% endblock %}
  
  {% block script %}
- 
+ <script>
+
+  $(document).ready(function() {
+     $('.notificacion').click(function(id) {
+        var $id = parseInt(this.id.substring(4));
+        window.location.href = ("/carta_notificacion/{{antidoping.id}}/"+$id);
+    });
+  });
+
+ </script>
+
  {% endblock %}
  
  {% block content %}
@@ -25,9 +35,9 @@
       <div class="hero-unit">
 
         <div class="well" style="max-width: 400px; margin: 0 auto 10px;">
-                <button type="button" class="btn btn-small btn-block btn-success">Primera Notificación</button>
-                <button type="button" class="btn btn-small btn-block btn-warning">Segunda Notificación</button>
-                <button type="button" class="btn btn-small btn-block btn-danger">Tercera Notificación</button>
+                <button type="button" id="not_1" class="btn btn-small btn-block btn-success notificacion">Primera Notificación</button>
+                <button type="button" id="not_2" class="btn btn-small btn-block btn-warning notificacion">Segunda Notificación</button>
+                <button type="button" id="not_3" class="btn btn-small btn-block btn-danger notificacion">Tercera Notificación</button>
         </div>
 
         <h3>Nombre : {{antidoping.nombre}}</h3>
@@ -40,7 +50,7 @@
           	<th>Apellido</th>
           	<th>Notificado</th>
           </tr>
-          {% for a in alumnos %}
+          {% for a,b in alumnos %}
           <tr>
           	<td><a href="/perfil_estudiante/{{a.matricula}}">{{a.matricula}}</a>
                     <div id="icons">
@@ -49,11 +59,11 @@
             </td>
           	<td>{{a.nombre}}</td>
           	<td>{{a.apellido}}</td>
-          	<td>{{a.estudiantemuestra.notificacion}}</td> <!-- Pendiente !-->
+          	<td>{{b.notificacion}}</td> <!-- Pendiente !-->
           </tr>
         {% endfor %}
+
         </table>
-      
       <h4>Grupos</h4>
       <table class="table table-hover">
         <tr>
