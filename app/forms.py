@@ -219,16 +219,15 @@ class AplicacionEncuesta(ModelForm):
 
 
 class EncuestaContestada(ModelForm):
-  #fol = Encuesta.objects.get(folio=folio)
-  folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
+  folio = forms.CharField(error_messages=my_default_errors, label="Folio", required=False)
   nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
   apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
   matricula = forms.DecimalField(required = True,label="Matricula")
   correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
-  semestre = forms.ChoiceField(widget=forms.RadioSelect(), choices=SEMESTRE, required = True, label="Semestre")
+  semestre = forms.CharField(error_messages=my_default_errors,label="Semestre",required=True)
   #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
-  respuestas = forms.CharField(widget=forms.Textarea(), required = False,label="Respuestas")
-  frecuencia = forms.ChoiceField(error_messages=my_default_errors, choices=FRECUENCIA, required = True, label="Frecuencia")
+  opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Respuestas")
+  frecuencia = forms.CharField(error_messages=my_default_errors,label="Frecuencia",required=True)
   
   class Meta:
     model = Encuesta
@@ -249,10 +248,7 @@ class EncuestaContestada(ModelForm):
 	    'semestre',
 	    css_class='span3'),
 	Div(#'consumido',
-	    'respuestas',
+	    'opinion',
 	    'frecuencia',
-	    css_class='span3'),css_class='row-fluid'),
-	ButtonHolder(
-	    Submit('submit', 'Crear', css_class='btn-success')
-	))
+	    css_class='span3'),css_class='row-fluid'),)
       super(EncuestaContestada, self).__init__(*args, **kwargs)

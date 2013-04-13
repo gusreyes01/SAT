@@ -368,7 +368,11 @@ def autenticacion_encuesta(request):
     if request.method == 'POST':
         folio = request.POST['folio']
         if Encuesta.objects.filter(folio=folio).exists():
-            return redirect('/aplicacion_encuesta/'+folio)
+            campo = Encuesta.objects.get(folio = folio)
+            if campo.respuestas:
+                return redirect('/autenticacion_encuesta/')
+            else:
+                return redirect('/aplicacion_encuesta/'+folio)
         else:
             return redirect('/autenticacion_encuesta/')
     else:
@@ -382,7 +386,6 @@ def aplicacion_encuesta(request,id):
         forma = AplicacionEncuesta(request.POST, instance=pre)
         forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
         if forma.is_valid():
-            #folio = forma.cleaned_data['folio']
             nombres = forma.cleaned_data['nombres']
             apellidos = forma.cleaned_data['apellidos']
             notas = "notas"
@@ -393,25 +396,32 @@ def aplicacion_encuesta(request,id):
             frecuencia = forma.cleaned_data['frecuencia']
             respuestas = {"nombres":"%s" % nombres, "apellidos":"%s" % apellidos, "matricula":"%s" % matricula, "correo":"%s" % correo, "semestre":"%s" % semestre, "opinion":"%s" % opinion, "frecuencia":"%s" % frecuencia}
             respuestas = simplejson.dumps(respuestas)
-            e = Encuesta()
-            e.respuestas = respuestas
-            e.notas = notas
-            e.save()
-        return redirect('/')
+            pre.respuestas = respuestas
+            pre.notas = notas
+            pre.save()
+        return redirect('/encuesta_agradecimiento/')
     else:
         forma = AplicacionEncuesta(instance=pre)
     return render_to_response('encuestas/encuesta.html', { 'forma': forma}, context_instance=RequestContext(request))
 
+#Vista de la pantalla despues de haber contestado la encuesta
 @login_required
-def encuesta(request):
-    encuestas = Encuesta.objects.all()
-    return render_to_response('encuestas/encuestas.html',{'encuestas': encuestas}, context_instance=RequestContext(request))
+def encuesta_agradecimiento(request):
+    return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
 
+#Vista de todas las encuestas que han sido contestadas
+@login_required
+def encuestas_contestadas(request):
+    encuestas = Encuesta.objects.exclude(respuestas__isnull=True).exclude(respuestas__exact='')
+    return render_to_response('encuestas/encuestas_contestadas.html',{'encuestas': encuestas}, context_instance=RequestContext(request))
+
+#Vista de la encuesta con las respuestas
 @login_required
 def revisar_encuesta(request,id):
     rev_enc = Encuesta.objects.get(pk = id)
     json = rev_enc.respuestas
     json = simplejson.loads(json)
+    print json['nombres']
     if request.method == 'POST':
         forma = EncuestaContestada(request.POST, instance=rev_enc)
         forma.helper.form_action = reverse('revisar_encuesta', args=[id])
@@ -420,5 +430,12 @@ def revisar_encuesta(request,id):
         return redirect('/revisar_encuesta/')
     else:
         forma = EncuestaContestada(instance=rev_enc)
+        forma.fields['nombres'].initial = json['nombres']
+        forma.fields['apellidos'].initial = json['apellidos']
+        forma.fields['matricula'].initial = json['matricula']
+        forma.fields['correo'].initial = json['correo']
+        forma.fields['semestre'].initial = json['semestre']
+        forma.fields['opinion'].initial = json['opinion']
+        forma.fields['frecuencia'].initial = json['frecuencia']
     return render_to_response('encuestas/revisar_encuesta.html', {'forma': forma}, context_instance=RequestContext(request))
 
