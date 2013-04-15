@@ -23,6 +23,12 @@
  {% block content %}
  
  <div class="container">
+{% if error %}
+  <div class="hero-unit">
+    <h2>Hubo un error :(</h2>
+    <p>Lo sentimos hubo un error al procesar la información, probablemente hay una inconsistencia entre la base de datos y la información que se desea procesar.</p>
+  </div>
+{% else %}
     <form action="/alta_muestra/" method="POST">{% csrf_token %}
     <input type="hidden" name="antidoping_id" value="{{antidoping_id}}">
     <div class="hero-unit">
@@ -36,6 +42,7 @@
     </div>
 
     <!-- Main hero unit for a primary marketing message or call to action -->
+
     <div class="hero-unit">
       <h2>Muestra de alumnos señalados</h2>
       {% if verificar %}
@@ -108,6 +115,7 @@
     </div>
     <input class="btn btn-primary" type="submit" value="Eliminar alumnos seleccionados y guardar muestra" />
     </form>
+    {% endif %}
     <hr>
 </div> <!-- /container -->
  

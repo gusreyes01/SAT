@@ -148,6 +148,7 @@ def seleccion_muestra(request):
         muestra_seleccionados = []
         muestra_grupos = []
         muestra_aleatorios = []
+        respuesta = {}
 
         delimitador = '|'
 
@@ -159,138 +160,149 @@ def seleccion_muestra(request):
         print alumnos_seleccionados, grupos_seleccionados
         print "Rango horas: ", obtener_horario_de_forma(inicio, fin)
 
-        # Modificar si se necesita null.
-        if dia == 'lunes':
-          grupos = Grupo.objects.exclude(horario_1='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_1, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-     
-        elif dia == 'martes':
-          grupos = Grupo.objects.exclude(horario_2='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_2, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-
-        elif dia == 'miercoles':
-          grupos = Grupo.objects.exclude(horario_3='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_3, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-
-        elif dia == 'jueves':
-          grupos = Grupo.objects.exclude(horario_4='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_4, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-
-        elif dia == 'viernes':
-          grupos = Grupo.objects.exclude(horario_5='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-
-        elif dia == 'sabado':
-          grupos = Grupo.objects.exclude(horario_5='None')
-          # Revisar que se encuentre los grupos dentro del horario deseado.
-          for gpo in grupos:
-            horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
-            horario_atdp = obtener_horario_de_forma(inicio, fin)
-            if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
-              muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
-
-        
-
-        # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos.        
-        total_grupos = muestra_grupos + list(Grupo.objects.filter(pk__in=grupos_seleccionados))
-        total_grupos = list(set(total_grupos))
-        for estudiante in alumnos_seleccionados:
-          tmp = Inscrito.objects.filter(estudiante_id=estudiante, grupo__in=total_grupos)
-          if tmp != []:
-            muestra_seleccionados = muestra_seleccionados + [tmp[0]]        # Trick to merge querysets.
-
-        # muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
+        try:
+          # Modificar si se necesita null.
+          if dia == 'lunes':
+            grupos = Grupo.objects.exclude(horario_1='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_1, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
        
-        # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
-        for inscrito in muestra_seleccionados:
-          muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
-          # muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
-       
-       # obtener alumnos que pertenecen a los grupos senalados.
-        for gpo_seleccionado in grupos_seleccionados:
-          muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo_id=gpo_seleccionado), randint(3,5))
+          elif dia == 'martes':
+            grupos = Grupo.objects.exclude(horario_2='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_2, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-        # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
-        shuffle(muestra_grupos)
-        cantidad_alumnos_seleccionados = len(muestra_seleccionados)
-        cantidad_alumnos_aleatorios = len(muestra_aleatorios)
-        cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
+          elif dia == 'miercoles':
+            grupos = Grupo.objects.exclude(horario_3='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_3, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-        print cantidad_alumnos_aleatorios,cantidad_alumnos_seleccionados
-        # Escoger alumnos aleatoriamente hasta que se cumpla el tamano de la muestra.
-        elementos_restantes = tamano_muestra - cantidad_total_muestra
+          elif dia == 'jueves':
+            grupos = Grupo.objects.exclude(horario_4='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_4, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-        for gpo in muestra_grupos:
-          # print "er:", elementos_restantes
-          if(elementos_restantes >= 3 and elementos_restantes <= 5):
-            tmp = sample(Inscrito.objects.filter(grupo=gpo), elementos_restantes)
-            cantidad_tmp = elementos_restantes
-            muestra_aleatorios = muestra_aleatorios + tmp
-          elif(elementos_restantes < 3):
-            break
-          else:
-            tmp = sample(Inscrito.objects.filter(grupo=gpo), randint(3,5))
-            cantidad_tmp = len(tmp)
-            muestra_aleatorios = muestra_aleatorios + tmp
+          elif dia == 'viernes':
+            grupos = Grupo.objects.exclude(horario_5='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-          elementos_restantes = elementos_restantes - cantidad_tmp
+          elif dia == 'sabado':
+            grupos = Grupo.objects.exclude(horario_5='None')
+            # Revisar que se encuentre los grupos dentro del horario deseado.
+            for gpo in grupos:
+              horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
+              horario_atdp = obtener_horario_de_forma(inicio, fin)
+              if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
+                muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-        cantidad_alumnos_aleatorios = len(muestra_aleatorios)
-        cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
+          
 
-        # Guardar antidoping.
-        nuevo_antidoping.nombre = forma.cleaned_data['nombre']
-        nuevo_antidoping.muestra_inicio = inicio
-        nuevo_antidoping.muestra_fin = fin
-        nuevo_antidoping.antidoping_inicio = timezone.now()
-        nuevo_antidoping.tamano_muestra = cantidad_total_muestra
-        nuevo_antidoping.estado_antidoping = 0
-        nuevo_antidoping.notas = forma.cleaned_data['notas']
-        nuevo_antidoping.save()
+          # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos.        
+          total_grupos = muestra_grupos + list(Grupo.objects.filter(pk__in=grupos_seleccionados))
+          total_grupos = list(set(total_grupos))
+          for estudiante in alumnos_seleccionados:
+            tmp = Inscrito.objects.filter(estudiante_id=estudiante, grupo__in=total_grupos)
+            # print "tmp", tmp
+            # print type(tmp)
+            # print tmp != []
+            if tmp:
+              muestra_seleccionados = muestra_seleccionados + [tmp[0]]        # Trick to merge querysets.
 
-        # Guardar las personas de la muestra.
-        for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
-          tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
-          tmp.save() 
+          # muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
+         
+          # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
+          for inscrito in muestra_seleccionados:
+            muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
+            # muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
+         
+         # obtener alumnos que pertenecen a los grupos senalados.
+          for gpo_seleccionado in grupos_seleccionados:
+            muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo_id=gpo_seleccionado), randint(3,5))
 
+          # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
+          shuffle(muestra_grupos)
+          cantidad_alumnos_seleccionados = len(muestra_seleccionados)
+          cantidad_alumnos_aleatorios = len(muestra_aleatorios)
+          cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
+
+          print cantidad_alumnos_aleatorios,cantidad_alumnos_seleccionados
+          # Escoger alumnos aleatoriamente hasta que se cumpla el tamano de la muestra.
+          elementos_restantes = tamano_muestra - cantidad_total_muestra
+
+          for gpo in muestra_grupos:
+            # print "er:", elementos_restantes
+            if(elementos_restantes >= 3 and elementos_restantes <= 5):
+              tmp = sample(Inscrito.objects.filter(grupo=gpo), elementos_restantes)
+              cantidad_tmp = elementos_restantes
+              muestra_aleatorios = muestra_aleatorios + tmp
+            elif(elementos_restantes < 3):
+              break
+            else:
+              tmp = sample(Inscrito.objects.filter(grupo=gpo), randint(3,5))
+              cantidad_tmp = len(tmp)
+              muestra_aleatorios = muestra_aleatorios + tmp
+
+            elementos_restantes = elementos_restantes - cantidad_tmp
+
+          cantidad_alumnos_aleatorios = len(muestra_aleatorios)
+          cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
+
+          # Guardar antidoping.
+          nuevo_antidoping.nombre = forma.cleaned_data['nombre']
+          nuevo_antidoping.muestra_inicio = inicio
+          nuevo_antidoping.muestra_fin = fin
+          nuevo_antidoping.antidoping_inicio = timezone.now()
+          nuevo_antidoping.tamano_muestra = cantidad_total_muestra
+          nuevo_antidoping.estado_antidoping = 0
+          nuevo_antidoping.notas = forma.cleaned_data['notas']
+          nuevo_antidoping.save()
+
+          # Guardar las personas de la muestra.
+          for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
+            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
+            tmp.save()
+          respuesta = {
+              'antidoping_id': nuevo_antidoping.pk,
+              'muestra': muestra_aleatorios, 
+              'muestra_seleccionados': muestra_seleccionados, 
+              'cantidad_total_muestra': cantidad_total_muestra,
+              'cantidad_total_seleccionados': cantidad_alumnos_seleccionados,
+              'dia': dia, 
+              'inicio': inicio, 
+              'fin': fin, 
+              'verificar': True,
+              'error': False
+            }
+
+        except:
+          print "Hubo una excepcion"
+          respuesta = {
+              'error': True
+            }
 
         return render_to_response('home/verificar_muestra.html',
-          {
-          'antidoping_id': nuevo_antidoping.pk,
-          'muestra': muestra_aleatorios, 
-          'muestra_seleccionados': muestra_seleccionados, 
-          'cantidad_total_muestra': cantidad_total_muestra,
-          'cantidad_total_seleccionados': cantidad_alumnos_seleccionados,
-          'dia': dia, 
-          'inicio': inicio, 
-          'fin': fin, 
-          'verificar': True
-          }, context_instance=RequestContext(request))
+          respuesta, context_instance=RequestContext(request))
 
   
     else:
