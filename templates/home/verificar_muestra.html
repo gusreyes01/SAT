@@ -24,7 +24,7 @@
  
  <div class="container">
     <form action="/alta_muestra/" method="POST">{% csrf_token %}
-    
+    <input type="hidden" name="antidoping_id" value="{{antidoping_id}}">
     <div class="hero-unit">
       <h2>Información general</h2>
       <p>La muestra fue escogida el día <strong>{{dia}}</strong> entre <strong>{{inicio}}</strong> y <strong>{{fin}}</strong>

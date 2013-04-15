@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 # Create your views here.
 import os
+from datetime import date
 from io import BytesIO
 from app.forms import *
 from app.librerias.muestra import crear_muestra
@@ -14,6 +15,7 @@ from django.core.context_processors import csrf
 from django.utils import timezone
 from random import sample, shuffle, randint
 from app.cartas_notificacion import *
+
 
 # For debugging.
 import pdb
@@ -143,13 +145,14 @@ def seleccion_muestra(request):
         dia = forma.cleaned_data['dia']
         inicio = forma.cleaned_data['inicio']
         fin = forma.cleaned_data['fin']
+        muestra_seleccionados = []
         muestra_grupos = []
         muestra_aleatorios = []
+
         delimitador = '|'
 
         print "dia..", dia
         print "antidoping id..",nuevo_antidoping.pk 
-        # print "hora de inicio.." ,nuevo_antidoping.antidoping_inicio
         print "dia de antidoping",dia
         print "hora inicio",inicio
         print "hora fin",fin
@@ -211,19 +214,26 @@ def seleccion_muestra(request):
             if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
               muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
-       # Alumnos que pertenecen a los grupos senalados.
-        for gpo_seleccionado in grupos_seleccionados:
-          muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo_id=gpo_seleccionado), randint(3,5))
+        
 
-        # Obtener alumnos que fueron senalados y que se pueden encontrar en los grupos.
+        # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos.        
         total_grupos = muestra_grupos + list(Grupo.objects.filter(pk__in=grupos_seleccionados))
         total_grupos = list(set(total_grupos))
-        muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
-      
+        for estudiante in alumnos_seleccionados:
+          tmp = Inscrito.objects.filter(estudiante_id=estudiante, grupo__in=total_grupos)
+          if tmp != []:
+            muestra_seleccionados = muestra_seleccionados + [tmp[0]]        # Trick to merge querysets.
+
+        # muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
+       
         # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
         for inscrito in muestra_seleccionados:
           muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
-          muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
+          # muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
+       
+       # obtener alumnos que pertenecen a los grupos senalados.
+        for gpo_seleccionado in grupos_seleccionados:
+          muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo_id=gpo_seleccionado), randint(3,5))
 
         # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
         shuffle(muestra_grupos)
@@ -271,6 +281,7 @@ def seleccion_muestra(request):
 
         return render_to_response('home/verificar_muestra.html',
           {
+          'antidoping_id': nuevo_antidoping.pk,
           'muestra': muestra_aleatorios, 
           'muestra_seleccionados': muestra_seleccionados, 
           'cantidad_total_muestra': cantidad_total_muestra,
@@ -291,10 +302,20 @@ def seleccion_muestra(request):
 def alta_muestra(request):
   if request.method == 'POST':
     lista_a_borrar = map(int, request.POST.getlist('eliminar-de-muestra'))
-    elementos_a_borrar = EstudianteMuestra.objects.filter(inscrito_id__in=lista_a_borrar)
+    antidoping_id = int(request.POST.get('antidoping_id', ''))
+    elementos_a_borrar = EstudianteMuestra.objects.filter(inscrito_id__in=lista_a_borrar, antidoping_id=antidoping_id)
+    
+    # Generar folios
+    muestra_antidoping = EstudianteMuestra.objects.filter(antidoping_id=antidoping_id)
+    now = date.today()
+    now = str(now).replace('-','')
+    for estudiante in muestra_antidoping:
+      appendix = randint(0,100000)
+      estudiante.folio = "e%s%d" %(now,appendix)
+      estudiante.save()     # Anadir despues verificacion de que no existe un folio igual.
+
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping
-      # antidoping_tmp.tamano_muestra = elementos_a_borrar[0].antidoping.tamano_muestra - len(lista_a_borrar)
       antidoping_tmp.save()
       
     elementos_a_borrar.delete()
