@@ -317,14 +317,15 @@ def alta_muestra(request):
     antidoping_id = int(request.POST.get('antidoping_id', ''))
     elementos_a_borrar = EstudianteMuestra.objects.filter(inscrito_id__in=lista_a_borrar, antidoping_id=antidoping_id)
     
-    # Generar folios
+    # Generar folios y guardar estado del alumno.
     muestra_antidoping = EstudianteMuestra.objects.filter(antidoping_id=antidoping_id)
     now = date.today()
     now = str(now).replace('-','')
     for estudiante in muestra_antidoping:
       appendix = randint(0,100000)
       estudiante.folio = "e%s%d" %(now,appendix)
-      estudiante.save()     # Anadir despues verificacion de que no existe un folio igual.
+      estudiante.notificacion = 0
+      estudiante.save()     # Falta verificar de que no existe un folio igual.
 
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping
