@@ -16,24 +16,24 @@ ESTADO_INSTITUCION = (
 )
 
 SEMESTRE = (
-    ('1-3', '1'),
-    ('4-6', '2'),
-    ('7-8', '3'),
-    ('9', '4'),
+    ('1-3', '1° - 3°'),
+    ('4-6', '4° - 6°'),
+    ('7-8', '7° - 8°'),
+    ('9', '9°'),
 )
 
 CONSUMIDO = (
-    ('Escuela', '1'),
-    ('Trabajo', '2'),
-    ('Fiesta', '3'),
-    ('Otros', '4'),
+    ('Escuela', 'Escuela'),
+    ('Trabajo', 'Trabajo'),
+    ('Fiesta', 'Fiesta'),
+    ('Otros', 'Otros'),
 )
 
 FRECUENCIA = (
-    ('1 dia', '1'),
-    ('4 dias', '2'),
-    ('1 semana', '3'),
-    ('1 mes', '4'),
+    ('1 dia', '1 dia'),
+    ('4 dias', '4 dias'),
+    ('1 semana', '1 semana'),
+    ('1 mes', '1 mes'),
 )
 
 COLOR = (
@@ -171,15 +171,6 @@ class CrearAntidoping(ModelForm):
 #class EstudiantesMuestra(ModelForm):
 
 class AplicacionEncuesta(ModelForm):
-  #if Encuesta.objects.all():
-   # fol_object = Encuesta.objects.all().order_by('id').reverse()[0]
-    #fol_all = fol_object.folio
-    #fol_sufix = fol_all[1:]
-    #fol_sufix_next = int(fol_sufix) + 1
-    #fol_next = 'e' + str(fol_sufix_next)
-  #else:
-   # fol_next = 'e1'
-  
   folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
   nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
   apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
@@ -213,7 +204,7 @@ class AplicacionEncuesta(ModelForm):
 	    'frecuencia',
 	    css_class='span3'),css_class='row-fluid'),
 	ButtonHolder(
-	    Submit('submit', 'Crear', css_class='btn-success')
+	    Submit('submit', 'Enviar respuestas', css_class='btn-success')
 	))
       super(AplicacionEncuesta, self).__init__(*args, **kwargs)
 
@@ -226,12 +217,13 @@ class EncuestaContestada(ModelForm):
   correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
   semestre = forms.CharField(error_messages=my_default_errors,label="Semestre",required=True)
   #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
-  opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Respuestas")
+  opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Opinion")
   frecuencia = forms.CharField(error_messages=my_default_errors,label="Frecuencia",required=True)
+  notas = forms.CharField(widget=forms.Textarea(), required = False,label="Notas")
   
   class Meta:
     model = Encuesta
-    exclude = ('notas')
+    exclude = ('id', 'folio', 'respuestas')
         
   def __init__(self, *args, **kwargs):
       self.helper = FormHelper()
@@ -250,5 +242,9 @@ class EncuestaContestada(ModelForm):
 	Div(#'consumido',
 	    'opinion',
 	    'frecuencia',
-	    css_class='span3'),css_class='row-fluid'),)
+	    'notas',
+	    css_class='span3'),css_class='row-fluid'),
+	ButtonHolder(
+	    Submit('submit', 'Subir notas', css_class='btn-success')
+	))
       super(EncuestaContestada, self).__init__(*args, **kwargs)

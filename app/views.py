@@ -370,11 +370,12 @@ def autenticacion_encuesta(request):
         if Encuesta.objects.filter(folio=folio).exists():
             campo = Encuesta.objects.get(folio = folio)
             if campo.respuestas:
-                return redirect('/autenticacion_encuesta/')
+                return render_to_response('encuestas/autenticacion.html', {'existe_respuesta': campo.respuestas}, context_instance=RequestContext(request))
             else:
                 return redirect('/aplicacion_encuesta/'+folio)
         else:
-            return redirect('/autenticacion_encuesta/')
+            no_existe_folio = True
+            return render_to_response('encuestas/autenticacion.html', {'no_existe_folio': no_existe_folio}, context_instance=RequestContext(request))
     else:
         return render_to_response('encuestas/autenticacion.html', context_instance=RequestContext(request))
 
@@ -388,7 +389,7 @@ def aplicacion_encuesta(request,id):
         if forma.is_valid():
             nombres = forma.cleaned_data['nombres']
             apellidos = forma.cleaned_data['apellidos']
-            notas = "notas"
+            notas = "Escribir las notas aquí"
             matricula = forma.cleaned_data['matricula']
             correo = forma.cleaned_data['correo']
             semestre = forma.cleaned_data['semestre']
@@ -419,17 +420,20 @@ def encuestas_contestadas(request):
 @login_required
 def revisar_encuesta(request,id):
     rev_enc = Encuesta.objects.get(pk = id)
+    folio = rev_enc.folio 
     json = rev_enc.respuestas
     json = simplejson.loads(json)
-    print json['nombres']
     if request.method == 'POST':
         forma = EncuestaContestada(request.POST, instance=rev_enc)
         forma.helper.form_action = reverse('revisar_encuesta', args=[id])
         if forma.is_valid():
-            forma.save()
-        return redirect('/revisar_encuesta/')
+            notas = forma.cleaned_data['notas']
+            rev_enc.notas = notas
+            rev_enc.save()
+        return redirect('/encuestas_contestadas/')
     else:
         forma = EncuestaContestada(instance=rev_enc)
+        forma.fields['folio'].initial = folio
         forma.fields['nombres'].initial = json['nombres']
         forma.fields['apellidos'].initial = json['apellidos']
         forma.fields['matricula'].initial = json['matricula']
