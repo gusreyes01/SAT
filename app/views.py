@@ -67,6 +67,19 @@ def edita_estudiante(request,id):
     else:
       forma = AltaEstudiante(instance=estudiante)
     return render_to_response('home/estudiante/edita_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
+
+@login_required
+def evaluar_estudiante(request,id):
+    estudiante_muestra = EstudianteMuestra.objects.get(pk = id)
+    if request.method == 'POST':
+      forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
+      #forma.helper.form_action = reverse('evaluar_estudiante', args=[id])
+      if forma.is_valid():
+        forma.save()
+        return redirect('/perfil_muestra/'+id)  
+    else:
+      forma = EvaluaEstudiante(instance=estudiante_muestra)
+    return render_to_response('home/estudiante/evaluar_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
    
 @login_required
 def estudiante(request):
@@ -108,18 +121,17 @@ def eliminar_muestra(request,id):
 @login_required
 def perfil_muestra(request,id):
    antidoping = Antidoping.objects.get(pk=id)
-   #Select
-   #itemset_queryset = EstudianteMuestra.objects.filter(antidoping=antidoping).values_list('inscrito_id', flat=True)
-   #estudiantes_muestra = antidoping.estudiantemuestra_set.all()
    alumnos = map(lambda x: x.inscrito.estudiante, antidoping.estudiantemuestra_set.all())
-   alumnos_muestra = EstudianteMuestra.objects.filter(inscrito_id__in=alumnos)
    grupos = map(lambda x: x.inscrito.grupo, antidoping.estudiantemuestra_set.all())   
+
+   alumnos_matricula = map(lambda x: x.matricula, alumnos)
+   estudiante_resultado = antidoping.estudiantemuestra_set.all()
+   alumnos = zip(alumnos, estudiante_resultado)
+   #muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
+
    grupos = list(set(grupos))
-   #alumnos = Estudiante.objects.filter(matricula__in=itemset_queryset)   
-   
-   #alumnos_grupo = Inscrito.objects.filter(estudiante_id__in=itemset_queryset).values_list('grupo_id', flat=True)
-   #grupos = Grupo.objects.filter(crn__in=alumnos_grupo).select_related()
-   return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'grupos': grupos,'antidoping': antidoping,'alumnos_muestra':alumnos_muestra}, context_instance=RequestContext(request))    
+
+   return render_to_response('home/muestra/perfil_muestra.html',{'alumnos': alumnos,'estudiante_resultado':estudiante_resultado,'grupos': grupos,'antidoping': antidoping}, context_instance=RequestContext(request))    
    
 @login_required
 def seleccion_muestra(request):

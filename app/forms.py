@@ -15,6 +15,16 @@ ESTADO_INSTITUCION = (
     ('1','INACTIVO'),
 )
 
+TIPO_SELECCION = (
+    ('0','ALEATORIA'),
+    ('1','DIRIGIDA'),
+)
+
+ESTADO_ANTIDOPING = (
+    ('0','POSITIVO'),
+    ('1','NEGATIVO'),
+)
+
 SEMESTRE = (
     ('1', '1-3'),
     ('2', '4-6'),
@@ -168,7 +178,37 @@ class CrearAntidoping(ModelForm):
 	))
       super(CrearAntidoping, self).__init__(*args, **kwargs)
 
-#class EstudiantesMuestra(ModelForm):
+# Esta forma se encarga de evaluar el resultado estudiante para cada antidoping.
+
+class EvaluaEstudiante(ModelForm):
+  notificacion = forms.BooleanField(required=False)
+  estado = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_ANTIDOPING)
+  tipo_seleccion = forms.ChoiceField(error_messages=my_default_errors,choices=TIPO_SELECCION)
+  notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
+
+  class Meta:
+    model = EstudianteMuestra
+    exclude = ('folio','antidoping','inscrito','respuestas')
+        
+  def __init__(self, *args, **kwargs):
+      self.helper = FormHelper()
+      self.helper.form_id = 'id-EvaluaEstudiante'
+      self.helper.form_class = 'blueForms'
+      self.helper.form_method = 'POST'
+      self.helper.form_action = ''
+      self.helper.layout = Layout(
+  Div(
+  Div(
+      'notificacion',
+      'tipo_seleccion',
+      'estado',
+      'notas',
+
+      css_class='span3'),css_class='row-fluid'),
+  ButtonHolder(
+      Submit('submit', 'Crear', css_class='btn-success')
+  ))
+      super(EvaluaEstudiante, self).__init__(*args, **kwargs)
 
 """
 class AplicacionEncuesta(ModelForm):
