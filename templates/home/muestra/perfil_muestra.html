@@ -49,6 +49,7 @@
           	<th>Nombre</th>
           	<th>Apellido</th>
           	<th>Notificado</th>
+            <th></th>
           </tr>
           {% for a,b in alumnos %}
           <tr>
@@ -59,7 +60,8 @@
             </td>
           	<td>{{a.nombre}}</td>
           	<td>{{a.apellido}}</td>
-          	<td>{{b.notificacion}}</td> <!-- Pendiente !-->
+          	<td>{{b.notificacion}}</td> 
+            <td><a href="/evaluar_estudiante/{{b.id}}"><i class="icon-check"></i> Evaluar</a></td>
           </tr>
         {% endfor %}
 

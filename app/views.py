@@ -65,6 +65,19 @@ def edita_estudiante(request,id):
     else:
       forma = AltaEstudiante(instance=estudiante)
     return render_to_response('home/estudiante/edita_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
+
+@login_required
+def evaluar_estudiante(request,id):
+    estudiante_muestra = EstudianteMuestra.objects.get(pk = id)
+    if request.method == 'POST':
+      forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
+      #forma.helper.form_action = reverse('evaluar_estudiante', args=[id])
+      if forma.is_valid():
+        forma.save()
+        return redirect('/perfil_muestra/'+id)  
+    else:
+      forma = EvaluaEstudiante(instance=estudiante_muestra)
+    return render_to_response('home/estudiante/evaluar_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
    
 @login_required
 def estudiante(request):
