@@ -463,7 +463,7 @@ def success(request):
 
 
 
-login_required
+@login_required
 def aplicacion_encuesta(request):
     if request.method == 'POST':
         forma = AplicacionEncuesta(request.POST)
