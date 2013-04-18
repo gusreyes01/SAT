@@ -49,6 +49,7 @@
           	<th>Nombre</th>
           	<th>Apellido</th>
           	<th>Estado</th>
+            <th>Folio</th>
             <th></th>
           </tr>
           {% for a,b in alumnos %}
@@ -61,6 +62,7 @@
           	<td>{{a.nombre}}</td>
           	<td>{{a.apellido}}</td>
           	<td>{{b.estado}}</td> 
+            <td>{{b.folio}}</td> 
             <td><a href="/evaluar_estudiante/{{b.id}}"><i class="icon-check"></i> Evaluar</a></td>
           </tr>
         {% endfor %}

@@ -11,27 +11,31 @@ my_default_errors = {
 }
 
 ESTADO_INSTITUCION = (
-    ('0','ACTIVO'),
-    ('1','INACTIVO'),
+    ('0','Activo'),
+    ('1','Inactivo'),
 )
 
 TIPO_SELECCION = (
-    ('0','ALEATORIA'),
-    ('1','DIRIGIDA'),
+    ('0','Aleatoria'),
+    ('1','Dirigida'),
 )
 
 TIPO_DROGA = (
-    ('0', 'Tipo 1'),
-    ('0', 'Tipo 2'),
-    ('0', 'Tipo 3'),
-    ('0', 'Tipo 4'),
-    ('0', 'Tipo 5'),
-    ('0', 'Tipo 6'),
+    ('0', 'Marihuana'),
+    ('1', 'Cocaína'),
+    ('2', 'Metanfetaminas | Anfetaminas'),
+    ('3', 'Alucinógenos'),
+    ('4', 'Opiáceos'),
+    ('5', 'Otro'),
 )
 
 ESTADO_ANTIDOPING = (
-    ('0','POSITIVO'),
-    ('1','NEGATIVO'),
+    ('0','Antidoping iniciado'),
+    ('1','1era. Noticificación recibida'),
+    ('2','2da. Noticificación recibida'),
+    ('3','Encuesta realizada'),
+    ('4','Antidoping realizado'),
+    ('5','Antidoping terminado'),
 )
 
 SEMESTRE = (
@@ -56,12 +60,11 @@ FRECUENCIA = (
 )
 
 COLOR = (
-    ('0','GRIS'),
-    ('1','VERDE'),
-    ('2','AMARILLO'),
-    ('3','NARANJA'),
-    ('4','NARANJA'),
-    ('5','NEGRO'),
+    ('0','Gris'),
+    ('1','Verde'),
+    ('2','Amarillo'),
+    ('3','Naranja'),
+    ('4','Negro'),
 )
 
 DIA_SEMANA = (
@@ -105,6 +108,11 @@ HORARIO = (
     ('21', '21:00'),
     ('21+', '21:30'),
     ('22', '22:00'),
+  )
+
+RESULTADO_ANTIDOPING = (
+    ('0', 'Positivo'),
+    ('1', 'Negativo'),
   )
 
 class AltaEstudiante(ModelForm):
@@ -190,9 +198,10 @@ class CrearAntidoping(ModelForm):
 # Esta forma se encarga de evaluar el resultado estudiante para cada antidoping.
 
 class EvaluaEstudiante(ModelForm):
-  notificacion = forms.BooleanField(required=False)
+  tipo_droga = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TIPO_DROGA)
   estado = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_ANTIDOPING)
   tipo_seleccion = forms.ChoiceField(error_messages=my_default_errors,choices=TIPO_SELECCION)
+  resultado = forms.ChoiceField(error_messages=my_default_errors,choices=RESULTADO_ANTIDOPING)
   notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
 
   class Meta:
@@ -209,8 +218,10 @@ class EvaluaEstudiante(ModelForm):
   Div(
   Div(
       'notificacion',
+      'tipo_droga',
       'tipo_seleccion',
       'estado',
+      'resultado',
       'notas',
 
       css_class='span3'),css_class='row-fluid'),
@@ -221,18 +232,14 @@ class EvaluaEstudiante(ModelForm):
 
 class AplicacionEncuesta(ModelForm):
   folio = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), error_messages=my_default_errors, label="Folio", required=False)
-  nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
-  apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
-  matricula = forms.DecimalField(required = True,label="Matricula")
   correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
   semestre = forms.ChoiceField(widget=forms.RadioSelect(), choices=SEMESTRE, required = True, label="Semestre")
-  #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
   opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Opinion")
   frecuencia = forms.ChoiceField(error_messages=my_default_errors, choices=FRECUENCIA, required = True, label="Frecuencia")
   
   class Meta:
     model = EstudianteMuestra
-    exclude = ('respuestas', 'notas')
+    exclude = ('resultado', 'antidoping', 'inscrito', 'tipo_seleccion', 'tipo_droga', 'estado','respuestas', 'notas')
         
   def __init__(self, *args, **kwargs):
       self.helper = FormHelper()
@@ -242,9 +249,6 @@ class AplicacionEncuesta(ModelForm):
       self.helper.layout = Layout(
 	Div(
 	Div('folio',
-	    'nombres',
-	    'apellidos',
-	    'matricula',
 	    'correo',
 	    'semestre',
 	    css_class='span3'),
@@ -259,12 +263,8 @@ class AplicacionEncuesta(ModelForm):
 
 class EncuestaContestada(ModelForm):
   folio = forms.CharField(error_messages=my_default_errors, label="Folio", required=False)
-  nombres = forms.CharField(error_messages=my_default_errors,label="Nombres",required=True)
-  apellidos = forms.CharField(error_messages=my_default_errors,label="Apellidos",required=True)
-  matricula = forms.DecimalField(required = True,label="Matricula")
   correo = forms.EmailField(error_messages=my_default_errors,label="Correo",required=True)
   semestre = forms.CharField(error_messages=my_default_errors,label="Semestre",required=True)
-  #consumido = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(), choices=CONSUMIDO, required = False, label="Consumido")
   opinion = forms.CharField(widget=forms.Textarea(), required = False,label="Opinion")
   frecuencia = forms.CharField(error_messages=my_default_errors,label="Frecuencia",required=True)
   notas = forms.CharField(widget=forms.Textarea(), required = False,label="Notas")
@@ -281,9 +281,6 @@ class EncuestaContestada(ModelForm):
       self.helper.layout = Layout(
 	Div(
 	Div('folio',
-	    'nombres',
-	    'apellidos',
-	    'matricula',
 	    'correo',
 	    'semestre',
 	    css_class='span3'),

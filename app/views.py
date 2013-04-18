@@ -31,10 +31,10 @@ def login(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
-            login(request, user)
-            # Redirect to a success page.
+          login(request, user)
+          # Redirect to a success page.
         else:
-            HttpResponse('')# Return a 'disabled account' error message
+          HttpResponse('')# Return a 'disabled account' error message
     else:
         # Return an 'invalid login' error message.
          HttpResponse('')
@@ -81,6 +81,12 @@ def evaluar_estudiante(request,id):
       #forma.helper.form_action = reverse('evaluar_estudiante', args=[id])
       if forma.is_valid():
         forma.save()
+        estudiante_muestra = forma.save(commit=False)
+        # estudiante_muestra.tipo_seleccion = 
+        # estudiante_muestra.tipo_droga = 
+        # estudiante_muestra.estado = 
+        # estudiante_muestra.resultado = 
+        # estudiante_muestra.notas =
         return redirect('/perfil_muestra/'+id)  
     else:
       forma = EvaluaEstudiante(instance=estudiante_muestra)
@@ -107,8 +113,8 @@ def alta_estudiante(request):
       #forma2 = SeleccionMuestra(request.POST)     
       # Todas las reglas de validacion aprobadas
       if forma.is_valid():
-	  forma.save()
-	  return redirect('/') # Redirect after POST
+        forma.save()
+        return redirect('/') # Redirect after POST
     else:
         forma = AltaEstudiante() # An unbound form
         #forma2 = SeleccionMuestra() # An unbound form
@@ -233,10 +239,10 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'sabado':
-            grupos = Grupo.objects.exclude(horario_5='None')
+            grupos = Grupo.objects.exclude(horario_6='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
-              horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
+              horario_gpo = convierte_de_horario(gpo.horario_6, delimitador)
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
@@ -484,8 +490,8 @@ def success(request):
 def autenticacion_encuesta(request):
     if request.method == 'POST':
         folio = request.POST['folio']
-        if Encuesta.objects.filter(folio=folio).exists():
-            campo = Encuesta.objects.get(folio = folio)
+        if EstudianteMuestra.objects.filter(folio=folio).exists():
+            campo = EstudianteMuestra.objects.get(folio = folio)
             if campo.respuestas:
                 return render_to_response('encuestas/autenticacion.html', {'existe_respuesta': campo.respuestas}, context_instance=RequestContext(request))
             else:
@@ -499,39 +505,43 @@ def autenticacion_encuesta(request):
 #Vista de la forma de encuesta a llenar
 @login_required
 def aplicacion_encuesta(request,id):
-    pre = Encuesta.objects.get(folio = id)
+    estudiante_muestra = EstudianteMuestra.objects.get(folio = id)
+    estudiante = estudiante_muestra.inscrito.estudiante
     if request.method == 'POST':
-        forma = AplicacionEncuesta(request.POST, instance=pre)
-        forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
-        if forma.is_valid():
-            nombres = forma.cleaned_data['nombres']
-            apellidos = forma.cleaned_data['apellidos']
-            notas = "Escribir las notas aquí"
-            matricula = forma.cleaned_data['matricula']
-            correo = forma.cleaned_data['correo']
-            semestre = forma.cleaned_data['semestre']
-            opinion = forma.cleaned_data['opinion']
-            frecuencia = forma.cleaned_data['frecuencia']
-            respuestas = {"nombres":"%s" % nombres, "apellidos":"%s" % apellidos, "matricula":"%s" % matricula, "correo":"%s" % correo, "semestre":"%s" % semestre, "opinion":"%s" % opinion, "frecuencia":"%s" % frecuencia}
-            respuestas = simplejson.dumps(respuestas)
-            pre.respuestas = respuestas
-            pre.notas = notas
-            pre.save()
-        return redirect('/encuesta_agradecimiento/')
+      forma = AplicacionEncuesta(request.POST, instance=estudiante_muestra)
+      forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
+      print "forma", forma.is_valid()
+      if forma.is_valid():
+        # nombres = forma.cleaned_data['nombres']
+        # apellidos = forma.cleaned_data['apellidos']
+        # matricula = forma.cleaned_data['matricula']
+        print "Entre aqui"
+        notas = "Escribir las notas aquí"
+        correo = forma.cleaned_data['correo']
+        semestre = forma.cleaned_data['semestre']
+        opinion = forma.cleaned_data['opinion']
+        frecuencia = forma.cleaned_data['frecuencia']
+        respuestas = {"correo":"%s" % correo, "semestre":"%s" % semestre, "opinion":"%s" % opinion, "frecuencia":"%s" % frecuencia}
+        respuestas = simplejson.dumps(respuestas)
+        estudiante_muestra.respuestas = respuestas
+        estudiante_muestra.notas = notas
+        estudiante_muestra.save()
+        # return redirect('/encuesta_agradecimiento/')
+        return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
     else:
-        forma = AplicacionEncuesta(instance=pre)
-    return render_to_response('encuestas/encuesta.html', { 'forma': forma}, context_instance=RequestContext(request))
+      forma = AplicacionEncuesta(instance=estudiante_muestra)
+    return render_to_response('encuestas/encuesta.html', {'forma': forma, 'estudiante': estudiante}, context_instance=RequestContext(request))
 
 #Vista de la pantalla despues de haber contestado la encuesta
 @login_required
 def encuesta_agradecimiento(request):
-    return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
+  return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
 
 #Vista de todas las encuestas que han sido contestadas
 @login_required
 def encuestas_contestadas(request):
-    encuestas = EstudianteMuestra.objects.exclude(respuestas__isnull=True).exclude(respuestas__exact='')
-    return render_to_response('encuestas/encuestas_contestadas.html',{'encuestas': encuestas}, context_instance=RequestContext(request))
+  encuestas = EstudianteMuestra.objects.exclude(respuestas__isnull=True).exclude(respuestas__exact='')
+  return render_to_response('encuestas/encuestas_contestadas.html',{'encuestas': encuestas}, context_instance=RequestContext(request))
 
 #Vista de la encuesta con las respuestas
 @login_required
@@ -551,9 +561,9 @@ def revisar_encuesta(request,id):
     else:
         forma = EncuestaContestada(instance=rev_enc)
         forma.fields['folio'].initial = folio
-        forma.fields['nombres'].initial = json['nombres']
-        forma.fields['apellidos'].initial = json['apellidos']
-        forma.fields['matricula'].initial = json['matricula']
+        # forma.fields['nombres'].initial = json['nombres']
+        # forma.fields['apellidos'].initial = json['apellidos']
+        # forma.fields['matricula'].initial = json['matricula']
         forma.fields['correo'].initial = json['correo']
         forma.fields['semestre'].initial = json['semestre']
         forma.fields['opinion'].initial = json['opinion']

@@ -15,14 +15,20 @@
 
 {% block content %}
  
- <div class="container">
+<div class="container">
+ 	<div class="hero-unit">
+      <h2>Revisa que tu información sea la correcta</h2>
+        <p>Mi nombre es <strong>{{estudiante.nombre}} {{estudiante.apellido}} </strong> y mi matrícula es {{estudiante.matricula}}.</p>
+        <p>Si existe un error en la información, favor de avisar a alguien del CAT.</p>
+    </div>
+
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-       <h3>Encuesta del CAT </h3>
-        {{ forma.errors }}
-       	{% crispy forma %}       	
-      </div>
-      <hr>
-    </div> <!-- /container -->
+	<div class="hero-unit">
+		<h3>Encuesta del CAT </h3>
+		{{ forma.errors }}
+		{% crispy forma %}       	
+	</div>
+  <hr>
+</div> <!-- /container -->
  
  {% endblock %}
