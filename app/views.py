@@ -38,9 +38,13 @@ def login(request):
         # Return an 'invalid login' error message.
          HttpResponse('')
         
+#   Vista para cerrar sesion
+@login_required    
 def logout_view(request):
     logout(request)
-    # Redirect to a success page.
+    response = redirect('/login/')
+    return response
+ 
 
 @login_required
 def perfil_estudiante(request,id):
@@ -83,6 +87,14 @@ def evaluar_estudiante(request,id):
    
 @login_required
 def estudiante(request):
+  if request.is_ajax():
+          q1 = request.GET.get('q1', '')
+          if q1:
+              results = Estudiante.objects.filter(matricula__contains =q1)
+          data = {'results': results,}
+          return render_to_response( 'home/consultas/results.html', data,context_instance = RequestContext( request ) )
+      
+  else:
     estudiantes = Estudiante.objects.all()[:100]  
     return render_to_response('home/estudiante/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
     

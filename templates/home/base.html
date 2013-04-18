@@ -16,9 +16,9 @@
     </style>
     <!-- Common CSS Styles --> 
     <style type="text/css" title="currentStyle">
-	@import "{{ STATIC_URL }}CSS/Style.css";
-	@import "{{ STATIC_URL }}CSS/bootstrap.min.css";
-	@import "{{ STATIC_URL }}CSS/bootstrap-responsive.css";
+  	@import "{{ STATIC_URL }}CSS/Style.css";
+  	@import "{{ STATIC_URL }}CSS/bootstrap.min.css";
+  	@import "{{ STATIC_URL }}CSS/bootstrap-responsive.css";
     </style>
     
     {% block style %}{% endblock %}
@@ -54,7 +54,7 @@
             <ul class="n-logout nav pull-right">
                 <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{user.username}}</a></p></li>
                 <li class="divider-vertical"></li>
-                <li><a href="/accounts/logout/"> <i class="icon-eject icon-white"></i> Salir</a></li>
+                <li><a href="/logout/"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

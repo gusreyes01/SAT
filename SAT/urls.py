@@ -18,6 +18,8 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
 
      # Url exitoso
+     url(r'^login/$',  login),
+     url(r'^logout/', 'app.views.logout_view', name = 'logout_view'),
      url(r'^success/$', 'app.views.success', name='success_muestra'),
      
      # Urls para el manejo de estudiantes.
