@@ -283,6 +283,7 @@ def seleccion_muestra(request):
 
           # Guardar antidoping.
           nuevo_antidoping.nombre = forma.cleaned_data['nombre']
+          nuevo_antidoping.dia = dia
           nuevo_antidoping.muestra_inicio = inicio
           nuevo_antidoping.muestra_fin = fin
           nuevo_antidoping.antidoping_inicio = timezone.now()
@@ -295,7 +296,10 @@ def seleccion_muestra(request):
           for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
             tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
             tmp.save()
+
           respuesta = {
+              # Se pueden eliminar parametros mandando el objeto antidoping,
+              # borrar este comentario cuando se haga.
               'antidoping_id': nuevo_antidoping.pk,
               'muestra': muestra_aleatorios, 
               'muestra_seleccionados': muestra_seleccionados, 
@@ -336,9 +340,9 @@ def alta_muestra(request):
     now = str(now).replace('-','')
     for estudiante in muestra_antidoping:
       appendix = randint(0,100000)
-      estudiante.folio = "e%s%d" %(now,appendix)
-      estudiante.notificacion = 0
-      estudiante.save()     # Falta verificar de que no existe un folio igual.
+      estudiante.folio = "e%s%d" %(now,appendix) # Falta verificar de que no existe un folio igual.
+      estudiante.estado = 0
+      estudiante.save()     
 
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping

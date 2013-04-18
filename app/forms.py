@@ -20,6 +20,15 @@ TIPO_SELECCION = (
     ('1','DIRIGIDA'),
 )
 
+TIPO_DROGA = (
+    ('0', 'Tipo 1'),
+    ('0', 'Tipo 2'),
+    ('0', 'Tipo 3'),
+    ('0', 'Tipo 4'),
+    ('0', 'Tipo 5'),
+    ('0', 'Tipo 6'),
+)
+
 ESTADO_ANTIDOPING = (
     ('0','POSITIVO'),
     ('1','NEGATIVO'),

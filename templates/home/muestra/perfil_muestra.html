@@ -48,7 +48,7 @@
           	<th>Matricula</th>
           	<th>Nombre</th>
           	<th>Apellido</th>
-          	<th>Notificado</th>
+          	<th>Estado</th>
             <th></th>
           </tr>
           {% for a,b in alumnos %}
@@ -60,7 +60,7 @@
             </td>
           	<td>{{a.nombre}}</td>
           	<td>{{a.apellido}}</td>
-          	<td>{{b.notificacion}}</td> 
+          	<td>{{b.estado}}</td> 
             <td><a href="/evaluar_estudiante/{{b.id}}"><i class="icon-check"></i> Evaluar</a></td>
           </tr>
         {% endfor %}
