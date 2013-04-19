@@ -16,8 +16,6 @@
  
  {% block script %}
  
- <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
- <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
  <script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
  
  {% endblock %}
@@ -27,35 +25,32 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <a href="/seleccion_muestra"><input type="button" class="btn btn-primary" value="Crear Antidoping"></button></a>
-      <h2>Antidopings</h2>
-      <table class="table table-hover">
-      <tr>
-	<th>Nombre del Antidoping</th>
-	<th>Cantidad de Alumnos</th>
-	<th>Fecha de creación</th>
-	<th>Estado</th>
-      </tr>
-      {% for a in antidopings %}
-      <tr>
-	<td><a href="/perfil_muestra/{{a.id}}">{{a.nombre}}</a>
-	<div id="icons">
-	  <a href="/eliminar_muestra/{{a.id}}">
-	    <i class="icon-trash"></i>
-	  </a>
-	</div></td>
-	<td>{{a.tamano_muestra}}</td>
-	<td>{{a.antidoping_inicio}}</td>
-  {% if a.estado_antidoping == 0 %}
-  <td>Aplicando Pruebas</td>
-  {% else %}
-  <td><button class="btn btn-success">Terminado</button>  </td>
-  {% endif %}
-      </tr>
-      {% endfor %}
-      <table>
-      </div>
-      <hr>
+        <a href="/seleccion_muestra">
+          <input type="button" class="btn btn-primary" value="Crear Antidoping"></button>
+        </a>
+        <h2>Antidopings</h2>
+        <table class="table table-hover">
+          <tr>
+          	<th>Nombre del Antidoping</th>
+          	<th>Fecha de creación</th>
+          	<th>Estado</th>
+          </tr>
+          {% for a in antidopings %}
+          <tr>
+          	<td>
+              <a href="/perfil_muestra/{{a.id}}">{{a.nombre}}</a>
+          	  <div id="icons"><a href="/eliminar_muestra/{{a.id}}"><i class="icon-trash"></i></a></div>
+            </td>
+          	<td>{{a.antidoping_inicio}}</td>
+            {% if a.estado_antidoping == 0 %}
+            <td>Aplicando Pruebas</td>
+            {% else %}
+            <td><button class="btn btn-success">Terminado</button>  </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </table>
+      </div><!-- /hero-unit -->
     </div> <!-- /container -->
  
  {% endblock %}

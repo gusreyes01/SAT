@@ -7,7 +7,7 @@ siguientes pasos:
 
 2. Crear la base de datos satdb previamente y haber creado las tablas iniciales,
 para más información utiliza el script de setup.sh.
-	2.1 mysql -u mi_usuario -p < dummy_estudiantes.sql
-	2.2 mysql -u mi_usuario -p < dummy_clases.sql
-	2.3 mysql -u mi_usuario -p < dummy_grupos.sql
-	2.4 mysql -u mi_usuario -p < dummy_inscritos.sql
+	2.1 mysql -u root -p < dummy_nombres.sql
+	2.2 mysql -u root -p < dummy_clases.sql
+	2.3 mysql -u root -p < dummy_grupos.sql
+	2.4 mysql -u root -p < dummy_inscritos.sql

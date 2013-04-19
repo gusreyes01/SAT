@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-  <html lang="es">
+  <html lang="es-MX">
     <head>
     
     <meta charset="utf-8">
@@ -16,15 +16,16 @@
     </style>
     <!-- Common CSS Styles --> 
     <style type="text/css" title="currentStyle">
-	@import "{{ STATIC_URL }}CSS/Style.css";
-	@import "{{ STATIC_URL }}CSS/bootstrap.min.css";
-	@import "{{ STATIC_URL }}CSS/bootstrap-responsive.css";
+  	@import "{{ STATIC_URL }}CSS/Style.css";
+  	@import "{{ STATIC_URL }}CSS/bootstrap.min.css";
+  	@import "{{ STATIC_URL }}CSS/bootstrap-responsive.css";
     </style>
     
     {% block style %}{% endblock %}
     
-    <!-- Common JS Libraries 
-    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/jquery-1.8.2.min.js"></script>    -->
+    <!-- Common JS Libraries -->
+    <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
+    <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}JS/bootstrap.min.js"></script>
 
     {% block script %}{% endblock %}
@@ -47,13 +48,13 @@
               <li class="active"><a href="/">Home</a></li>
               <li><a href="/estudiante">Estudiante</a></li>
               <li><a href="/muestra">Antidoping</a></li>
-       		  <li><a href="/aplicacion_encuesta">Aplicación de Encuesta</a></li>
+              <li><a href="/autenticacion_encuesta">Entrar a Encuesta</a></li>
               <li><a href="/encuestas_contestadas">Muestra de Encuestados</a></li>          
              </ul>
             <ul class="n-logout nav pull-right">
                 <li><p class="navbar-text pull-right">Bienvenido,  <a href=" /profile">{{user.username}}</a></p></li>
                 <li class="divider-vertical"></li>
-                <li><a href="/accounts/logout/"> <i class="icon-eject icon-white"></i> Salir</a></li>
+                <li><a href="/logout/"> <i class="icon-eject icon-white"></i> Salir</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -62,8 +63,7 @@
     
     {% block content %}{% endblock %}  
     
-    </body>
-    
+    </body>    
     <footer>
       <p>&copy; Tecnológico de Monterrey, Campus Monterrey 2013</p>
     </footer>

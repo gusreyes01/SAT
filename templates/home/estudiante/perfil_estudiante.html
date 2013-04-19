@@ -17,13 +17,7 @@
  {% endblock %}
  
  {% block script %}
- <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
- <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
- <!-- tablesorter widget file - loaded after the plugin -->
- <script>
 
- </script>
- 
  {% endblock %}
  
  {% block content %}
@@ -31,33 +25,33 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-      <h3>Perfil : {{estudiante.nombre}} {{estudiante.apellido}}, {{estudiante.matricula}}  </h3>
-      <h4>Antidopings</h4>
-      <table id="tabla_antidopings" class="table table-hover">
-      <thead>
-	  <tr>
-	    <th>Antidoping</th>
-	    <th>Fecha</th>
-	    <th>Encuesta</th>
-	    <th>Notificacion</th>
-	    <th>Estado</th>
-	    <th>Notas</th>
-	  </tr>
-      <thead>
-      <tbody>
-	{% for r in resultados %}
-	<tr>
-	  <td><a href="/perfil_muestra/{{r.antidoping_id}}">{{r.antidoping_id}}</a></td>
-	  <td>{{r.antidoping.antidoping_inicio}}</td>
-	  <td><a href="/encuesta/{{r.encuesta}}">{{r.encuesta}}</a></td>
-	  <td>{{r.notificacion}}</td>
-	  <td>{{r.estado}}</td>
-	  <td>{{r.notas}}</td>
-	</tr>
-      {% endfor %}
-      </tbody>
-      <table>
-      </div>
+        <h3>Perfil : {{estudiante.nombre}} {{estudiante.apellido}}, {{estudiante.matricula}}  </h3>
+        <h4>Antidopings</h4>
+        <table id="tabla_antidopings" class="table table-hover">
+          <thead>
+        	  <tr>
+        	    <th>Antidoping</th>
+        	    <th>Fecha</th>
+        	    <th>Encuesta</th>
+        	    <th>Notificacion</th>
+        	    <th>Estado</th>
+        	    <th>Notas</th>
+        	  </tr>
+          </thead>
+          <tbody>
+          	{% for r in resultados %}
+          	<tr>
+          	  <td><a href="/perfil_muestra/{{r.antidoping_id}}">{{r.antidoping_id}}</a></td>
+          	  <td>{{r.antidoping.antidoping_inicio}}</td>
+          	  <td><a href="/encuesta/{{r.encuesta}}">{{r.encuesta}}</a></td>
+          	  <td>{{r.notificacion}}</td>
+          	  <td>{{r.estado}}</td>
+          	  <td>{{r.notas}}</td>
+          	</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>  <!-- /hero-unit -->
       <hr>
     </div> <!-- /container -->
  

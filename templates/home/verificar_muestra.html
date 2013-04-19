@@ -16,8 +16,6 @@
  
  {% block script %}
  
- <script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
- <script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
  <script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
  
  {% endblock %}
@@ -25,8 +23,14 @@
  {% block content %}
  
  <div class="container">
+{% if error %}
+  <div class="hero-unit">
+    <h2>Hubo un error :(</h2>
+    <p>Lo sentimos hubo un error al procesar la información, probablemente hay una inconsistencia entre la base de datos y la información que se desea procesar.</p>
+  </div>
+{% else %}
     <form action="/alta_muestra/" method="POST">{% csrf_token %}
-    
+    <input type="hidden" name="antidoping_id" value="{{antidoping_id}}">
     <div class="hero-unit">
       <h2>Información general</h2>
       <p>La muestra fue escogida el día <strong>{{dia}}</strong> entre <strong>{{inicio}}</strong> y <strong>{{fin}}</strong>
@@ -38,6 +42,7 @@
     </div>
 
     <!-- Main hero unit for a primary marketing message or call to action -->
+
     <div class="hero-unit">
       <h2>Muestra de alumnos señalados</h2>
       {% if verificar %}
@@ -102,7 +107,7 @@
           {% elif dia == "viernes"%}
             <td>{{inscrito.grupo.horario_5}}</td>
           {% elif dia == "sabado"%}
-            <td>{{inscrito.grupo.horario_5}}</td>
+            <td>{{inscrito.grupo.horario_6}}</td>
           {% endif %}
         </tr>
         {% endfor %}
@@ -110,6 +115,7 @@
     </div>
     <input class="btn btn-primary" type="submit" value="Eliminar alumnos seleccionados y guardar muestra" />
     </form>
+    {% endif %}
     <hr>
 </div> <!-- /container -->
  
