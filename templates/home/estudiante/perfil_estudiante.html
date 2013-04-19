@@ -25,28 +25,38 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <h3>Perfil : {{estudiante.nombre}} {{estudiante.apellido}}, {{estudiante.matricula}}  </h3>
-        <h4>Antidopings</h4>
+        <h3>{{estudiante.nombre}} {{estudiante.apellido}}, {{estudiante.matricula}}  </h3>
+        <!-- <h4>Antidopings</h4> -->
         <table id="tabla_antidopings" class="table table-hover">
           <thead>
         	  <tr>
         	    <th>Antidoping</th>
         	    <th>Fecha</th>
         	    <th>Encuesta</th>
-        	    <th>Notificacion</th>
         	    <th>Estado</th>
+              <th>Folio</th>
         	    <th>Notas</th>
+              <th>Adicional</th>
         	  </tr>
           </thead>
           <tbody>
-          	{% for r in resultados %}
+          	{% for estudiante_muestra in resultados %}
           	<tr>
-          	  <td><a href="/perfil_muestra/{{r.antidoping_id}}">{{r.antidoping_id}}</a></td>
-          	  <td>{{r.antidoping.antidoping_inicio}}</td>
-          	  <td><a href="/encuesta/{{r.encuesta}}">{{r.encuesta}}</a></td>
-          	  <td>{{r.notificacion}}</td>
-          	  <td>{{r.estado}}</td>
-          	  <td>{{r.notas}}</td>
+          	  <td><a href="/perfil_muestra/{{estudiante_muestra.antidoping_id}}">{{estudiante_muestra.antidoping.nombre}}</a></td>
+          	  <td>{{estudiante_muestra.antidoping.antidoping_inicio}}</td>
+              {% if estudiante_muestra.respuestas %}
+          	  <td><a href="/revisar_encuesta/{{estudiante_muestra.folio}}">Revisar</a></td>
+              {% else %}
+              <td>No realizada</td>
+              {%endif%}
+          	  <td>{{estudiante_muestra.estado}}</td>
+              <td>{{estudiante_muestra.folio}}</td>
+              {% if estudiante_muestra.notas %}
+          	  <td>{{estudiante_muestra.notas}}</td>
+              {% else %}
+              <td>No hay notas</td>
+              {%endif%}
+              <td><a href="/evaluar_estudiante/{{estudiante_muestra.id}}">Editar</a></td>
           	</tr>
             {% endfor %}
           </tbody>

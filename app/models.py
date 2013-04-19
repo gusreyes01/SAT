@@ -37,6 +37,8 @@ class Grupo(models.Model):
     horario_4 = models.CharField(null=True, max_length=255)
     horario_5 = models.CharField(null=True, max_length=255)
     horario_6 = models.CharField(null=True, max_length=255)
+    anio = models.IntegerField(null=True, max_length=255)
+    semestre = models.IntegerField(null=True, max_length=255)
     profesor = models.CharField(null=False, max_length=255)
     
 class Inscrito(models.Model):
