@@ -80,13 +80,10 @@ def evaluar_estudiante(request,id):
       forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
       #forma.helper.form_action = reverse('evaluar_estudiante', args=[id])
       if forma.is_valid():
-        forma.save()
         estudiante_muestra = forma.save(commit=False)
-        # estudiante_muestra.tipo_seleccion = 
-        # estudiante_muestra.tipo_droga = 
-        # estudiante_muestra.estado = 
-        # estudiante_muestra.resultado = 
-        # estudiante_muestra.notas =
+        estudiante_muestra.tipo_droga = forma.cleaned_data['tipo_droga']
+        estudiante_muestra.tipo_droga = ','.join(estudiante_muestra.tipo_droga)
+        estudiante_muestra.save()
         return redirect('/perfil_muestra/'+id)  
     else:
       forma = EvaluaEstudiante(instance=estudiante_muestra)
@@ -368,12 +365,6 @@ def alta_muestra(request):
       
     elementos_a_borrar.delete()
 
-
-
-    # muestra = EstudianteMuestra.objects.all()
-    # for m in muestra:
-    #   print m.estudiante.matricula, m.estudiante.nombre
-
     return redirect('/success')  # Redirect after POST
   else:
     # return render_to_response('home/home.html', context_instance=RequestContext(request))
@@ -405,6 +396,7 @@ def obtener_carta(request, id_antidoping, notificacion):
       # if est.notificacion = 0:
       
       dia = est.antidoping.dia
+      print dia
       if dia == "lunes":
         horario = est.inscrito.grupo.horario_1
       elif dia == "martes":

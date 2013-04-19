@@ -111,8 +111,8 @@ HORARIO = (
   )
 
 RESULTADO_ANTIDOPING = (
-    ('0', 'Positivo'),
-    ('1', 'Negativo'),
+    ('0', 'Negativo'),
+    ('1', 'Positivo'),
   )
 
 class AltaEstudiante(ModelForm):
