@@ -78,13 +78,15 @@ def evaluar_estudiante(request,id):
     estudiante_muestra = EstudianteMuestra.objects.get(pk = id)
     if request.method == 'POST':
       forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
-      #forma.helper.form_action = reverse('evaluar_estudiante', args=[id])
       if forma.is_valid():
         estudiante_muestra = forma.save(commit=False)
         estudiante_muestra.tipo_droga = forma.cleaned_data['tipo_droga']
         estudiante_muestra.tipo_droga = ','.join(estudiante_muestra.tipo_droga)
+        if estudiante_muestra.estado > estudiante_muestra.antidoping.estado_antidoping:
+          estudiante_muestra.antidoping.estado_antidoping = estudiante_muestra.estado 
+          estudiante_muestra.antidoping.save()
         estudiante_muestra.save()
-        return redirect('/perfil_muestra/'+id)  
+        return redirect('/perfil_muestra/' + str(estudiante_muestra.antidoping_id))  
     else:
       forma = EvaluaEstudiante(instance=estudiante_muestra)
     return render_to_response('home/estudiante/evaluar_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    

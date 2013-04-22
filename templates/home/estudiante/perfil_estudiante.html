@@ -1,5 +1,6 @@
 {% extends "home/base.html" %}
 {% load crispy_forms_tags %}
+{% load antidoping_extras %}
 
  {% block style %}
  
@@ -45,12 +46,17 @@
           	  <td><a href="/perfil_muestra/{{estudiante_muestra.antidoping_id}}">{{estudiante_muestra.antidoping.nombre}}</a></td>
           	  <td>{{estudiante_muestra.antidoping.antidoping_inicio}}</td>
               {% if estudiante_muestra.respuestas %}
-          	  <td><a href="/revisar_encuesta/{{estudiante_muestra.folio}}">Revisar</a></td>
+          	  <td><a href="/revisar_encuesta/{{estudiante_muestra.id}}">Revisar</a></td>
               {% else %}
               <td>No realizada</td>
               {%endif%}
-          	  <td>{{estudiante_muestra.estado}}</td>
-              <td>{{estudiante_muestra.folio}}</td>
+          	  <td>{{estudiante_muestra.estado|estado}}</td>
+              <!-- <td>{{estudiante_muestra.folio}}</td> -->
+              {% if estudiante_muestra.respuestas %} 
+                <td><a href="/revisar_encuesta/{{estudiante_muestra.id}}">{{estudiante_muestra.folio}}</a></td> 
+              {% else %}
+                <td>{{estudiante_muestra.folio}}</td> 
+              {% endif %}
               {% if estudiante_muestra.notas %}
           	  <td>{{estudiante_muestra.notas}}</td>
               {% else %}

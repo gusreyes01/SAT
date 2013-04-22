@@ -1,5 +1,7 @@
 {% extends "home/base.html" %}
 {% load crispy_forms_tags %}
+{% load antidoping_extras %}
+
 
  {% block style %}
  
@@ -25,28 +27,28 @@
  <div class="container">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <a href="/seleccion_muestra">
-          <input type="button" class="btn btn-primary" value="Crear Antidoping"></button>
-        </a>
         <h2>Antidopings</h2>
+        <a href="/seleccion_muestra">
+          <input type="button" class="btn btn-primary" value="Nuevo"></button>
+        </a>
+        <a href="/seleccion_muestra">
+          <input type="button" class="btn btn-primary" value="Editar"></button>
+        </a>
         <table class="table table-hover">
           <tr>
           	<th>Nombre del Antidoping</th>
           	<th>Fecha de creación</th>
           	<th>Estado</th>
           </tr>
-          {% for a in antidopings %}
+          {% for antidoping in antidopings %}
           <tr>
           	<td>
-              <a href="/perfil_muestra/{{a.id}}">{{a.nombre}}</a>
-          	  <div id="icons"><a href="/eliminar_muestra/{{a.id}}"><i class="icon-trash"></i></a></div>
+              <a href="/perfil_muestra/{{antidoping.id}}">{{antidoping.nombre}}</a>
+          	  <div id="icons"><a href="/eliminar_muestra/{{antidoping.id}}"><i class="icon-trash"></i></a></div>
             </td>
-          	<td>{{a.antidoping_inicio}}</td>
-            {% if a.estado_antidoping == 0 %}
-            <td>Aplicando Pruebas</td>
-            {% else %}
-            <td><button class="btn btn-success">Terminado</button>  </td>
-            {% endif %}
+          	<td>{{antidoping.antidoping_inicio}}</td>
+            <td>{{antidoping.estado_antidoping|estado}}</td>
+            <!-- <td><button class="btn btn-success">Terminado</button>  </td> -->
           </tr>
           {% endfor %}
         </table>

@@ -30,12 +30,12 @@ TIPO_DROGA = (
 )
 
 ESTADO_ANTIDOPING = (
-    ('0','Antidoping iniciado'),
+    ('0','Iniciado'),
     ('1','1era. Noticificación recibida'),
     ('2','2da. Noticificación recibida'),
     ('3','Encuesta realizada'),
-    ('4','Antidoping realizado'),
-    ('5','Antidoping terminado'),
+    ('4','Prueba realizada'),
+    ('5','Cerrado'),
 )
 
 SEMESTRE = (
@@ -198,11 +198,11 @@ class CrearAntidoping(ModelForm):
 # Esta forma se encarga de evaluar el resultado estudiante para cada antidoping.
 
 class EvaluaEstudiante(ModelForm):
-  tipo_droga = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TIPO_DROGA)
-  estado = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_ANTIDOPING)
-  tipo_seleccion = forms.ChoiceField(error_messages=my_default_errors,choices=TIPO_SELECCION)
-  resultado = forms.ChoiceField(error_messages=my_default_errors,choices=RESULTADO_ANTIDOPING)
-  notas = forms.CharField(widget=forms.Textarea, error_messages=my_default_errors, label="Notas", required=False)
+  tipo_droga = forms.MultipleChoiceField(required = False, widget=forms.CheckboxSelectMultiple, choices=TIPO_DROGA)
+  estado = forms.ChoiceField(required = False, error_messages=my_default_errors,choices=ESTADO_ANTIDOPING)
+  tipo_seleccion = forms.ChoiceField(required = False, error_messages=my_default_errors,choices=TIPO_SELECCION)
+  resultado = forms.ChoiceField(required = False, error_messages=my_default_errors,choices=RESULTADO_ANTIDOPING)
+  notas = forms.CharField(required = False, widget=forms.Textarea, error_messages=my_default_errors, label="Notas")
 
   class Meta:
     model = EstudianteMuestra
@@ -226,7 +226,7 @@ class EvaluaEstudiante(ModelForm):
 
       css_class='span3'),css_class='row-fluid'),
   ButtonHolder(
-      Submit('submit', 'Crear', css_class='btn-success')
+      Submit('submit', 'Guardar', css_class='btn-success')
   ))
       super(EvaluaEstudiante, self).__init__(*args, **kwargs)
 

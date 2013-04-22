@@ -1,5 +1,6 @@
 {% extends "home/base.html" %}
 {% load crispy_forms_tags %}
+{% load antidoping_extras %}
 
  {% block style %}
  
@@ -61,8 +62,12 @@
             </td>
           	<td>{{a.nombre}}</td>
           	<td>{{a.apellido}}</td>
-          	<td>{{b.estado}}</td> 
+          	<td>{{b.estado|estado}}</td>
+            {% if b.respuestas %} 
+            <td><a href="/revisar_encuesta/{{b.id}}">{{b.folio}}</a></td> 
+            {% else %}
             <td>{{b.folio}}</td> 
+            {% endif %}
             <td><a href="/evaluar_estudiante/{{b.id}}">Editar</a></td>
           </tr>
         {% endfor %}
