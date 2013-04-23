@@ -47,7 +47,7 @@ urlpatterns = patterns('',
      # Urls para mostrar vista de encuesta.
      url(r'^autenticacion_encuesta/$', 'app.views.autenticacion_encuesta', name='autenticacion_encuesta'),
      url(r'^aplicacion_encuesta/(\w+)/$', 'app.views.aplicacion_encuesta', name='aplicacion_encuesta'),
-     url(r'^encuesta_agradecimiento/$', 'app.views.encuesta_agradecimiento', name='encuesta_agradecimiento'),
+     # url(r'^encuesta_agradecimiento/$', 'app.views.encuesta_agradecimiento', name='encuesta_agradecimiento'),
      
      # Urls para mostrar lista de encuestas contestadas.
      url(r'^encuestas_contestadas/$', 'app.views.encuestas_contestadas', name='encuestas_contestadas'),

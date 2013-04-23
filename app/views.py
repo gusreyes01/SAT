@@ -16,6 +16,7 @@ from django.utils import timezone
 from random import sample, shuffle, randint
 from app.cartas_notificacion import *
 from django.utils import simplejson
+from django.db.models import Max
 
 
 # For debugging.
@@ -80,11 +81,11 @@ def evaluar_estudiante(request,id):
       forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
       if forma.is_valid():
         estudiante_muestra = forma.save(commit=False)
-        estudiante_muestra.tipo_droga = forma.cleaned_data['tipo_droga']
-        estudiante_muestra.tipo_droga = ','.join(estudiante_muestra.tipo_droga)
-        if estudiante_muestra.estado > estudiante_muestra.antidoping.estado_antidoping:
-          estudiante_muestra.antidoping.estado_antidoping = estudiante_muestra.estado 
-          estudiante_muestra.antidoping.save()
+        # estudiante_muestra.tipo_droga = forma.cleaned_data['tipo_droga']
+        # estudiante_muestra.tipo_droga = ','.join(estudiante_muestra.tipo_droga)
+        # if estudiante_muestra.estado > estudiante_muestra.antidoping.estado_antidoping:
+        #   estudiante_muestra.antidoping.estado_antidoping = estudiante_muestra.estado 
+        #   estudiante_muestra.antidoping.save()
         estudiante_muestra.save()
         return redirect('/perfil_muestra/' + str(estudiante_muestra.antidoping_id))  
     else:
@@ -121,7 +122,11 @@ def alta_estudiante(request):
     
 @login_required
 def muestra(request):
-    antidopings = Antidoping.objects.all()  
+    antidopings = Antidoping.objects.all()
+    for antidoping in antidopings:
+      tmp = EstudianteMuestra.objects.filter(antidoping=antidoping.pk).aggregate(Max('estado'))
+      antidoping.estado_antidoping = tmp['estado__max'] # Sacar el atributo y guardarlo.
+      antidoping.save()
     return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
 
 @login_required
@@ -504,12 +509,7 @@ def aplicacion_encuesta(request,id):
     if request.method == 'POST':
       forma = AplicacionEncuesta(request.POST, instance=estudiante_muestra)
       forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
-      print "forma", forma.is_valid()
       if forma.is_valid():
-        # nombres = forma.cleaned_data['nombres']
-        # apellidos = forma.cleaned_data['apellidos']
-        # matricula = forma.cleaned_data['matricula']
-        print "Entre aqui"
         notas = "Escribir las notas aquí"
         correo = forma.cleaned_data['correo']
         semestre = forma.cleaned_data['semestre']
@@ -519,6 +519,7 @@ def aplicacion_encuesta(request,id):
         respuestas = simplejson.dumps(respuestas)
         estudiante_muestra.respuestas = respuestas
         estudiante_muestra.notas = notas
+        estudiante_muestra.estado = 3     # 3 que significa que ya se respondio la encuesta.
         estudiante_muestra.save()
         # return redirect('/encuesta_agradecimiento/')
         return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
@@ -527,9 +528,9 @@ def aplicacion_encuesta(request,id):
     return render_to_response('encuestas/encuesta.html', {'forma': forma, 'estudiante': estudiante}, context_instance=RequestContext(request))
 
 #Vista de la pantalla despues de haber contestado la encuesta
-@login_required
-def encuesta_agradecimiento(request):
-  return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
+# @login_required
+# def encuesta_agradecimiento(request):
+#   return render_to_response('encuestas/encuesta_agradecimiento.html', context_instance=RequestContext(request))
 
 #Vista de todas las encuestas que han sido contestadas
 @login_required
@@ -555,9 +556,6 @@ def revisar_encuesta(request,id):
     else:
         forma = EncuestaContestada(instance=rev_enc)
         forma.fields['folio'].initial = folio
-        # forma.fields['nombres'].initial = json['nombres']
-        # forma.fields['apellidos'].initial = json['apellidos']
-        # forma.fields['matricula'].initial = json['matricula']
         forma.fields['correo'].initial = json['correo']
         forma.fields['semestre'].initial = json['semestre']
         forma.fields['opinion'].initial = json['opinion']
