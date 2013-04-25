@@ -1,4 +1,5 @@
-﻿{% if results|length %}
+﻿{% load antidoping_extras %}
+{% if results|length %}
 	<table class="table table-striped">
 	<tr class='even'>
 		<td colspan="13" class="right">
@@ -15,7 +16,7 @@
 		</th>
 	</tr>
 	{% for f in results %}
-	<tr class="{% cycle 'odd' 'even' %}">
+	<tr class="{{f.color|color}}">
 		<td><strong>{{ forloop.counter }}.</strong></td>
 		<td>
 		  	<a href="/perfil_estudiante/{{f.matricula}}">{{f.matricula}}</a>

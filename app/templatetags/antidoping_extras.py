@@ -34,6 +34,21 @@ def estado(estado_en_numero):
     elif estado_en_numero == 5:
         return 'Cerrado'
 
+def color(color_en_numero):
+    if color_en_numero == 0:
+        return 'success'
+    elif color_en_numero == 1:
+        return 'error'
+    elif color_en_numero == 2:
+        return 'warning'
+    elif color_en_numero == 3:
+        return 'info'
+    elif color_en_numero == 4:
+        return 'success'
+    elif color_en_numero == 5:
+        return 'error'
+
         
 register.filter('estado', estado)
 register.filter('horario', horario)
+register.filter('color', color)
