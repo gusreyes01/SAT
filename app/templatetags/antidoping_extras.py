@@ -36,17 +36,17 @@ def estado(estado_en_numero):
 
 def color(color_en_numero):
     if color_en_numero == 0:
-        return 'success'
+        return '#FF0000'  #ROJO
     elif color_en_numero == 1:
-        return 'error'
+        return '#FF4000'  #NARANJA
     elif color_en_numero == 2:
-        return 'warning'
+        return '#FFBF00'  #AMARILLO
     elif color_en_numero == 3:
-        return 'info'
+        return '#40FF00'  #VERDE
     elif color_en_numero == 4:
-        return 'success'
+        return '#0101DF'  #AZUL
     elif color_en_numero == 5:
-        return 'error'
+        return '#0101DF'  #NEGRO
 
         
 register.filter('estado', estado)
