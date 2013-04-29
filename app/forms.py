@@ -31,8 +31,8 @@ TIPO_DROGA = (
 
 ESTADO_ANTIDOPING = (
     ('0','Iniciado'),
-    ('1','1era. Noticificación recibida'),
-    ('2','2da. Noticificación recibida'),
+    ('1','1era. Notificación recibida'),
+    ('2','2da. Notificación recibida'),
     ('3','Encuesta realizada'),
     ('4','Prueba realizada'),
     ('5','Cerrado'),

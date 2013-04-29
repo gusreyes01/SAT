@@ -389,6 +389,7 @@ def obtener_carta(request, id_antidoping, notificacion):
 
     notificacion = int(notificacion)
     id_antidoping = int(id_antidoping)
+    # print notificacion
     # id_antidoping = int(params_split[0])
     # notificacion = int(params_split[1])
 
@@ -401,32 +402,35 @@ def obtener_carta(request, id_antidoping, notificacion):
 
       # quitar comentario y identar esta lista.append
       # if est.notificacion = 0:
-      
-      dia = est.antidoping.dia
-      print dia
-      if dia == "lunes":
-        horario = est.inscrito.grupo.horario_1
-      elif dia == "martes":
-        horario = est.inscrito.grupo.horario_2
-      elif dia == "miercoles":
-        horario = est.inscrito.grupo.horario_3
-      elif dia == "jueves":
-        horario = est.inscrito.grupo.horario_4
-      elif dia == "viernes":
-        horario = est.inscrito.grupo.horario_5
-      elif dia == "sabado":
-        horario = est.inscrito.grupo.horario_6
-      horario_split = horario.split("|")
+      # Condiciones para generar una carta:
+      # 1. estado = 0 iniciado | notificacion = 1
+      # 2. estado = 1 primera notificacion recibida | notificacion = 2
+      if est.estado == (notificacion - 1) and est.estado != 3: 
+        dia = est.antidoping.dia
+        # print dia
+        if dia == "lunes":
+          horario = est.inscrito.grupo.horario_1
+        elif dia == "martes":
+          horario = est.inscrito.grupo.horario_2
+        elif dia == "miercoles":
+          horario = est.inscrito.grupo.horario_3
+        elif dia == "jueves":
+          horario = est.inscrito.grupo.horario_4
+        elif dia == "viernes":
+          horario = est.inscrito.grupo.horario_5
+        elif dia == "sabado":
+          horario = est.inscrito.grupo.horario_6
+        horario_split = horario.split("|")
 
-      est_dic = {}
-      est_dic['nombres'] = est.inscrito.estudiante.nombre
-      est_dic['apellidos'] = est.inscrito.estudiante.apellido
-      est_dic['matricula'] = est.inscrito.estudiante.matricula
-      est_dic['horario'] = horario_split[0]
-      est_dic['salon'] = horario_split[1]
-      est_dic['materia'] = est.inscrito.grupo.clase.nombre
-      est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
-      lista.append(est_dic)
+        est_dic = {}
+        est_dic['nombres'] = est.inscrito.estudiante.nombre
+        est_dic['apellidos'] = est.inscrito.estudiante.apellido
+        est_dic['matricula'] = est.inscrito.estudiante.matricula
+        est_dic['horario'] = horario_split[0]
+        est_dic['salon'] = horario_split[1]
+        est_dic['materia'] = est.inscrito.grupo.clase.nombre
+        est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
+        lista.append(est_dic)
 
     PWD = os.path.dirname(os.path.realpath(__file__))
     LOGO = os.path.join(PWD, "static/itesm.jpg")
