@@ -186,6 +186,21 @@ def seleccion_muestra(request):
         muestra_grupos = []
         muestra_aleatorios = []
         respuesta = {}
+        meses = {
+          '1': 1,
+          '2': 1,
+          '3': 1,
+          '4': 1,
+          '5': 1,
+          '6': 2,
+          '7': 2,
+          '8': 3,
+          '9': 3,
+          '10': 3,
+          '11': 3,
+          '12': 3,
+        }
+
 
         delimitador = '|'
 
@@ -197,10 +212,16 @@ def seleccion_muestra(request):
         print alumnos_seleccionados, grupos_seleccionados
         print "Rango horas: ", obtener_horario_de_forma(inicio, fin)
 
+        ## Obtener anio y semestre actual para filtar la muestra.
+        time = timezone.now() # obtener la fecha actual
+        anio = int(time.year)
+        mes = str(time.month)
+        semestre = meses[mes]
         try:
           # Modificar si se necesita null.
           if dia == 'lunes':
-            grupos = Grupo.objects.exclude(horario_1='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_1='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_1, delimitador)
@@ -209,7 +230,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
        
           elif dia == 'martes':
-            grupos = Grupo.objects.exclude(horario_2='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_2='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_2, delimitador)
@@ -218,7 +240,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'miercoles':
-            grupos = Grupo.objects.exclude(horario_3='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_3='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_3, delimitador)
@@ -227,7 +250,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'jueves':
-            grupos = Grupo.objects.exclude(horario_4='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_4='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_4, delimitador)
@@ -236,7 +260,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'viernes':
-            grupos = Grupo.objects.exclude(horario_5='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_5='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
@@ -245,7 +270,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'sabado':
-            grupos = Grupo.objects.exclude(horario_6='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_6='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_6, delimitador)
@@ -516,12 +542,36 @@ def aplicacion_encuesta(request,id):
       forma = AplicacionEncuesta(request.POST, instance=estudiante_muestra)
       forma.helper.form_action = reverse('aplicacion_encuesta', args=[id])
       if forma.is_valid():
-        notas = "Escribir las notas aquí"
-        correo = forma.cleaned_data['correo']
-        semestre = forma.cleaned_data['semestre']
-        opinion = forma.cleaned_data['opinion']
-        frecuencia = forma.cleaned_data['frecuencia']
-        respuestas = {"correo":"%s" % correo, "semestre":"%s" % semestre, "opinion":"%s" % opinion, "frecuencia":"%s" % frecuencia}
+        # nombres = forma.cleaned_data['nombres']
+        # apellidos = forma.cleaned_data['apellidos']
+        # matricula = forma.cleaned_data['matricula']
+        medicamento_consumido = forma.cleaned_data['medicamento_consumido']
+        medicamento_consumido_paraque = forma.cleaned_data['medicamento_consumido_paraque']
+        alcohol_frecuencia = forma.cleaned_data['alcohol_frecuencia']
+        tabaco_frecuencia = forma.cleaned_data['tabaco_frecuencia']
+        droga_ofrecido = forma.cleaned_data['droga_ofrecido']
+        quien_ofrecido = forma.cleaned_data['quien_ofrecido']
+        quien_ofrecido_otro = forma.cleaned_data['quien_ofrecido_otro']
+        donde_ofrecido = forma.cleaned_data['donde_ofrecido']
+        donde_ofrecido_otro = forma.cleaned_data['donde_ofrecido_otro']
+        que_ofrecido = forma.cleaned_data['que_ofrecido']
+        que_ofrecido_otro = forma.cleaned_data['que_ofrecido_otro']
+        haz_consumido = forma.cleaned_data['haz_consumido']
+        edad_consumido = forma.cleaned_data['edad_consumido']
+        que_consumido = forma.cleaned_data['que_consumido']
+        que_consumido_otro = forma.cleaned_data['que_consumido_otro']
+        ultimo_consumido = forma.cleaned_data['ultimo_consumido']
+        que_consumido2 = forma.cleaned_data['que_consumido2']
+        que_consumido2_otro = forma.cleaned_data['que_consumido2_otro']
+        conoces_consumidor = forma.cleaned_data['conoces_consumidor']
+        de_donde = forma.cleaned_data['de_donde']
+        de_donde_otro = forma.cleaned_data['de_donde_otro']
+        lugar_consumo = forma.cleaned_data['lugar_consumo']
+        lugar_consumo_donde = forma.cleaned_data['lugar_consumo_donde']
+        relaciones = forma.cleaned_data['relaciones']
+        #print "Entre aqui"
+        notas = "Escribir las notas aquí"        
+        respuestas = {"medicamento_consumido":"%s" % medicamento_consumido , "medicamento_consumido_paraque":"%s" % medicamento_consumido_paraque, "alcohol_frecuencia":"%s" % alcohol_frecuencia, "tabaco_frecuencia":"%s" % tabaco_frecuencia, "droga_ofrecido":"%s" % droga_ofrecido, "quien_ofrecido":"%s" % quien_ofrecido, "quien_ofrecido_otro":"%s" % quien_ofrecido_otro, "donde_ofrecido":"%s" % donde_ofrecido, "donde_ofrecido_otro":"%s" % donde_ofrecido_otro, "que_ofrecido":"%s" % que_ofrecido, "que_ofrecido_otro":"%s" % que_ofrecido_otro, "haz_consumido":"%s" % haz_consumido, "edad_consumido":"%s" % edad_consumido, "que_consumido":"%s" % que_consumido, "que_consumido_otro":"%s" % que_consumido_otro, "ultimo_consumido":"%s" % ultimo_consumido, "que_consumido2":"%s" % que_consumido2, "que_consumido2_otro":"%s" % que_consumido2_otro, "conoces_consumidor":"%s" % conoces_consumidor, "de_donde":"%s" % de_donde, "de_donde_otro":"%s" % de_donde_otro, "lugar_consumo":"%s" % lugar_consumo, "lugar_consumo_donde":"%s" % lugar_consumo_donde, "relaciones":"%s" % relaciones}
         respuestas = simplejson.dumps(respuestas)
         estudiante_muestra.respuestas = respuestas
         estudiante_muestra.notas = notas
@@ -555,17 +605,91 @@ def revisar_encuesta(request,id):
         forma = EncuestaContestada(request.POST, instance=rev_enc)
         forma.helper.form_action = reverse('revisar_encuesta', args=[id])
         if forma.is_valid():
+            medicamento_consumido = forma.cleaned_data['medicamento_consumido']
+            medicamento_consumido_paraque = forma.cleaned_data['medicamento_consumido_paraque']
+            alcohol_frecuencia = forma.cleaned_data['alcohol_frecuencia']
+            tabaco_frecuencia = forma.cleaned_data['tabaco_frecuencia']
+            droga_ofrecido = forma.cleaned_data['droga_ofrecido']
+            quien_ofrecido = forma.cleaned_data['quien_ofrecido']
+            quien_ofrecido_otro = forma.cleaned_data['quien_ofrecido_otro']
+            donde_ofrecido = forma.cleaned_data['donde_ofrecido']
+            donde_ofrecido_otro = forma.cleaned_data['donde_ofrecido_otro']
+            que_ofrecido = forma.cleaned_data['que_ofrecido']
+            que_ofrecido_otro = forma.cleaned_data['que_ofrecido_otro']
+            haz_consumido = forma.cleaned_data['haz_consumido']
+            edad_consumido = forma.cleaned_data['edad_consumido']
+            que_consumido = forma.cleaned_data['que_consumido']
+            que_consumido_otro = forma.cleaned_data['que_consumido_otro']
+            ultimo_consumido = forma.cleaned_data['ultimo_consumido']
+            que_consumido2 = forma.cleaned_data['que_consumido2']
+            que_consumido2_otro = forma.cleaned_data['que_consumido2_otro']
+            conoces_consumidor = forma.cleaned_data['conoces_consumidor']
+            de_donde = forma.cleaned_data['de_donde']
+            de_donde_otro = forma.cleaned_data['de_donde_otro']
+            lugar_consumo = forma.cleaned_data['lugar_consumo']
+            lugar_consumo_donde = forma.cleaned_data['lugar_consumo_donde']
+            relaciones = forma.cleaned_data['relaciones']
             notas = forma.cleaned_data['notas']
+            #print "Entre aqui"            
+            respuestas = {"medicamento_consumido":"%s" % medicamento_consumido , "medicamento_consumido_paraque":"%s" % medicamento_consumido_paraque, "alcohol_frecuencia":"%s" % alcohol_frecuencia, "tabaco_frecuencia":"%s" % tabaco_frecuencia, "droga_ofrecido":"%s" % droga_ofrecido, "quien_ofrecido":"%s" % quien_ofrecido, "quien_ofrecido_otro":"%s" % quien_ofrecido_otro, "donde_ofrecido":"%s" % donde_ofrecido, "donde_ofrecido_otro":"%s" % donde_ofrecido_otro, "que_ofrecido":"%s" % que_ofrecido, "que_ofrecido_otro":"%s" % que_ofrecido_otro, "haz_consumido":"%s" % haz_consumido, "edad_consumido":"%s" % edad_consumido, "que_consumido":"%s" % que_consumido, "que_consumido_otro":"%s" % que_consumido_otro, "ultimo_consumido":"%s" % ultimo_consumido, "que_consumido2":"%s" % que_consumido2, "que_consumido2_otro":"%s" % que_consumido2_otro, "conoces_consumidor":"%s" % conoces_consumidor, "de_donde":"%s" % de_donde, "de_donde_otro":"%s" % de_donde_otro, "lugar_consumo":"%s" % lugar_consumo, "lugar_consumo_donde":"%s" % lugar_consumo_donde, "relaciones":"%s" % relaciones}
+            respuestas = simplejson.dumps(respuestas)
+            rev_enc.respuestas = respuestas
             rev_enc.notas = notas
             rev_enc.save()
         return redirect('/encuestas_contestadas/')
     else:
         forma = EncuestaContestada(instance=rev_enc)
+        #folio
         forma.fields['folio'].initial = folio
-        forma.fields['correo'].initial = json['correo']
-        forma.fields['semestre'].initial = json['semestre']
-        forma.fields['opinion'].initial = json['opinion']
-        forma.fields['frecuencia'].initial = json['frecuencia']
+
+        #respuesta de pregunta 1
+        forma.fields['medicamento_consumido'].initial = json['medicamento_consumido']
+        #respuesta de pregunta 1
+        forma.fields['medicamento_consumido_paraque'].initial = json['medicamento_consumido_paraque']
+        #respuesta de pregunta 2
+        forma.fields['alcohol_frecuencia'].initial = json['alcohol_frecuencia']
+        #respuesta de pregunta 3
+        forma.fields['tabaco_frecuencia'].initial = json['tabaco_frecuencia']
+        #respuesta de pregunta 4
+        forma.fields['droga_ofrecido'].initial = json['droga_ofrecido']
+        #respuesta de pregunta 5
+        forma.fields['quien_ofrecido'].initial = json['quien_ofrecido']        
+        #respuesta de pregunta 5
+        forma.fields['quien_ofrecido_otro'].initial = json['quien_ofrecido_otro']
+        #respuesta de pregunta 6
+        forma.fields['donde_ofrecido'].initial = json['donde_ofrecido']
+        #respuesta de pregunta 6
+        forma.fields['donde_ofrecido_otro'].initial = json['donde_ofrecido_otro']
+        #respuesta de pregunta 7
+        forma.fields['que_ofrecido'].initial = json['que_ofrecido']
+        #respuesta de pregunta 7
+        forma.fields['que_ofrecido_otro'].initial = json['que_ofrecido_otro']
+        #respuesta de pregunta 8
+        forma.fields['haz_consumido'].initial = json['haz_consumido']
+        #respuesta de pregunta 9
+        forma.fields['edad_consumido'].initial = json['edad_consumido']
+        #respuesta de pregunta 10
+        forma.fields['que_consumido'].initial = json['que_consumido']        
+        #respuesta de pregunta 10
+        forma.fields['que_consumido_otro'].initial = json['que_consumido_otro']        
+        #respuesta de pregunta 11
+        forma.fields['ultimo_consumido'].initial = json['ultimo_consumido']
+        #respuesta de pregunta 12
+        forma.fields['que_consumido2'].initial = json['que_consumido2']
+        #respuesta de pregunta 12
+        forma.fields['que_consumido2_otro'].initial = json['que_consumido2_otro']
+        #respuesta de pregunta 13
+        forma.fields['conoces_consumidor'].initial = json['conoces_consumidor']        
+        #respuesta de pregunta 14
+        forma.fields['de_donde'].initial = json['de_donde']
+        #respuesta de pregunta 14
+        forma.fields['de_donde_otro'].initial = json['de_donde_otro']
+        #respuesta de pregunta 15
+        forma.fields['lugar_consumo'].initial = json['lugar_consumo']
+        #respuesta de pregunta 16
+        forma.fields['lugar_consumo_donde'].initial = json['lugar_consumo_donde']
+        #respuesta de pregunta 17
+        forma.fields['relaciones'].initial = json['relaciones']
     return render_to_response('encuestas/revisar_encuesta.html', {'forma': forma}, context_instance=RequestContext(request))
 
 
