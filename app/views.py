@@ -17,6 +17,8 @@ from random import sample, shuffle, randint
 from app.cartas_notificacion import *
 from django.utils import simplejson
 from django.db.models import Max
+from django.db.models import Sum, Count, Q
+
 
 
 # For debugging.
@@ -689,3 +691,21 @@ def revisar_encuesta(request,id):
         #respuesta de pregunta 17
         forma.fields['relaciones'].initial = json['relaciones']
     return render_to_response('encuestas/revisar_encuesta.html', {'forma': forma}, context_instance=RequestContext(request))
+
+
+#   Vista para generar reportes en Highcharts
+#   Se planea segmentar para generar diferentes clases de reportes.
+@login_required
+def reportes(request, anio=2013):
+    general = EstudianteMuestra.objects.filter(resultado__isnull=False).values('resultado').annotate(Cantidad=Count('resultado'))
+    color = Estudiante.objects.filter(color__isnull=False).values('color').annotate(Cantidad=Count('color'))
+
+    total_alumnos_general = 0
+    for x in general:
+      total_alumnos_general += x['Cantidad']
+
+    total_alumnos_color = 0
+    for x in color:
+      total_alumnos_color += x['Cantidad']
+
+    return render_to_response('home/reportes/reportes.html', {'general': general,'total_alumnos_general': total_alumnos_general,'total_alumnos_color': total_alumnos_color, 'color': color}, context_instance=RequestContext(request))
