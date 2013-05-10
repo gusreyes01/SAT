@@ -52,6 +52,9 @@ urlpatterns = patterns('',
      # Urls para mostrar lista de encuestas contestadas.
      url(r'^encuestas_contestadas/$', 'app.views.encuestas_contestadas', name='encuestas_contestadas'),
      url(r'^revisar_encuesta/(\d+)/$', 'app.views.revisar_encuesta', name='revisar_encuesta'),
+
+     # Urls para mostrar reportes en highcharts.
+     url(r'^reportes/$', 'app.views.reportes', name='reportes'),
 )
 
 # Add the static files pattern to the url.

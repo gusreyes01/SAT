@@ -36,19 +36,40 @@ def estado(estado_en_numero):
 
 def color(color_en_numero):
     if color_en_numero == 0:
-        return '#FF0000'  #ROJO
+        return '#8CBF26'  #VERDE
     elif color_en_numero == 1:
-        return '#FF4000'  #NARANJA
+        return '#E8BE1B'  #AMARILLO
     elif color_en_numero == 2:
-        return '#FFBF00'  #AMARILLO
+        return '#F09609'  #NARANJA
     elif color_en_numero == 3:
-        return '#40FF00'  #VERDE
+        return '#E51400'  #ROJO
     elif color_en_numero == 4:
-        return '#0101DF'  #AZUL
-    elif color_en_numero == 5:
-        return '#0101DF'  #NEGRO
+        return '#000000'  #NEGRO
+    else:
+        return '#989898'
 
+def color_texto(color_en_numero):
+    if color_en_numero == 0:
+        return 'Verde'  #VERDE
+    elif color_en_numero == 1:
+        return 'Amarillo'  #AMARILLO
+    elif color_en_numero == 2:
+        return 'Naranja'  #NARANJA
+    elif color_en_numero == 3:
+        return 'Rojo'  #ROJO
+    elif color_en_numero == 4:
+        return 'Negro'  #NEGRO
+    else:
+        return 'No encontrado'
+
+def resultado(resultado_en_numero):
+    if resultado_en_numero == 0:
+        return 'Negativo' 
+    elif resultado_en_numero == 1:
+        return 'Positivo'  
         
 register.filter('estado', estado)
 register.filter('horario', horario)
 register.filter('color', color)
+register.filter('color_texto', color_texto)
+register.filter('resultado', resultado)
