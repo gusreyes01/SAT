@@ -184,6 +184,21 @@ def seleccion_muestra(request):
         muestra_grupos = []
         muestra_aleatorios = []
         respuesta = {}
+        meses = {
+          '1': 1,
+          '2': 1,
+          '3': 1,
+          '4': 1,
+          '5': 1,
+          '6': 2,
+          '7': 2,
+          '8': 3,
+          '9': 3,
+          '10': 3,
+          '11': 3,
+          '12': 3,
+        }
+
 
         delimitador = '|'
 
@@ -195,10 +210,16 @@ def seleccion_muestra(request):
         print alumnos_seleccionados, grupos_seleccionados
         print "Rango horas: ", obtener_horario_de_forma(inicio, fin)
 
+        ## Obtener anio y semestre actual para filtar la muestra.
+        time = timezone.now() # obtener la fecha actual
+        anio = int(time.year)
+        mes = str(time.month)
+        semestre = meses[mes]
         try:
           # Modificar si se necesita null.
           if dia == 'lunes':
-            grupos = Grupo.objects.exclude(horario_1='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_1='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_1, delimitador)
@@ -207,7 +228,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
        
           elif dia == 'martes':
-            grupos = Grupo.objects.exclude(horario_2='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_2='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_2, delimitador)
@@ -216,7 +238,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'miercoles':
-            grupos = Grupo.objects.exclude(horario_3='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_3='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_3, delimitador)
@@ -225,7 +248,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'jueves':
-            grupos = Grupo.objects.exclude(horario_4='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_4='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_4, delimitador)
@@ -234,7 +258,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'viernes':
-            grupos = Grupo.objects.exclude(horario_5='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_5='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_5, delimitador)
@@ -243,7 +268,8 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
 
           elif dia == 'sabado':
-            grupos = Grupo.objects.exclude(horario_6='None')
+            semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
+            grupos = semestre.exclude(horario_6='None')
             # Revisar que se encuentre los grupos dentro del horario deseado.
             for gpo in grupos:
               horario_gpo = convierte_de_horario(gpo.horario_6, delimitador)
