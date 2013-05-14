@@ -24,9 +24,9 @@ from django.db.models import Sum, Count, Q
 # For debugging.
 import pdb
 
-@login_required
-def home(request):
-    return render_to_response('home/home.html', context_instance=RequestContext(request))
+# @login_required
+# def home(request):
+#     return render_to_response('home/home.html', context_instance=RequestContext(request))
     
 def login(request):
     username = request.POST['username']

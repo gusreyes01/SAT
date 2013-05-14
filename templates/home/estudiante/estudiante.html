@@ -1,5 +1,6 @@
 {% extends "home/base.html" %}
 {% load crispy_forms_tags %}
+{% block estudiante %}active{% endblock %}
 
 {% block style %}
 
@@ -71,8 +72,8 @@ $(document).ajaxStart(function () {
 <div class="container">
 
   <!-- Main hero unit for a primary marketing message or call to action -->
+  <a href="/alta_estudiante"><input type="button" class="btn btn-success" value="Alta Estudiante"></button></a>
   <div class="hero-unit">
-    <a href="/alta_estudiante"><input type="button" class="btn btn-success" value="Alta Estudiante"></button></a>
     <div class="container" style="width:400px;">
       <div>
        <h3>Buscar Estudiante</h3>
