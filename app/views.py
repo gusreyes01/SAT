@@ -846,4 +846,3 @@ def buscaArreglo(clave, campo, lista):
     for regresa in lista:
       if regresa[campo] == clave:
         return regresa
->>>>>>> importar-csv
