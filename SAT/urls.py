@@ -55,6 +55,10 @@ urlpatterns = patterns('',
 
      # Urls para mostrar reportes en highcharts.
      url(r'^reportes/$', 'app.views.reportes', name='reportes'),
+     
+     # Url para subir el CSV
+     url(r'^subir_csv/$', 'app.views.subir_csv', name='subir_csv'),
+     url(r'^subir_csv/success/$', 'app.views.subir_csv_success', name='subir_csv_success'),
 )
 
 # Add the static files pattern to the url.

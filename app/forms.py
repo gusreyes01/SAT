@@ -429,3 +429,6 @@ class EncuestaContestada(ModelForm):
 	    Submit('submit', 'Subir notas', css_class='btn-success')
 	))
       super(EncuestaContestada, self).__init__(*args, **kwargs)
+
+class UploadFileForm(forms.Form):
+  file  = forms.FileField(label="Archivo CSV")

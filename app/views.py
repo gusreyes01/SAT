@@ -18,8 +18,7 @@ from app.cartas_notificacion import *
 from django.utils import simplejson
 from django.db.models import Max
 from django.db.models import Sum, Count, Q
-
-
+from django.http import HttpResponseRedirect
 
 # For debugging.
 import pdb
@@ -692,7 +691,6 @@ def revisar_encuesta(request,id):
         forma.fields['relaciones'].initial = json['relaciones']
     return render_to_response('encuestas/revisar_encuesta.html', {'forma': forma}, context_instance=RequestContext(request))
 
-
 #   Vista para generar reportes en Highcharts
 #   Se planea segmentar para generar diferentes clases de reportes.
 @login_required
@@ -709,3 +707,143 @@ def reportes(request, anio=2013):
       total_alumnos_color += x['Cantidad']
 
     return render_to_response('home/reportes/reportes.html', {'general': general,'total_alumnos_general': total_alumnos_general,'total_alumnos_color': total_alumnos_color, 'color': color}, context_instance=RequestContext(request))
+
+
+def subir_csv(request):
+    if request.method == 'POST':
+        forma = UploadFileForm(request.POST, request.FILES)
+        if forma.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('success/')
+    else:
+        forma = UploadFileForm()
+    return render_to_response('home/upload_csv.html', {'forma': forma}, context_instance=RequestContext(request))
+
+@login_required
+def subir_csv_success(request):
+    return render_to_response('home/upload_csv_success.html', context_instance=RequestContext(request))
+
+def handle_uploaded_file(f):
+    # actualiza el estatus de todos los estudiantes a 0
+    Estudiante.objects.all().update(estado_institucion='0')
+
+    #Lee el archivo linea por linea y lo almacena en la lista
+    lista = []
+    matriculas = []
+    crns = []
+    claves_mat = []
+    for line in f:
+      line = line.replace(",\n", "") # remove bad terminated line with extra comma
+      line = line.replace("\n", "") # remove all the whitespace
+      line = line.replace("'", "") # remove all the "
+      line = line.replace('"', "") # remove all the '
+      line = line.replace(', ', ",") # remove all the whitespace
+
+      line = line.split(",")  
+    
+      fila = {}
+
+      matriculas.append(line[0])
+      crns.append(line[16])
+      claves_mat.append(line[24].replace("'", ""))
+
+      fila['matricula'] = line[0]
+      fila['nombre'] = line[1]
+      fila['apellido'] = line[2]
+      fila['correo'] = line[3]
+      fila['telefono'] = line[4]
+      fila['celular'] = line[5]
+      fila['nombrePadre'] = line[6]
+      fila['apellidoPadre'] = line[7]
+      fila['correoPadre'] = line[8]
+      fila['telefonoPadre'] = line[9]
+      fila['celularPadre'] = line[10]
+      fila['nombreMadre'] = line[11]
+      fila['apellidoMadre'] = line[12]
+      fila['correoMadre'] = line[13]
+      fila['telefonoMadre'] = line[14]
+      fila['celularMadre'] = line[15]
+      fila['crn'] = line[16]
+      fila['horario_1'] = line[17]
+      fila['horario_2'] = line[18]
+      fila['horario_3'] = line[19]
+      fila['horario_4'] = line[20]
+      fila['horario_5'] = line[21]
+      fila['horario_6'] = line[22]
+      fila['profesor'] = line[23]
+      fila['clave_materia'] = line[24]
+      fila['nombre_materia'] = line[25]
+      lista.append(fila)
+
+    # Obtiene los valores unicos almacenados en las listas de matriculas, crns y claves de materia
+    matriculas = sorted(set(matriculas))
+    crns = sorted(set(crns))
+    claves_mat = sorted(set(claves_mat))
+
+    # Agrega o actualiza los estudiantes
+    for matricula in matriculas:
+      # Si el estudiante existe simplemente actualiza el estatus en la institución
+      try:
+        est = Estudiante.objects.get(matricula=matricula)
+        est.estado_institucion = '1'
+        est.save()
+      
+      #Si el estudiante no existe inserta los datos de su padre y madre, para posteriormente insertar al alumno
+      except Estudiante.DoesNotExist:
+        nuevoEst = buscaArreglo(matricula, 'matricula', lista)
+
+        padreNuevo = Padre(nombre=nuevoEst['nombrePadre'], apellido=nuevoEst['apellidoPadre'], correo=nuevoEst['correoPadre'], telefono=nuevoEst['telefonoPadre'], celular=nuevoEst['celularPadre'])
+        padreNuevo.save()
+        madreNuevo = Padre(nombre=nuevoEst['nombreMadre'], apellido=nuevoEst['apellidoMadre'], correo=nuevoEst['correoMadre'], telefono=nuevoEst['telefonoMadre'], celular=nuevoEst['celularMadre'])
+        madreNuevo.save()
+
+        modeloEst = Estudiante (matricula=nuevoEst['matricula'], nombre=nuevoEst['nombre'], apellido=nuevoEst['apellido'], correo=nuevoEst['correo'], telefono=nuevoEst['telefono'], celular=nuevoEst['celular'], padre_id=padreNuevo.id, madre_id=madreNuevo.id, color='0', estado_institucion='1')
+        modeloEst.save()
+
+    # Agrega las materias que no estan dadas de alta en la base de datos
+    materia_claves_id = []
+    for clave in claves_mat:
+      # Si ya existe solo almacena el valor en la lista materia_claves_id
+      try:
+        clase = Clase.objects.get(clave_materia=clave)
+        fil = {}
+        fil['clave'] = clave
+        fil['id'] = str(clase.id)
+        materia_claves_id.append(fil)
+
+      # Si no existe lo inserta, ademas de almacenar el valor en el arreglo
+      except Clase.DoesNotExist:
+        arrClase = buscaArreglo(clave, 'clave_materia', lista)
+        claseNueva = Clase(clave_materia=arrClase['clave_materia'], nombre=arrClase['nombre_materia'])
+        claseNueva.save()
+        fil = {}
+        fil['clave'] = clave
+        fil['id'] = str(clase.id)
+        materia_claves_id.append(fil)
+
+    # Obtiene el año y semestre actual
+    anioActual = date.today().year
+    semestre = date.today().month
+    if semestre == 1 or semestre == 2 or semestre == 3 or semestre == 4 or semestre == 5:
+      semestre = 1
+    elif semestre == 6  or semestre == 7:
+      semestre = 2
+    else:
+      semestre = 3
+
+    # Para cada crn unico almacena la información de su grupo en la base de datos
+    for crn in crns:
+      arrGrupos = buscaArreglo(crn, 'crn', lista)
+      arrClave = buscaArreglo(arrGrupos['clave_materia'], 'clave', materia_claves_id)
+      grupoNuevo = Grupo(crn=arrGrupos['crn'], clase_id=arrClave['id'], horario_1=arrGrupos['horario_1'], horario_2=arrGrupos['horario_2'], horario_3=arrGrupos['horario_3'], horario_4=arrGrupos['horario_4'], horario_5=arrGrupos['horario_5'], horario_6=arrGrupos['horario_6'], anio=anioActual ,semestre=semestre ,profesor=arrGrupos['profesor'])
+      grupoNuevo.save()
+
+    # Relaciona a los alumnos actuales con las materias que esta cursando
+    inscritos = [Inscrito(estudiante_id=renglon['matricula'], grupo_id=renglon['crn']) for renglon in lista]
+    Inscrito.objects.bulk_create(inscritos)
+
+def buscaArreglo(clave, campo, lista):
+    for regresa in lista:
+      if regresa[campo] == clave:
+        return regresa
+>>>>>>> importar-csv

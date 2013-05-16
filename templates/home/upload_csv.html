@@ -1,0 +1,32 @@
+{% extends "home/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+<link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
+<link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
+<link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css"> 
+{% endblock %}
+ 
+{% block script %}
+<script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
+<script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+ 
+{% block content %}
+ 
+<div class="container">
+	<div class="hero-unit">
+		<form action="/subir_csv/" method="post" enctype="multipart/form-data">
+		  	<p>
+		    	{% csrf_token %}
+		    	{{ forma }}
+				<div class="buttonHolder">
+					<input type="submit" name="submit" value="Importar CSV" class="btn btn-primary btn-success" id="submit-id-submit">
+				</div>
+			</p>
+		</form>
+	</div>
+	<hr>
+</div> <!-- /container -->
+{% endblock %}
