@@ -396,7 +396,6 @@ def obtener_carta(request, id_antidoping, notificacion):
       # if est.notificacion = 0:
       
       dia = est.antidoping.dia
-      print dia
       if dia == "lunes":
         horario = est.inscrito.grupo.horario_1
       elif dia == "martes":
@@ -418,6 +417,7 @@ def obtener_carta(request, id_antidoping, notificacion):
       est_dic['horario'] = horario_split[0]
       est_dic['salon'] = horario_split[1]
       est_dic['materia'] = est.inscrito.grupo.clase.nombre
+      est_dic['folio'] = est.folio
       est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
       lista.append(est_dic)
 
@@ -452,16 +452,24 @@ def obtener_carta(request, id_antidoping, notificacion):
     # Consulta cada elemento de la lista y lo convierte en una hoja que es enviada al documento verificando el numero de carta
     if notificacion== 1:
       for alumno in lista:
-          hoja = primera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          hoja = primera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['folio'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
           plantilla += hoja
     elif notificacion== 2:
       for alumno in lista:
-          hoja = segunda_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
+          hoja = segunda_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['folio'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
           plantilla += hoja
     elif notificacion== 3:
-      for alumno in lista:
-          hoja = tercera_carta(alumno['materia'], alumno['salon'], alumno['horario'], alumno['nombres'], alumno['apellidos'], alumno['matricula'], alumno['tipo_de_seleccion'], fecha, fecha_completa, styles, imagen)
-          plantilla += hoja
+      lista3 = []
+      for est3 in estudiante_muestra:
+        tn = {}
+        tn['nombres'] = est3.inscrito.estudiante.nombre
+        tn['apellidos'] = est3.inscrito.estudiante.apellido
+        tn['matricula'] = est3.inscrito.estudiante.matricula
+        lista3.append(tn)
+      #genera el csv
+      csv = tercera_carta_csv(lista3, styles, imagen)
+      hoja = tercera_carta(lista3, styles, imagen)
+      plantilla += hoja
     
     # Vacia la plantilla en el documento    
     documento.build(plantilla)
@@ -470,12 +478,12 @@ def obtener_carta(request, id_antidoping, notificacion):
     buffer.close()
     response.write(pdf)
     
+    #return csv
     return response
 
 @login_required
 def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
-
 
 #Vista que da acceso al alumno a su encuesta correspondiente
 @login_required
@@ -532,7 +540,7 @@ def aplicacion_encuesta(request,id):
         lugar_consumo_donde = forma.cleaned_data['lugar_consumo_donde']
         relaciones = forma.cleaned_data['relaciones']
         #print "Entre aqui"
-        notas = "Escribir las notas aquí"        
+        notas = "Escribir las notas aquí"
         respuestas = {"medicamento_consumido":"%s" % medicamento_consumido , "medicamento_consumido_paraque":"%s" % medicamento_consumido_paraque, "alcohol_frecuencia":"%s" % alcohol_frecuencia, "tabaco_frecuencia":"%s" % tabaco_frecuencia, "droga_ofrecido":"%s" % droga_ofrecido, "quien_ofrecido":"%s" % quien_ofrecido, "quien_ofrecido_otro":"%s" % quien_ofrecido_otro, "donde_ofrecido":"%s" % donde_ofrecido, "donde_ofrecido_otro":"%s" % donde_ofrecido_otro, "que_ofrecido":"%s" % que_ofrecido, "que_ofrecido_otro":"%s" % que_ofrecido_otro, "haz_consumido":"%s" % haz_consumido, "edad_consumido":"%s" % edad_consumido, "que_consumido":"%s" % que_consumido, "que_consumido_otro":"%s" % que_consumido_otro, "ultimo_consumido":"%s" % ultimo_consumido, "que_consumido2":"%s" % que_consumido2, "que_consumido2_otro":"%s" % que_consumido2_otro, "conoces_consumidor":"%s" % conoces_consumidor, "de_donde":"%s" % de_donde, "de_donde_otro":"%s" % de_donde_otro, "lugar_consumo":"%s" % lugar_consumo, "lugar_consumo_donde":"%s" % lugar_consumo_donde, "relaciones":"%s" % relaciones}
         respuestas = simplejson.dumps(respuestas)
         estudiante_muestra.respuestas = respuestas
