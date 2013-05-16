@@ -52,6 +52,10 @@ urlpatterns = patterns('',
      # Urls para mostrar lista de encuestas contestadas.
      url(r'^encuestas_contestadas/$', 'app.views.encuestas_contestadas', name='encuestas_contestadas'),
      url(r'^revisar_encuesta/(\d+)/$', 'app.views.revisar_encuesta', name='revisar_encuesta'),
+
+     # Url para subir el CSV
+     url(r'^subir_csv/$', 'app.views.subir_csv', name='subir_csv'),
+     url(r'^subir_csv/success/$', 'app.views.subir_csv_success', name='subir_csv_success'),
 )
 
 # Add the static files pattern to the url.
