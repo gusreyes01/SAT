@@ -67,7 +67,7 @@
 		</div>
 		<form class="searchform pull-right" action="/estudiante/" method="POST">{% csrf_token %}
             <div class="input-icon-append">
-            	<input class="input-large" maxlength="23" placeholder="buscar alumno por matrícula" type="text" name="q1">
+            	<input class="input-large" maxlength="23" placeholder="Buscar alumno por matrícula" type="text" name="q1">
                 <button type="submit" rel="tooltip-bottom" class="icon" data-original-title="search">
                 	<i class="icon-search"></i>
                 </button>
@@ -91,21 +91,21 @@
 			<span>estudiante</span>
 		  </a>
 		</li> -->
-		<!-- <li  >
+<!-- 		<li  >
 		  <a href="/scores/">
 			<i class="icon-user"></i>
 			<span>Encuesta</span>
 		  </a>
-		</li>
-		<li  >
-		  <a href="/revisar-conexion-arduino/">
-			<i class="icon-wrench"></i>
-			<span>Reportes</span>
-		  </a>
 		</li> -->
 		<li  >
+		  <a href="/reportes/">
+			<i class="icon-bar-chart"></i>
+			<span>Reportes</span>
+		  </a>
+		</li>
+		<li  >
 		  <a href="/logout/">
-			<i class="icon-table"></i>
+			<i class="icon-eject"></i>
 			<span>Salir</span>
 		  </a>
 		</li>
