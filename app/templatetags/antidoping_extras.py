@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 from django import template
+from app.models import *
 import datetime
 
 register = template.Library()
@@ -67,9 +68,23 @@ def resultado(resultado_en_numero):
         return 'Negativo' 
     elif resultado_en_numero == 1:
         return 'Positivo'  
-        
+
+def contar_objetos(antidoping, estado):
+    cantidad = 0
+    if antidoping:
+        cantidad = EstudianteMuestra.objects.filter(antidoping_id = antidoping.id).filter(estado = estado).count()
+        return cantidad
+
+def contar_total(objeto):
+    cantidad = 0
+    if objeto:
+        cantidad = EstudianteMuestra.objects.filter(antidoping_id = objeto.id).count()
+        return cantidad
+
 register.filter('estado', estado)
 register.filter('horario', horario)
 register.filter('color', color)
 register.filter('color_texto', color_texto)
 register.filter('resultado', resultado)
+register.filter('contar_objetos', contar_objetos)
+register.filter('contar_total', contar_total)
