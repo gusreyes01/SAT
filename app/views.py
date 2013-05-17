@@ -95,13 +95,16 @@ def evaluar_estudiante(request,id):
    
 @login_required
 def estudiante(request):
-  if request.is_ajax():
-          q1 = request.GET.get('q1', '')
-          if q1:
-              results = Estudiante.objects.filter(matricula__contains =q1)
-          data = {'results': results,}
-          return render_to_response( 'home/consultas/results.html', data,context_instance = RequestContext( request ) )
-      
+  if request.method=='POST':
+      q1 = request.POST.get('q1', '')
+      print "hola todavia no hay q1"
+      if q1:
+          results = Estudiante.objects.filter(matricula__contains =q1)
+          print "Si hay q1"
+      data = {'results': results,}
+
+      return render_to_response( 'home/estudiante/estudiante.html', data,context_instance = RequestContext( request ) )
+  
   else:
     estudiantes = Estudiante.objects.all()[:100]  
     return render_to_response('home/estudiante/estudiante.html',{'estudiantes': estudiantes}, context_instance=RequestContext(request))    
@@ -123,12 +126,23 @@ def alta_estudiante(request):
     
 @login_required
 def muestra(request):
+    general = EstudianteMuestra.objects.filter(resultado__isnull=False).values('resultado').annotate(Cantidad=Count('resultado'))
+    color = Estudiante.objects.filter(color__isnull=False).values('color').annotate(Cantidad=Count('color'))
+
+    total_alumnos_general = 0
+    for x in general:
+      total_alumnos_general += x['Cantidad']
+
+    total_alumnos_color = 0
+    for x in color:
+      total_alumnos_color += x['Cantidad']
+
     antidopings = Antidoping.objects.all()
     for antidoping in antidopings:
       tmp = EstudianteMuestra.objects.filter(antidoping=antidoping.pk).aggregate(Max('estado'))
       antidoping.estado_antidoping = tmp['estado__max'] # Sacar el atributo y guardarlo.
       antidoping.save()
-    return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
+    return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings, 'general': general, 'total_alumnos_general': total_alumnos_general, 'color':color, 'total_alumnos_color':total_alumnos_color}, context_instance=RequestContext(request))
 
 @login_required
 def success(request):
@@ -399,7 +413,8 @@ def alta_muestra(request):
       
     elementos_a_borrar.delete()
 
-    return redirect('/success')  # Redirect after POST
+    redireccion = '/perfil_muestra/%d' % antidoping_id
+    return redirect(redireccion)  # Redirect after POST
   else:
     # return render_to_response('home/home.html', context_instance=RequestContext(request))
     return home(request)

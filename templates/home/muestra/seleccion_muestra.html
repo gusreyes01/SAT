@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
 
  {% block style %}
@@ -25,14 +25,24 @@
  {% endblock %}
  
  {% block content %}
+
+ <div class="section-header">
+    <h1>seleccionar alumnos para la muestra</h1> 
+  </div>
  
- <div class="container">
+ <!-- <div class="container"> -->
+ <div class="container-fluid ">
+    <div class="row-fluid">
+    <div class="span12">
+    <div class="widget">
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-       <h3>Seleccionar alumnos para la muestra</h3>
+      <!-- <div class="hero-unit"> -->
         {{ forma.errors }}
        	{% crispy forma %}       	
-      </div> <!-- /hero-unit -->
+      <!-- </div> /hero-unit -->
     </div> <!-- /container -->
+  </div>
+</div>
+</div>
  
  {% endblock %}
