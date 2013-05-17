@@ -413,7 +413,7 @@ def alta_muestra(request):
       
     elementos_a_borrar.delete()
 
-    redireccion = '/perfil_muestra/%d' % antidoping_id
+    redireccion = '/perfil_muestra/'
     return redirect(redireccion)  # Redirect after POST
   else:
     # return render_to_response('home/home.html', context_instance=RequestContext(request))
