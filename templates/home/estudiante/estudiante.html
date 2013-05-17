@@ -1,5 +1,6 @@
-{% extends "home/base.html" %}
+{% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
+{% load antidoping_extras %}
 {% block estudiante %}active{% endblock %}
 
 {% block style %}
@@ -31,9 +32,9 @@ ul {
     height: 12px;
     display: inline-block;
     background-color: #ccc;
-    position: absolute;
-    left: -25px;
-    top:2px; 
+    position: relative;
+    left: 0px;
+    top:1px; 
 }
 
 
@@ -42,52 +43,75 @@ ul {
 {% endblock %}
 
 {% block script %}
-<script src="{{ STATIC_URL }}JS/tablesorter.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}JS/jquery.tablesorter.min.js" type="text/javascript" charset="utf-8"></script>
-<!-- tablesorter widget file - loaded after the plugin -->
-<script src="{{ STATIC_URL }}JS/jquery.tablesorter.pager.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}JS/jquery.tablesorter.widgets.js" type="text/javascript" charset="utf-8"></script>
-
-<script>
-$(document).ready(function () {
-  $('#spinner').hide();
-  $('#searchSubmit').click(function () {
-    q1 = $('#q1').val();
-    $('#results').html('&nbsp;').load('/estudiante/?q1='+q1);
-  });
-});
-
-$(document).ajaxStart(function () {
-  $('#spinner').show();
-}).ajaxStop(function () {
-  $('#spinner').hide();
-});
-</script>
 
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
-
-  <!-- Main hero unit for a primary marketing message or call to action -->
-  <a href="/alta_estudiante"><input type="button" class="btn btn-success" value="Alta Estudiante"></button></a>
-  <div class="hero-unit">
-    <div class="container" style="width:400px;">
-      <div>
-       <h3>Buscar Estudiante</h3>
-       <label>Matricula:</label>
-       <input id="q1" type="text"/>
-       <input id="searchSubmit" type="submit" value="Buscar" class="btn btn-primary"/>
-       <div class="margin">
-        <span id="spinner"><img src="{{ STATIC_URL }}spinner.gif"/></span>
-      </div>
-    </div>
+  <div class="section-header">
+    <h1>Se encontraron {{ results|length }} alumno(s)</h1> 
   </div>
-  <div id="results"></div>
 
-</div> <!-- /hero-unit -->
-</div> <!-- /container -->
+
+  <div class="container-fluid ">
+    <div class="row-fluid">
+    <a href="/alta_estudiante"><input type="button" class="btn btn-flat btn-blue no-radius" value="Alta Estudiante"></button></a>
+  </div>
+  </div>
+  <br />
+<div class="container-fluid ">
+<div class="row-fluid">
+<div class="span12">
+<div class="widget">
+
+  {% if results|length %}
+  <!-- <strong>Se encontraron {{ results|length }} alumnos.</strong> -->
+  <div id="results">
+  <table class="table table-striped table-bordered">
+    <tr>
+        <th>Matricula</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+        <th>Telefono</th>
+    </tr>
+  {% for f in results %}
+    <tr>
+      <!-- <td><strong>{{ forloop.counter }}.</strong></td> -->
+      <!-- <td class="right"> -->
+      <td>
+        <div class="input-color">
+          <div class="color-box" style="background-color: {{f.color|color}};"></div>
+          <a href="/perfil_estudiante/{{f.matricula}}">{{f.matricula}}</a>
+        </div>
+      </td>
+      <td>
+        <div id="icons">
+            <a href="/edita_estudiante/{{f.matricula}}"><i class="icon-pencil"></i></a>
+        </div>{{ f.nombre }}
+      </td>
+      <td>
+        {{ f.apellido }}
+      </td>
+      <td>
+        {{ f.correo }}
+      </td>
+      <td>
+        {{ f.telefono }}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+{% else %}
+  <div class="note">
+  Tu busqueda no arrojo resultados, intenta de nuevo :)
+  </div>
+{% endif %}
+</div>
+
+</div> 
+</div> 
+</div>
+</div>
 
 {% endblock %}
