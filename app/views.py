@@ -96,11 +96,19 @@ def evaluar_estudiante(request,id):
 @login_required
 def estudiante(request):
   if request.method=='POST':
-      q1 = request.POST.get('q1', '')
-      print "hola todavia no hay q1"
-      if q1:
-          results = Estudiante.objects.filter(matricula__contains =q1)
-          print "Si hay q1"
+      busqueda = request.POST.get('q1', '')
+      if busqueda:
+          results = Estudiante.objects.filter(matricula__contains=busqueda) # busqueda por matricula
+          if len(results) < 1:
+            results = Estudiante.objects.filter(correo__contains=busqueda) # busqueda por correo
+          if len(results) < 1:
+            results = Estudiante.objects.filter(nombre__contains=busqueda) # busqueda por nombre
+          if len(results) < 1:
+            results = Estudiante.objects.filter(apellido__contains=busqueda) # busqueda por apellido
+          if len(results) < 1:
+            tmp = EstudianteMuestra.objects.filter(folio__contains=busqueda) # busqueda por folio
+            results = map(lambda estudiantemuestra: estudiantemuestra.inscrito.estudiante, tmp)
+
       data = {'results': results,}
 
       return render_to_response( 'home/estudiante/estudiante.html', data,context_instance = RequestContext( request ) )

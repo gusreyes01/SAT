@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
 
  {% block style %}
@@ -19,14 +19,24 @@
  
  {% block content %}
  
- <div class="container">
+ <!-- <div class="container"> -->
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-       <h3>Evaluar Estudiante</h3>
+      <!-- <div class="hero-unit"> -->
+
+<div class="section-header">
+    <h1>Evaluar Estudiante</h1> 
+</div>
+
+<div class="container-fluid ">
+<div class="row-fluid">
+<div class="span12">
+<div class="widget">
         {{ forma.errors }}
        	{% crispy forma %}       	
       </div>
       <hr>
-    </div> <!-- /container -->
+    </div> 
+  </div> 
+</div> 
  
  {% endblock %}
