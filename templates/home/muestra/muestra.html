@@ -82,7 +82,9 @@ $('#color_container').highcharts({
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
-        plotShadow: false
+        plotShadow: false,
+        width: 400
+
     },
     title: {
         text: 'Resultados Generales'
@@ -137,8 +139,35 @@ $('#color_container').highcharts({
  {% block content %}
 
 <div class="section-header">
-    <h1>antidopings</h1> 
+    <h1>Antidopings</h1> 
   </div>
+
+
+      <div class="container-fluid ">
+    <div class="row-fluid">
+    <div class="span12">
+    <div class="widget">
+      <table class="table table-striped table-bordered">
+        <tr>
+            <th>Nombre del Antidoping</th>
+            <th>Fecha de creación</th>
+            <th>Estado</th>
+        </tr>
+          {% for antidoping in antidopings %}
+          <tr>
+            <td>
+              <a href="/perfil_muestra/{{antidoping.id}}">{{antidoping.nombre}}</a>
+              <div id="icons"><a href="/eliminar_muestra/{{antidoping.id}}"><i class="icon-trash"></i></a></div>
+            </td>
+            <td>{{antidoping.antidoping_inicio}}</td>
+            <td>{{antidoping.estado_antidoping|estado}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+    </div>
+    </div>
+    </div>
 
 <div class="container-fluid ">
   <div class="row-fluid">
@@ -234,31 +263,7 @@ $('#color_container').highcharts({
   </div>
   <br />
 
-    <div class="container-fluid ">
-    <div class="row-fluid">
-    <div class="span12">
-    <div class="widget">
-      <table class="table table-striped table-bordered">
-        <tr>
-            <th>Nombre del Antidoping</th>
-            <th>Fecha de creación</th>
-            <th>Estado</th>
-        </tr>
-          {% for antidoping in antidopings %}
-          <tr>
-            <td>
-              <a href="/perfil_muestra/{{antidoping.id}}">{{antidoping.nombre}}</a>
-              <div id="icons"><a href="/eliminar_muestra/{{antidoping.id}}"><i class="icon-trash"></i></a></div>
-            </td>
-            <td>{{antidoping.antidoping_inicio}}</td>
-            <td>{{antidoping.estado_antidoping|estado}}</td>
-          </tr>
-          {% endfor %}
-      </table>
-    </div>
-    </div>
-    </div>
-    </div>
+
 
  
  {% endblock %}

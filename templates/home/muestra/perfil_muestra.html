@@ -10,6 +10,11 @@
  #icons{
   float:right;
  }
+ .table-nonfluid {
+   width: auto;
+
+   border:0px;
+ }
  </style>
  
  {% endblock %}
@@ -38,14 +43,36 @@
 <div class="span12">
 <div class="widget">
 
-        <div class="well" style="max-width: 400px; margin: 0 auto 10px;">
-                <button type="button" id="not_1" class="btn btn-small btn-block btn-success notificacion">Primera Notificación</button>
-                <button type="button" id="not_2" class="btn btn-small btn-block btn-warning notificacion">Segunda Notificación</button>
-                <button type="button" id="not_3" class="btn btn-small btn-block btn-danger notificacion">Tercera Notificación</button>
+        <div class="well" >
+          <table class="table-nonfluid" style="margin-bottom:20px;">
+            <tr>
+              <td><h4>Iniciado: </h4></td>
+              <td></td>
+              <td><h4>{{antidoping|contar_objetos:0}}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>Primera Notificación:</h4></td>
+              <td></td>
+              <td><h4>{{antidoping|contar_objetos:1}}</h4></td>
+
+            </tr>
+            <tr>
+              <td><h4>Segunda Notificación:</h4></td>
+              <td></td>
+              <td><h4>{{antidoping|contar_objetos:2}}</h4></td>
+            </tr>
+       </table>
+                  <button type="button" id="not_1" class="btn btn-small btn-success notificacion">Primera Notificación</button>
+                  <button type="button" id="not_2" class="btn btn-small btn-warning notificacion">Segunda Notificación</button>
+                  <button type="button" id="not_3" class="btn btn-small btn-danger notificacion">Tercera Notificación</button>
+          </p>
         </div>
 
+        <h3>Nombre : {{antidoping.nombre}}</h3>
+        <h4>{{antidoping|contar_total}} Alumnos</h4>
+
         <!-- <h3>Nombre : {{antidoping.nombre}}</h3> -->
-        <h4>Alumnos</h4>
+
 
         <table class="table table-striped table-bordered">
           <tr>
