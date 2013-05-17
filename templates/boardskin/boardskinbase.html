@@ -14,6 +14,7 @@
 	<link href="{{ STATIC_URL }}boardskin/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+	
 
 	<!-- css block -->
 	{% block style %}{% endblock %}
@@ -112,6 +113,8 @@
 	</ul>
 	
 </div>		<div class="section sidebar">
+			{% block sidebar %}{% endblock %}
+
 	<!-- <div class="widget">
 		<div class="widget-title">
 			<h3>Latest News</h3>
