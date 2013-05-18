@@ -19,6 +19,8 @@ from django.utils import simplejson
 from django.db.models import Max
 from django.db.models import Sum, Count, Q
 from django.http import HttpResponseRedirect
+import datetime
+import math
 
 # For debugging.
 import pdb
@@ -729,6 +731,7 @@ def subir_csv(request):
         forma = UploadFileForm(request.POST, request.FILES)
         if forma.is_valid():
             handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/subir_csv/')
             return HttpResponseRedirect('success/')
     else:
         forma = UploadFileForm()
@@ -739,6 +742,9 @@ def subir_csv_success(request):
     return render_to_response('home/upload_csv_success.html', context_instance=RequestContext(request))
 
 def handle_uploaded_file(f):
+
+    inicial = datetime.datetime.now()
+
     # actualiza el estatus de todos los estudiantes a 0
     Estudiante.objects.all().update(estado_institucion='0')
 
@@ -747,6 +753,7 @@ def handle_uploaded_file(f):
     matriculas = []
     crns = []
     claves_mat = []
+
     for line in f:
       line = line.replace(",\n", "") # remove bad terminated line with extra comma
       line = line.replace("\n", "") # remove all the whitespace
@@ -758,11 +765,9 @@ def handle_uploaded_file(f):
     
       fila = {}
 
-      matriculas.append(line[0])
-      crns.append(line[16])
-      claves_mat.append(line[24].replace("'", ""))
+      matricula = int(line[0].replace("A", ""))
 
-      fila['matricula'] = line[0]
+      fila['matricula'] = matricula
       fila['nombre'] = line[1]
       fila['apellido'] = line[2]
       fila['correo'] = line[3]
@@ -790,6 +795,10 @@ def handle_uploaded_file(f):
       fila['nombre_materia'] = line[25]
       lista.append(fila)
 
+      matriculas.append(matricula)
+      crns.append(line[16])
+      claves_mat.append(line[24].replace("'", ""))
+    
     # Obtiene los valores unicos almacenados en las listas de matriculas, crns y claves de materia
     matriculas = sorted(set(matriculas))
     crns = sorted(set(crns))
@@ -815,6 +824,8 @@ def handle_uploaded_file(f):
         modeloEst = Estudiante (matricula=nuevoEst['matricula'], nombre=nuevoEst['nombre'], apellido=nuevoEst['apellido'], correo=nuevoEst['correo'], telefono=nuevoEst['telefono'], celular=nuevoEst['celular'], padre_id=padreNuevo.id, madre_id=madreNuevo.id, color='0', estado_institucion='1')
         modeloEst.save()
 
+    print "Termino de obtener estudiantes y padres"
+
     # Agrega las materias que no estan dadas de alta en la base de datos
     materia_claves_id = []
     for clave in claves_mat:
@@ -833,8 +844,10 @@ def handle_uploaded_file(f):
         claseNueva.save()
         fil = {}
         fil['clave'] = clave
-        fil['id'] = str(clase.id)
+        fil['id'] = str(claseNueva.id)
         materia_claves_id.append(fil)
+
+    print "Termino con los cursos"
 
     # Obtiene el año y semestre actual
     anioActual = date.today().year
@@ -853,9 +866,17 @@ def handle_uploaded_file(f):
       grupoNuevo = Grupo(crn=arrGrupos['crn'], clase_id=arrClave['id'], horario_1=arrGrupos['horario_1'], horario_2=arrGrupos['horario_2'], horario_3=arrGrupos['horario_3'], horario_4=arrGrupos['horario_4'], horario_5=arrGrupos['horario_5'], horario_6=arrGrupos['horario_6'], anio=anioActual ,semestre=semestre ,profesor=arrGrupos['profesor'])
       grupoNuevo.save()
 
+    print "Termino de obtener las clases"
+
     # Relaciona a los alumnos actuales con las materias que esta cursando
     inscritos = [Inscrito(estudiante_id=renglon['matricula'], grupo_id=renglon['crn']) for renglon in lista]
     Inscrito.objects.bulk_create(inscritos)
+
+    print "Termino con la relacion de alumnos y clases"
+
+    final = datetime.datetime.now()
+    diferencia = final - inicial
+    print diferencia.seconds
 
 def buscaArreglo(clave, campo, lista):
     for regresa in lista:
