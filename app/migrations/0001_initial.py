@@ -52,6 +52,8 @@ class Migration(SchemaMigration):
             ('horario_4', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
             ('horario_5', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
             ('horario_6', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
+            ('anio', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
+            ('semestre', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
             ('profesor', self.gf('django.db.models.fields.CharField')(max_length=255)),
         ))
         db.send_create_signal('app', ['Grupo'])
@@ -85,7 +87,8 @@ class Migration(SchemaMigration):
             ('antidoping', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Antidoping'])),
             ('folio', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('tipo_seleccion', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
-            ('notificacion', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
+            ('resultado', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
+            ('tipo_droga', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
             ('estado', self.gf('django.db.models.fields.IntegerField')(max_length=255, null=True)),
             ('notas', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
             ('respuestas', self.gf('django.db.models.fields.TextField')(null=True)),
@@ -156,12 +159,14 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inscrito': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Inscrito']"}),
             'notas': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
-            'notificacion': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'null': 'True'}),
             'respuestas': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'resultado': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'null': 'True'}),
+            'tipo_droga': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             'tipo_seleccion': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'null': 'True'})
         },
         'app.grupo': {
             'Meta': {'object_name': 'Grupo'},
+            'anio': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'null': 'True'}),
             'clase': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Clase']"}),
             'crn': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'primary_key': 'True'}),
             'horario_1': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
@@ -170,7 +175,8 @@ class Migration(SchemaMigration):
             'horario_4': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             'horario_5': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             'horario_6': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
-            'profesor': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'profesor': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'semestre': ('django.db.models.fields.IntegerField', [], {'max_length': '255', 'null': 'True'})
         },
         'app.inscrito': {
             'Meta': {'object_name': 'Inscrito'},

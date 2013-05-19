@@ -8,8 +8,8 @@ class Padre(models.Model):
     nombre = models.CharField(null=False, max_length=255)
     apellido = models.CharField(null=False, max_length=255)
     correo = models.CharField(null=True, max_length=255)
-    telefono = models.IntegerField(null=True, max_length=255)
-    celular = models.IntegerField(null=True, max_length=255)
+    telefono = models.CharField(null=True, max_length=255)
+    celular = models.CharField(null=True, max_length=255)
       
 class Estudiante(models.Model):
     matricula = models.IntegerField(primary_key=True)
