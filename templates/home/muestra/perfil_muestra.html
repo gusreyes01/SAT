@@ -1,6 +1,7 @@
 {% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
 {% load antidoping_extras %}
+{% block antidoping %}current{% endblock %}
 
 {% block style %}
 
@@ -52,6 +53,13 @@ $(document).ready(function() {
             <h4>{{antidoping|contar_objetos:2}}</h4>
             <p class="sub">Segunda Notificación</p>
           </li>
+
+  </div>
+<div class="statistic-list-icon  widget">
+  <div class="widget-title">
+    <h3>Resultados</h3>
+  </div>
+      <ul class="listing">
           <li>
             <h4>{{antidoping|negativos}}</h4>
             <p class="sub">Negativos</p>
@@ -60,7 +68,9 @@ $(document).ready(function() {
             <h4>{{antidoping|positivos}}</h4>
             <p class="sub">Positivos</p>
           </li>
-  </div>
+        </ul>
+      </div>
+
 
 <div class="statistic-list-icon  widget">
   <div class="widget-title">

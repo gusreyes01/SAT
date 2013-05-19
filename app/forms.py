@@ -182,8 +182,8 @@ class AltaEstudiante(ModelForm):
   correo = forms.CharField(error_messages=my_default_errors,label="Correo",required=True)
   telefono = forms.CharField(required = False,label="Telefono")
   celular = forms.CharField(required = False,label="Celular")
-  color = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_INSTITUCION)
-  estado_institucion = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
+  color = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
+  estado_institucion = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_INSTITUCION)
   
   class Meta:
     model = Estudiante
