@@ -95,10 +95,18 @@ ul {
         {{ f.apellido }}
       </td>
       <td>
-        {{ f.correo }}
+        {% if f.correo != None %}
+          {{ f.correo }}
+        {% else %}
+          <p>No registrado</p>
+        {% endif %}
       </td>
       <td>
-        {{ f.telefono }}
+        {% if f.telefono != None %}
+          {{ f.telefono }}
+        {% else %}
+          <p>No registrado</p>
+        {% endif %}
       </td>
     </tr>
   {% endfor %}

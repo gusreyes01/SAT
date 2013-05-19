@@ -116,7 +116,9 @@ def estudiante(request):
             tmp = EstudianteMuestra.objects.filter(folio__contains=busqueda) # busqueda por folio
             results = map(lambda estudiantemuestra: estudiantemuestra.inscrito.estudiante, tmp)
 
-      data = {'results': results,}
+          data = {'results': results,}
+      else:
+        data = {'results': []}
 
       return render_to_response( 'home/estudiante/estudiante.html', data,context_instance = RequestContext( request ) )
   
@@ -449,12 +451,16 @@ def alta_muestra(request):
     muestra_antidoping = EstudianteMuestra.objects.filter(antidoping_id=antidoping_id)
     now = date.today()
     now = str(now).replace('-','')
+    lista_de_numeros_aleatorios = range(0, 1000000)
+    shuffle(lista_de_numeros_aleatorios)
+    contador = 0
     for estudiantemuestra in muestra_antidoping:
-      appendix = randint(0,100000)
+      appendix = lista_de_numeros_aleatorios[contador]
       estudiantemuestra.folio = "e%s%d" %(now,appendix) # Falta verificar de que no existe un folio igual.
       estudiantemuestra.estado = 0
       estudiantemuestra.resultado = 0
-      estudiantemuestra.save()     
+      estudiantemuestra.save()
+      contador = contador + 1     
 
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping
