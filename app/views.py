@@ -22,9 +22,13 @@ from django.db.models import Sum, Count, Q
 from django.http import HttpResponseRedirect
 import datetime
 import math
+from django.db import transaction
 
 # For debugging.
 import pdb
+
+# Variable para verificar el estado en el que se encuentra la importación del csv
+estado_importacion = ""
 
 # @login_required
 # def home(request):
@@ -776,14 +780,43 @@ def reportes(request, anio=2013):
 
     return render_to_response('home/reportes/reportes.html', {'general': general,'total_alumnos_general': total_alumnos_general,'total_alumnos_color': total_alumnos_color, 'color': color}, context_instance=RequestContext(request))
 
-
+@login_required
+#@transaction.commit_manually
 def subir_csv(request):
     if request.method == 'POST':
-        forma = UploadFileForm(request.POST, request.FILES)
-        if forma.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/subir_csv/')
-            return HttpResponseRedirect('success/')
+      forma = UploadFileForm(request.POST, request.FILES)
+      if forma.is_valid():
+        try:
+          handle_uploaded_file(request.FILES['file'])
+          #transaction.commit()
+        except:
+          pass
+          #transaction.rollback()
+        return HttpResponseRedirect('success/')
+    else:
+        forma = UploadFileForm()
+    return render_to_response('home/upload_csv.html', {'forma': forma}, context_instance=RequestContext(request))
+
+def consulta_master(request):
+    if request.is_ajax():
+        q1 = request.GET.get('q1', '')
+        q2 = request.GET.get('q2', '')
+        results = Avaluo.objects.all()
+        if q1:
+            results = results.filter(Q(FolioK__contains=q1) | Q(Referencia__contains=q1))
+        if q2:
+            results = results.filter((Q(Factura__contains=q2)))
+        data = {'results': results}
+        return render_to_response('home/consultas/results.html', data, context_instance=RequestContext(request))
+
+
+@login_required
+def subir_csv_back(request):
+    if request.method == 'POST':
+      forma = UploadFileForm(request.POST, request.FILES)
+      if forma.is_valid():
+        handle_uploaded_file(request.FILES['file'])
+        return HttpResponseRedirect('success/')
     else:
         forma = UploadFileForm()
     return render_to_response('home/upload_csv.html', {'forma': forma}, context_instance=RequestContext(request))
@@ -793,11 +826,7 @@ def subir_csv_success(request):
     return render_to_response('home/upload_csv_success.html', context_instance=RequestContext(request))
 
 def handle_uploaded_file(f):
-
     inicial = datetime.datetime.now()
-
-    # actualiza el estatus de todos los estudiantes a 0
-    Estudiante.objects.all().update(estado_institucion='0')
 
     #Lee el archivo linea por linea y lo almacena en la lista
     lista = []
@@ -805,7 +834,12 @@ def handle_uploaded_file(f):
     crns = []
     claves_mat = []
 
+    contador_lectura = 0;
     for line in f:
+      contador_lectura += 1
+      estado_importacion = "Obteniendo linea " + str(contador_lectura) + " del archivo de CSV"
+      print estado_importacion
+
       line = line.replace(",\n", "") # remove bad terminated line with extra comma
       line = line.replace("\n", "") # remove all the whitespace
       line = line.replace("'", "") # remove all the "
@@ -855,8 +889,21 @@ def handle_uploaded_file(f):
     crns = sorted(set(crns))
     claves_mat = sorted(set(claves_mat))
 
+    estado_importacion = "Actualizando estatus en la institución de todos los estudiantes"
+    print "\n\n\n"
+    print estado_importacion
+
+    # actualiza el estatus de todos los estudiantes a 0
+    Estudiante.objects.all().update(estado_institucion='0')
+
     # Agrega o actualiza los estudiantes
+    cont_estudiantes = 0
+    print "\n\n\n"
     for matricula in matriculas:
+      cont_estudiantes += 1
+      estado_importacion = "Guardando información del estudiante " +  str(cont_estudiantes) + " de " + str(len(matriculas))
+      print estado_importacion
+
       # Si el estudiante existe simplemente actualiza el estatus en la institución
       try:
         est = Estudiante.objects.get(matricula=matricula)
@@ -875,11 +922,15 @@ def handle_uploaded_file(f):
         modeloEst = Estudiante (matricula=nuevoEst['matricula'], nombre=nuevoEst['nombre'], apellido=nuevoEst['apellido'], correo=nuevoEst['correo'], telefono=nuevoEst['telefono'], celular=nuevoEst['celular'], padre_id=padreNuevo.id, madre_id=madreNuevo.id, color='0', estado_institucion='1')
         modeloEst.save()
 
-    print "Termino de obtener estudiantes y padres"
-
     # Agrega las materias que no estan dadas de alta en la base de datos
+    cont_materias = 0
+    print "\n\n\n"
     materia_claves_id = []
     for clave in claves_mat:
+      cont_materias += 1
+      estado_importacion = "Guardando información de la clase " +  str(cont_materias) + " de " + str(len(claves_mat))
+      print estado_importacion
+
       # Si ya existe solo almacena el valor en la lista materia_claves_id
       try:
         clase = Clase.objects.get(clave_materia=clave)
@@ -898,8 +949,6 @@ def handle_uploaded_file(f):
         fil['id'] = str(claseNueva.id)
         materia_claves_id.append(fil)
 
-    print "Termino con los cursos"
-
     # Obtiene el año y semestre actual
     anioActual = date.today().year
     semestre = date.today().month
@@ -911,23 +960,28 @@ def handle_uploaded_file(f):
       semestre = 3
 
     # Para cada crn unico almacena la información de su grupo en la base de datos
+    cont_grupo = 0
+    print "\n\n\n"
     for crn in crns:
+      cont_grupo += 1
+      estado_importacion = "Guardando información del grupo " +  str(cont_grupo) + " de " + str(len(crns))
+      print estado_importacion
+
       arrGrupos = buscaArreglo(crn, 'crn', lista)
       arrClave = buscaArreglo(arrGrupos['clave_materia'], 'clave', materia_claves_id)
       grupoNuevo = Grupo(crn=arrGrupos['crn'], clase_id=arrClave['id'], horario_1=arrGrupos['horario_1'], horario_2=arrGrupos['horario_2'], horario_3=arrGrupos['horario_3'], horario_4=arrGrupos['horario_4'], horario_5=arrGrupos['horario_5'], horario_6=arrGrupos['horario_6'], anio=anioActual ,semestre=semestre ,profesor=arrGrupos['profesor'])
       grupoNuevo.save()
 
-    print "Termino de obtener las clases"
-
     # Relaciona a los alumnos actuales con las materias que esta cursando
     inscritos = [Inscrito(estudiante_id=renglon['matricula'], grupo_id=renglon['crn']) for renglon in lista]
     Inscrito.objects.bulk_create(inscritos)
 
-    print "Termino con la relacion de alumnos y clases"
-
     final = datetime.datetime.now()
     diferencia = final - inicial
-    print diferencia.seconds
+    estado_importacion = "Relacionando estudiantes con sus grupos actuales"
+    print "\n\n\n"
+    print estado_importacion
+    print "La importación de datos tardo " + str(diferencia.seconds) + " segundo(s)"
 
 def buscaArreglo(clave, campo, lista):
     for regresa in lista:
