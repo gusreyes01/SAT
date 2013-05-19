@@ -1,16 +1,26 @@
-{% extends "home/base.html" %}
-
-{% load antidoping_extras %}
-
-{% block reportes %}active{% endblock %}
-
-
+{% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
+{% load antidoping_extras %}
+{% block muestra %}active{% endblock %}
 
 
 
-{% block script %}
-
+ {% block style %}
+ 
+ <link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
+ <link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
+ <link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css">
+ <style type="text/css">
+ #icons{
+  float:right;
+ }
+ </style>
+ 
+ {% endblock %}
+ 
+ {% block script %}
+ 
+ <script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/highcharts.js"></script>
 <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}JS/boostrap-tab.js"></script>
 
@@ -50,7 +60,7 @@ $(document).ready(function () {
                         color: '#000000',
                         connectorColor: '#000000',
                         formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
                         }
                     }
                 }
@@ -71,10 +81,17 @@ $('#color_container').highcharts({
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
-        plotShadow: false
+        plotShadow: false,
+        margin: [0, 0, 0, 0],
+        spacingTop: 0,
+        spacingBottom: 0,
+        spacingLeft: 0,
+        spacingRight: 0,
+        width:400,
+
     },
     title: {
-        text: 'Resultados Generales'
+        text: 'Resultados por Color'
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -84,12 +101,13 @@ $('#color_container').highcharts({
         pie: {
             allowPointSelect: true,
             cursor: 'pointer',
+            size:'40%',
             dataLabels: {
                 enabled: true,
                 color: '#000000',
                 connectorColor: '#000000',
                 formatter: function() {
-                    return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
                 }
             }
         }
@@ -118,71 +136,80 @@ $('#color_container').highcharts({
 
 
 });
-
 </script>
 
-{% endblock %}      
-{% block content %}
-<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-    <li class="general"><a href="#general" data-toggle="tab">General</a></li>
-    <li><a href="#color" data-toggle="tab">Color</a></li>
-</ul>
+ 
+ {% endblock %}
+ 
+ {% block content %}
 
-<div id="my-tab-content" class="tab-content">
-    <div class="tab-pane active" id="general">
-        <div class="span6">
-            <div id="general_container"></div>
-        </div>
-        <div class="span6">            
-           <table class="table table-hover">
-            <thead>
-                <th>Resultado</th>
-                <th>Cantidad</th>
-                <th></th>
-            </thead>
-            <tbody>
-                {% for g in general %}
-                <tr>
-                    <td>{{g.resultado|resultado}}</td>
-                    <td>{{g.Cantidad}}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td><b>Total</b></td>
-                    <td>{{ total_alumnos_general }}</td>
-                </tr>
+<div class="section-header"><h1>Reportes</h1></div>
+<div class="container-fluid ">
+  <div class="row-fluid">
+      <div class="widget">
 
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="tab-pane" id="color">
-    <div class="span6">
-        <div id="color_container"></div>
-    </div>
-    <div class="span6">        
-        <table class="table table-hover">
-            <thead>
-                <th>Resultado</th>
-                <th>Cantidad</th>
-                <th></th>
-            </thead>
-            <tbody>
-                {% for c in color %}
-                <tr>
-                    <td>{{c.color|color_texto}}</td>
-                    <td>{{c.Cantidad}}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td><b>Total</b></td>
-                    <td>{{ total_alumnos_color }}</td>
-                </tr>
-            </tbody>
-        </table> 
-    </div>
-</div>
-<div class="tab-pane" id="historial">
+            <div class="span12">
+
+        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+            <li class="general"><a href="#general" data-toggle="tab">General</a></li>
+            <li><a href="#color" data-toggle="tab">Color</a></li>
+        </ul>
+
+        <div id="my-tab-content" class="tab-content">
+            <div class="tab-pane active" id="general">
+                <div class="span6">
+                    <div id="general_container"></div>
+                </div>
+                <div class="span6">            
+                   <table class="table table-hover">
+                    <thead>
+                        <th>Resultado</th>
+                        <th>Cantidad</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% for g in general %}
+                        <tr>
+                            <td>{{g.resultado|resultado}}</td>
+                            <td>{{g.Cantidad}}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td><b>Total</b></td>
+                            <td>{{ total_alumnos_general }}</td>
+                        </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+            <div class="tab-pane" id="color">
+                <div class="span6">
+                    <div id="color_container"></div>
+                </div>
+                <div class="span6">        
+                    <table class="table table-hover">
+                        <thead>
+                            <th>Resultado</th>
+                            <th>Cantidad</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            {% for c in color %}
+                            <tr>
+                                <td>{{c.color|color_texto}}</td>
+                                <td>{{c.Cantidad}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td><b>Total</b></td>
+                                <td>{{ total_alumnos_color }}</td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                </div>
+            </div>
+          <div class="tab-pane" id="historial">
           <!--   <br>
             <div class="container">
                 <div class="row-fluid">
@@ -193,10 +220,19 @@ $('#color_container').highcharts({
                     </div>
                 </div>
             </div> -->
-        </div>
-    </div>
+          </div>
+      </div>
+  </div>
 </div>
 
-
 </div>
-{% endblock %}
+</div>
+
+ <!-- FIN DE REPORTES -->
+  
+  <br />
+
+
+
+ 
+ {% endblock %}

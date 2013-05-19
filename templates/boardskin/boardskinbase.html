@@ -14,6 +14,7 @@
 	<link href="{{ STATIC_URL }}boardskin/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+	
 
 	<!-- css block -->
 	{% block style %}{% endblock %}
@@ -91,27 +92,29 @@
 			<span>estudiante</span>
 		  </a>
 		</li> -->
-		<!-- <li  >
+<!-- 		<li  >
 		  <a href="/scores/">
 			<i class="icon-user"></i>
 			<span>Encuesta</span>
 		  </a>
-		</li>
-		<li  >
-		  <a href="/revisar-conexion-arduino/">
-			<i class="icon-wrench"></i>
-			<span>Reportes</span>
-		  </a>
 		</li> -->
 		<li  >
+		  <a href="/reportes/">
+			<i class="icon-bar-chart"></i>
+			<span>Reportes</span>
+		  </a>
+		</li>
+		<li  >
 		  <a href="/logout/">
-			<i class="icon-table"></i>
+			<i class="icon-eject"></i>
 			<span>Salir</span>
 		  </a>
 		</li>
 	</ul>
 	
 </div>		<div class="section sidebar">
+			{% block sidebar %}{% endblock %}
+
 	<!-- <div class="widget">
 		<div class="widget-title">
 			<h3>Latest News</h3>

@@ -409,11 +409,12 @@ def alta_muestra(request):
     muestra_antidoping = EstudianteMuestra.objects.filter(antidoping_id=antidoping_id)
     now = date.today()
     now = str(now).replace('-','')
-    for estudiante in muestra_antidoping:
+    for estudiantemuestra in muestra_antidoping:
       appendix = randint(0,100000)
-      estudiante.folio = "e%s%d" %(now,appendix) # Falta verificar de que no existe un folio igual.
-      estudiante.estado = 0
-      estudiante.save()     
+      estudiantemuestra.folio = "e%s%d" %(now,appendix) # Falta verificar de que no existe un folio igual.
+      estudiantemuestra.estado = 0
+      estudiantemuestra.resultado = 0
+      estudiantemuestra.save()     
 
     if len(elementos_a_borrar) > 0:
       antidoping_tmp = elementos_a_borrar[0].antidoping
@@ -421,7 +422,7 @@ def alta_muestra(request):
       
     elementos_a_borrar.delete()
 
-    redireccion = '/perfil_muestra/'
+    redireccion = '/'
     return redirect(redireccion)  # Redirect after POST
   else:
     # return render_to_response('home/home.html', context_instance=RequestContext(request))
