@@ -75,6 +75,18 @@ def contar_objetos(antidoping, estado):
         cantidad = EstudianteMuestra.objects.filter(antidoping_id = antidoping.id).filter(estado = estado).count()
         return cantidad
 
+def positivos(antidoping):
+    cantidad = 0
+    if antidoping:
+        cantidad = EstudianteMuestra.objects.filter(antidoping_id = antidoping.id, resultado=1).count()
+        return cantidad
+
+def negativos(antidoping):
+    cantidad = 0
+    if antidoping:
+        cantidad = EstudianteMuestra.objects.filter(antidoping_id = antidoping.id, resultado=0).count()
+        return cantidad
+
 def contar_total(objeto):
     cantidad = 0
     if objeto:
@@ -88,3 +100,5 @@ register.filter('color_texto', color_texto)
 register.filter('resultado', resultado)
 register.filter('contar_objetos', contar_objetos)
 register.filter('contar_total', contar_total)
+register.filter('positivos', positivos)
+register.filter('negativos', negativos)

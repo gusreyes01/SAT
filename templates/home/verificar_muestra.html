@@ -32,13 +32,13 @@
 {% if error %}
   <div class="hero-unit">
     <h2>Hubo un error :(</h2>
-    <p>Lo sentimos hubo un error al procesar la información, probablemente hay una inconsistencia entre la base de datos y la información que se desea procesar.</p>
+    <p>Lo sentimos hubo un error al procesar la información, probablemente hay una inconsistencia entre la base de datos o la información que se llenó en la forma, favor de intentar de nuevo.</p>
   </div>
 {% else %}
     <form action="/alta_muestra/" method="POST">{% csrf_token %}
     <input type="hidden" name="antidoping_id" value="{{antidoping_id}}">
   <div class="section-header">
-    <h1>información general</h1> 
+    <h1>Información general</h1> 
   </div>
     <div class="hero-unit">
     <!-- <div class="container-fluid ">

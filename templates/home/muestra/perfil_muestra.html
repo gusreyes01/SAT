@@ -41,22 +41,42 @@ $(document).ready(function() {
   </div>
       <ul class="listing">
           <li>
-<!--             <label class="label-warning"><i class="icon-fire icon-white"></i></label>
- -->            <h4>{{antidoping|contar_objetos:0}}</h4>
+            <h4>{{antidoping|contar_objetos:0}}</h4>
             <p class="sub">Iniciado</p>
           </li>
           <li>
-<!--             <label class="label-important"><i class="icon-heart icon-white"></i></label>
- -->            <h4>{{antidoping|contar_objetos:1}}</h4>
+            <h4>{{antidoping|contar_objetos:1}}</h4>
             <p class="sub">Primera Notificación</p>
           </li>
           <li>
-<!--             <label class="label-success"><i class="icon-leaf icon-white"></i></label>
- -->            <h4>{{antidoping|contar_objetos:2}}</h4>
+            <h4>{{antidoping|contar_objetos:2}}</h4>
             <p class="sub">Segunda Notificación</p>
+          </li>
+          <li>
+            <h4>{{antidoping|negativos}}</h4>
+            <p class="sub">Negativos</p>
+          </li>
+          <li>
+            <h4>{{antidoping|positivos}}</h4>
+            <p class="sub">Positivos</p>
           </li>
   </div>
 
+<div class="statistic-list-icon  widget">
+  <div class="widget-title">
+    <h3>Generar Notificaciones</h3>
+  </div>
+      <ul class="listing">
+          <li>
+            <button type="button" id="not_1" class="btn btn-flat btn-blue no-radius notificacion">Primera Notificación</button>
+          </li>
+          <li>
+            <button type="button" id="not_2" class="btn btn-flat btn-blue no-radius notificacion">Segunda Notificación</button>
+          </li>
+          <li>
+            <button type="button" id="not_3" class="btn btn-flat btn-blue no-radius btn-danger notificacion">Tercera Notificación</button>
+          </li>
+  </div>
 
 {% endblock %}
 
@@ -70,14 +90,6 @@ $(document).ready(function() {
     <div class="span12">
       <div class="widget">
       <h4>{{antidoping|contar_total}} Alumnos</h4>
-
-      <button type="button" id="not_1" class="btn btn-flat btn-blue no-radius notificacion">Primera Notificación</button>
-      <button type="button" id="not_2" class="btn btn-flat btn-blue no-radius notificacion">Segunda Notificación</button>
-      <button type="button" id="not_3" class="btn btn-flat btn-blue no-radius btn-danger notificacion">Tercera Notificación</button>
-      <br>
-
-      <!-- <h3>Nombre : {{antidoping.nombre}}</h3> -->
-
 
       <table class="table table-striped table-bordered" style="margin-top:10px;">
         <tr>

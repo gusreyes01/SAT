@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.utils import timezone
+from django.db import transaction
 from random import sample, shuffle, randint
 from app.cartas_notificacion import *
 from django.utils import simplejson
@@ -147,7 +148,11 @@ def muestra(request):
     for x in color:
       total_alumnos_color += x['Cantidad']
 
-    antidopings = Antidoping.objects.all()
+    
+    # Borrar antidopings mal inicializados.
+    borrar_antidopings()
+
+    antidopings = Antidoping.objects.exclude(estado_antidoping=None)
     for antidoping in antidopings:
       tmp = EstudianteMuestra.objects.filter(antidoping=antidoping.pk).aggregate(Max('estado'))
       antidoping.estado_antidoping = tmp['estado__max'] # Sacar el atributo y guardarlo.
@@ -158,11 +163,20 @@ def muestra(request):
 def success(request):
     return render_to_response('home/success.html', context_instance=RequestContext(request))    
 
-@login_required
-def eliminar_muestra(request,id):
+def borrar_antidopings():
+  antidoping_a_borrar = Antidoping.objects.filter(estado_antidoping=None)
+  for borrar in antidoping_a_borrar:
+    borrar_estudiante_muestra(borrar.pk)
+  antidoping_a_borrar.delete()
+
+def borrar_estudiante_muestra(id):
    antidoping_borrar = Antidoping.objects.get(pk=int(id))   # Obtener el antidoping a borrar.
    antidoping_borrar.estudiantemuestra_set.all().delete()   # Borrar los alumnos de la muestra relacionados a él.
    antidoping_borrar.delete()                               # Borrar el antidoping.
+
+@login_required
+def eliminar_muestra(request,id):
+   borrar_estudiante_muestra(id)
 
    return redirect('/muestra/')
 
@@ -241,6 +255,12 @@ def seleccion_muestra(request):
         mes = str(time.month)
         semestre = meses[mes]
         try:
+          # Verificar la cantidad de la muestra con los alumnos especificados.
+          if len(alumnos_seleccionados) > tamano_muestra or tamano_muestra < 3:
+            raise Exception("Cantidad de alumnos inconsistente")
+
+          grupos_seleccionados_filtrados = Grupo.objects.filter(pk__in=grupos_seleccionados)
+
           # Modificar si se necesita null.
           if dia == 'lunes':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -251,6 +271,7 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_1='None')
        
           elif dia == 'martes':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -261,6 +282,7 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_2='None')
 
           elif dia == 'miercoles':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -271,6 +293,7 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_3='None')
 
           elif dia == 'jueves':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -281,6 +304,7 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_4='None')
 
           elif dia == 'viernes':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -291,6 +315,7 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_5='None')
 
           elif dia == 'sabado':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -301,30 +326,35 @@ def seleccion_muestra(request):
               horario_atdp = obtener_horario_de_forma(inicio, fin)
               if horario_gpo['hora_inicio'] >= horario_atdp['hora_inicio'] and horario_gpo['hora_fin'] <= horario_atdp['hora_fin']:
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
+            grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_6='None')
 
           
-
-          # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos.        
-          total_grupos = muestra_grupos + list(Grupo.objects.filter(pk__in=grupos_seleccionados))
+          # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos seleccionados.        
+          total_grupos = muestra_grupos + list(grupos_seleccionados_filtrados)
           total_grupos = list(set(total_grupos))
+          # for gpo in total_grupos:
+          #   print gpo.crn
+
           for estudiante in alumnos_seleccionados:
             tmp = Inscrito.objects.filter(estudiante_id=estudiante, grupo__in=total_grupos)
-            # print "tmp", tmp
-            # print type(tmp)
-            # print tmp != []
             if tmp:
-              muestra_seleccionados = muestra_seleccionados + [tmp[0]]        # Trick to merge querysets.
+              muestra_seleccionados = muestra_seleccionados + [tmp[0]]        # Trick to merge querysets with the first student appearance n any of the groups.
+              print tmp[0].grupo_id
 
-          # muestra_seleccionados = Inscrito.objects.filter(estudiante_id__in=alumnos_seleccionados, grupo__in=total_grupos)
-         
+          grupos_repetidos = []
           # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
           for inscrito in muestra_seleccionados:
             muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
+            grupos_repetidos = grupos_repetidos + [inscrito.grupo_id]
+            print inscrito.grupo
             # muestra_grupos = filter(lambda gpo: gpo != inscrito.grupo, muestra_grupos)  # Eliminar de la seleccion.
          
+          grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(crn__in=grupos_repetidos)
+
          # obtener alumnos que pertenecen a los grupos senalados.
-          for gpo_seleccionado in grupos_seleccionados:
-            muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo_id=gpo_seleccionado), randint(3,5))
+          for gpo_seleccionado in grupos_seleccionados_filtrados:
+            elegir_inscritos = Inscrito.objects.filter(grupo_id=gpo_seleccionado)
+            muestra_aleatorios = muestra_aleatorios + sample(elegir_inscritos, randint(3,5))
 
           # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
           shuffle(muestra_grupos)
@@ -366,8 +396,12 @@ def seleccion_muestra(request):
           nuevo_antidoping.save()
 
           # Guardar las personas de la muestra.
-          for inscrito in list(muestra_seleccionados) + list(muestra_aleatorios):
-            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping)
+          for inscrito in list(muestra_seleccionados):
+            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=1)
+            tmp.save()
+
+          for inscrito in list(muestra_aleatorios):
+            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=0)
             tmp.save()
 
           respuesta = {
@@ -385,8 +419,8 @@ def seleccion_muestra(request):
               'error': False
             }
 
-        except:
-          print "Hubo una excepcion"
+        except Exception as e:
+          print '%s (%s)' % (e.message, type(e))
           respuesta = {
               'error': True
             }

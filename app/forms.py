@@ -431,4 +431,19 @@ class EncuestaContestada(ModelForm):
       super(EncuestaContestada, self).__init__(*args, **kwargs)
 
 class UploadFileForm(forms.Form):
-  file  = forms.FileField(label="Archivo CSV")
+  file  = forms.FileField(label="CSV")
+
+  def __init__(self, *args, **kwargs):
+      self.helper = FormHelper()
+      self.helper.form_id = 'id-UploadFileForm'
+      self.helper.form_class = 'blueForms'
+      self.helper.form_method = 'POST'
+      self.helper.layout = Layout(
+  Div(
+  Div('file',
+      css_class='span3'),css_class='row-fluid'),
+  Div(
+  ButtonHolder(
+      Submit('submit', 'Subir', css_class='btn-success'), css_class='row-fluid')
+  ))
+      super(UploadFileForm, self).__init__(*args, **kwargs)

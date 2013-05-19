@@ -1,4 +1,4 @@
-{% extends "home/base.html" %}
+{% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
 
 {% block style %}
@@ -15,18 +15,27 @@
  
 {% block content %}
  
-<div class="container">
-	<div class="hero-unit">
+ <div class="section-header">
+    <h1>Importar archivo csv</h1> 
+</div>
+
+
+<div class="container-fluid ">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget">
 		<form action="/subir_csv/" method="post" enctype="multipart/form-data">
 		  	<p>
 		    	{% csrf_token %}
 		    	{{ forma }}
 				<div class="buttonHolder">
-					<input type="submit" name="submit" value="Importar CSV" class="btn btn-primary btn-success" id="submit-id-submit">
+					<input type="submit" name="submit" value="Importar" class="btn btn-primary btn-success" id="submit-id-submit">
 				</div>
 			</p>
 		</form>
 	</div>
 	<hr>
-</div> <!-- /container -->
+</div>
+</div>
+</div>
 {% endblock %}

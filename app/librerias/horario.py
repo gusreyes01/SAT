@@ -55,9 +55,11 @@ def obtener_horario_de_forma(tiempo_inicio, tiempo_fin):
 		# print tiempo_inicio, tiempo_fin
 		hora_inicio = int(tiempo_inicio) + inicia_en_minuto
 		hora_fin = int(tiempo_fin) + termina_en_minuto
-		if hora_fin > hora_inicio:
-			return {'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
-		return {'hora_inicio': hora_fin, 'hora_fin': hora_inicio}
+		# print hora_fin - hora_inicio
+		if hora_fin < hora_inicio or hora_fin - hora_inicio < 1:
+			# return {'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
+			raise Exception("Horarios inconsistentes o la diferencia es menor a 1 hora.")
+		return {'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
 	except:
 		print sys.exc_info()[0]
 		return None
