@@ -143,27 +143,16 @@ def alta_estudiante(request):
     
 @login_required
 def muestra(request):
-    general = EstudianteMuestra.objects.filter(resultado__isnull=False).values('resultado').annotate(Cantidad=Count('resultado'))
-    color = Estudiante.objects.filter(color__isnull=False).values('color').annotate(Cantidad=Count('color'))
-
-    total_alumnos_general = 0
-    for x in general:
-      total_alumnos_general += x['Cantidad']
-
-    total_alumnos_color = 0
-    for x in color:
-      total_alumnos_color += x['Cantidad']
-
-    
+   
     # Borrar antidopings mal inicializados.
     borrar_antidopings()
 
-    antidopings = Antidoping.objects.exclude(estado_antidoping=None)
+    antidopings = Antidoping.objects.exclude(estado_antidoping=None).order_by('-antidoping_inicio')
     for antidoping in antidopings:
       tmp = EstudianteMuestra.objects.filter(antidoping=antidoping.pk).aggregate(Max('estado'))
       antidoping.estado_antidoping = tmp['estado__max'] # Sacar el atributo y guardarlo.
       antidoping.save()
-    return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings, 'general': general, 'total_alumnos_general': total_alumnos_general, 'color':color, 'total_alumnos_color':total_alumnos_color}, context_instance=RequestContext(request))
+    return render_to_response('home/muestra/muestra.html',{'antidopings': antidopings}, context_instance=RequestContext(request))
 
 @login_required
 def success(request):
