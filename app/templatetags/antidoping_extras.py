@@ -36,15 +36,15 @@ def estado(estado_en_numero):
         return 'Cerrado'
 
 def color(color_en_numero):
-    if color_en_numero == 0:
+    if color_en_numero == 1:
         return '#8CBF26'  #VERDE
-    elif color_en_numero == 1:
-        return '#E8BE1B'  #AMARILLO
     elif color_en_numero == 2:
-        return '#F09609'  #NARANJA
+        return '#E8BE1B'  #AMARILLO
     elif color_en_numero == 3:
-        return '#E51400'  #ROJO
+        return '#F09609'  #NARANJA
     elif color_en_numero == 4:
+        return '#E51400'  #ROJO
+    elif color_en_numero == 5:
         return '#000000'  #NEGRO
     else:
         return '#989898'

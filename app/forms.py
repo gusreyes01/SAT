@@ -120,7 +120,7 @@ LUGAR_CONSUMIDO = (
 )
 
 COLOR = (
-    ('0','Gris'),
+    # ('0','Gris'),
     ('1','Verde'),
     ('2','Amarillo'),
     ('3','Naranja'),

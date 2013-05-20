@@ -90,7 +90,9 @@ def evaluar_estudiante(request,id):
       if forma.is_valid():
         estudiante_muestra = forma.save(commit=False)
         if estudiante_muestra.resultado == 1:
-          estudiante_muestra.inscrito.estudiante.color = 4
+          estudiante = Estudiante.objects.get(matricula=estudiante_muestra.inscrito.estudiante_id)
+          estudiante.color = 4
+          estudiante.save()
         estudiante_muestra.save()
         return redirect('/perfil_muestra/' + str(estudiante_muestra.antidoping_id))  
     else:
@@ -711,7 +713,7 @@ def revisar_encuesta(request,id):
             rev_enc.respuestas = respuestas
             rev_enc.notas = notas
             rev_enc.save()
-        return redirect('/encuestas_contestadas/')
+        return redirect('/')
     else:
         forma = EncuestaContestada(instance=rev_enc)
         #folio

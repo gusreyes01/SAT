@@ -81,15 +81,21 @@ ul {
       <!-- <td><strong>{{ forloop.counter }}.</strong></td> -->
       <!-- <td class="right"> -->
       <td>
+        <!-- <div class="input-color">
+          <div class="color-box" style="background-color: {{f.color|color}};"></div>
+          <a href="/perfil_estudiante/{{f.matricula}}">{{f.matricula}}</a>
+        </div> -->
         <div class="input-color">
           <div class="color-box" style="background-color: {{f.color|color}};"></div>
           <a href="/perfil_estudiante/{{f.matricula}}">{{f.matricula}}</a>
-        </div>
+        
+          <div id="icons">
+            <a href="/edita_estudiante/{{f.matricula}}"><i class="icon-pencil"></i></a>
+          </div>
+          </div>
       </td>
       <td>
-        <div id="icons">
-            <a href="/edita_estudiante/{{f.matricula}}"><i class="icon-pencil"></i></a>
-        </div>{{ f.nombre }}
+        {{ f.nombre }}
       </td>
       <td>
         {{ f.apellido }}
