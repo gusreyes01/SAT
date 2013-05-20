@@ -62,8 +62,6 @@ def obtener_horario_de_forma(tiempo_inicio, tiempo_fin):
 		return {'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
 	except:
 		print sys.exc_info()[0]
-		return None
-
 
 
 
