@@ -535,7 +535,11 @@ def obtener_carta(request, id_antidoping, notificacion):
         est_dic['salon'] = horario_split[1]
         est_dic['materia'] = est.inscrito.grupo.clase.nombre
         est_dic['folio'] = est.folio
-        est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
+        seleccion = est.antidoping.estado_antidoping
+        if seleccion == 0:
+          est_dic['tipo_de_seleccion'] = 'seleccionado aleatoriamente'
+        else:
+          est_dic['tipo_de_seleccion'] = 'seleccionado de manera dirigida'
         lista.append(est_dic)
 
     PWD = os.path.dirname(os.path.realpath(__file__))
