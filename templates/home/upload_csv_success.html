@@ -1,25 +1,48 @@
-{% extends "home/base.html" %}
+{% extends "boardskin/boardskinbase.html" %}
+{% load crispy_forms_tags %}
 
- {% block style %}
+{% block style %}
+<link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
+<link href="{{ STATIC_URL }}CSS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css">
+<link href="{{ STATIC_URL }}CSS/jquery.tagsinput.css" rel="stylesheet" type="text/css"> 
+{% endblock %}
  
- {% endblock %}
+{% block script %}
+<script src="{{ STATIC_URL }}JS/jquery-1.9.1.min.js"></script>
+<script src="{{ STATIC_URL }}JS/jquery-ui-1.10.1.custom.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}JS/jquery.tagsinput.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#wait').hide();
+		$('#boton_upload').click(function () {
+			$('#form').hide();
+			$('#wait').show();
+		});
+	});
+</script>
+{% endblock %}
  
- {% block script %}
+{% block content %}
  
- {% endblock %}
- 
- {% block content %}
- 
- <div class="container">
+<div class="section-header">
+    <h1>Resultado de la importación</h1> 
+</div>
 
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <p>La información fue importada exitosamente</p>
-        <p><a href="/" class="btn btn-primary btn-large">Ir a la pantalla principal</a></p>
-      </div>
-
-      <hr>
-
-    </div> <!-- /container -->
- 
- {% endblock %}
+<div class="container-fluid ">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget" id="form">
+            	<div class="hero-unit">
+{% if error %}
+					<h2>Hubo un error :(</h2>
+	    			<p>{{ mensaje }}</p>
+{% else %}
+					<h2>La información fue importada exitosamente :)</h2>
+	    			<p>{{ mensaje }}</p>
+{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
