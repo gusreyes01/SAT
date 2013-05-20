@@ -67,7 +67,9 @@ def resultado(resultado_en_numero):
     if resultado_en_numero == 0:
         return 'Negativo' 
     elif resultado_en_numero == 1:
-        return 'Positivo'  
+        return 'Positivo'
+    else:
+        return 'Pendiente'  
 
 def contar_objetos(antidoping, estado):
     cantidad = 0

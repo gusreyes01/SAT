@@ -15,6 +15,34 @@
  width: auto;
  border:0px;
 }
+
+
+#icons{
+  float:right;
+}
+
+ul {
+    margin: 20px;
+}
+
+.input-color {
+    position: relative;
+}
+.input-color input {
+    padding-left: 20px;
+    padding-right: 100px;
+}
+.input-color .color-box {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    background-color: #ccc;
+    position: relative;
+    left: 0px;
+    top:1px; 
+}
+
+
 </style>
 
 {% endblock %}
@@ -107,19 +135,26 @@ $(document).ready(function() {
          <th>Nombre</th>
          <th>Apellido</th>
          <th>Estado</th>
+         <th>Resultado</th>
          <th>Encuesta</th>
          <th>Adicional</th>
        </tr>
        {% for a,b in alumnos %}
        <tr>
-         <td><a href="/perfil_estudiante/{{a.matricula}}">{{a.matricula}}</a>
+         <td>
+        <div class="input-color">
+          <div class="color-box" style="background-color: {{a.color|color}};"></div>
+          <a href="/perfil_estudiante/{{a.matricula}}">{{a.matricula}}</a>
+        
           <div id="icons">
             <a href="/edita_estudiante/{{a.matricula}}"><i class="icon-pencil"></i></a>
+          </div>
           </div>
         </td>
         <td>{{a.nombre}}</td>
         <td>{{a.apellido}}</td>
         <td>{{b.estado|estado}}</td>
+        <td>{{b.resultado|resultado}}</td>
         {% if b.respuestas %} 
         <td><a href="/revisar_encuesta/{{b.id}}">{{b.folio}}</a></td> 
         {% else %}
