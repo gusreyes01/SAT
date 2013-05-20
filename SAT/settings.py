@@ -127,7 +127,8 @@ TEMPLATE_DIRS = (
     'templates',
 )
 
-INTERNAL_IPS = ('127.0.0.1', )
+# Quitar comentario para activar debug toolbar
+# INTERNAL_IPS = ('127.0.0.1', )     
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -153,6 +154,7 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -176,7 +178,7 @@ LOGGING = {
         },
     }
 }
-
+"""
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
@@ -209,3 +211,4 @@ DEBUG_TOOLBAR_CONFIG = {
     'TAG': 'div',
     'ENABLE_STACKTRACES' : True,
 }
+"""
