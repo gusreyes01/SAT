@@ -838,31 +838,31 @@ def handle_uploaded_file(f):
       matricula = int(line[0].replace("A", ""))
 
       fila['matricula'] = matricula
-      fila['nombre'] = line[1]
-      fila['apellido'] = line[2]
-      fila['correo'] = line[3]
-      fila['telefono'] = line[4]
-      fila['celular'] = line[5]
-      fila['nombrePadre'] = line[6]
-      fila['apellidoPadre'] = line[7]
-      fila['correoPadre'] = line[8]
-      fila['telefonoPadre'] = line[9]
-      fila['celularPadre'] = line[10]
-      fila['nombreMadre'] = line[11]
-      fila['apellidoMadre'] = line[12]
-      fila['correoMadre'] = line[13]
-      fila['telefonoMadre'] = line[14]
-      fila['celularMadre'] = line[15]
+      fila['nombre'] = cambia_none(line[1])
+      fila['apellido'] = cambia_none(line[2])
+      fila['correo'] = cambia_none(line[3])
+      fila['telefono'] = cambia_none(line[4])
+      fila['celular'] = cambia_none(line[5])
+      fila['nombrePadre'] = cambia_none(line[6])
+      fila['apellidoPadre'] = cambia_none(line[7])
+      fila['correoPadre'] = cambia_none(line[8])
+      fila['telefonoPadre'] = cambia_none(line[9])
+      fila['celularPadre'] = cambia_none(line[10])
+      fila['nombreMadre'] = cambia_none(line[11])
+      fila['apellidoMadre'] = cambia_none(line[12])
+      fila['correoMadre'] = cambia_none(line[13])
+      fila['telefonoMadre'] = cambia_none(line[14])
+      fila['celularMadre'] = cambia_none(line[15])
       fila['crn'] = line[16]
-      fila['horario_1'] = line[17]
-      fila['horario_2'] = line[18]
-      fila['horario_3'] = line[19]
-      fila['horario_4'] = line[20]
-      fila['horario_5'] = line[21]
-      fila['horario_6'] = line[22]
-      fila['profesor'] = line[23]
-      fila['clave_materia'] = line[24]
-      fila['nombre_materia'] = line[25]
+      fila['horario_1'] = cambia_none(line[17])
+      fila['horario_2'] = cambia_none(line[18])
+      fila['horario_3'] = cambia_none(line[19])
+      fila['horario_4'] = cambia_none(line[20])
+      fila['horario_5'] = cambia_none(line[21])
+      fila['horario_6'] = cambia_none(line[22])
+      fila['profesor'] = cambia_none(line[23])
+      fila['clave_materia'] = cambia_none(line[24])
+      fila['nombre_materia'] = cambia_none(line[25])
       lista.append(fila)
 
       matriculas.append(matricula)
@@ -968,3 +968,9 @@ def buscaArreglo(clave, campo, lista):
     for regresa in lista:
       if regresa[campo] == clave:
         return regresa
+
+def cambia_none(valor):
+  if valor == "":
+    return "None"
+  else:
+    return valor
