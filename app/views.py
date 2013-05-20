@@ -77,7 +77,7 @@ def edita_estudiante(request,id):
       forma.helper.form_action = reverse('perfil_estudiante', args=[id])
       if forma.is_valid():
         forma.save()
-        return redirect('/estudiante/')  
+        return redirect('/')  
     else:
       forma = AltaEstudiante(instance=estudiante)
     return render_to_response('home/estudiante/edita_estudiante.html', {'forma': forma}, context_instance=RequestContext(request))    
@@ -89,11 +89,8 @@ def evaluar_estudiante(request,id):
       forma = EvaluaEstudiante(request.POST, instance=estudiante_muestra)
       if forma.is_valid():
         estudiante_muestra = forma.save(commit=False)
-        # estudiante_muestra.tipo_droga = forma.cleaned_data['tipo_droga']
-        # estudiante_muestra.tipo_droga = ','.join(estudiante_muestra.tipo_droga)
-        # if estudiante_muestra.estado > estudiante_muestra.antidoping.estado_antidoping:
-        #   estudiante_muestra.antidoping.estado_antidoping = estudiante_muestra.estado 
-        #   estudiante_muestra.antidoping.save()
+        if estudiante_muestra.resultado == 1:
+          estudiante_muestra.inscrito.estudiante.color = 4
         estudiante_muestra.save()
         return redirect('/perfil_muestra/' + str(estudiante_muestra.antidoping_id))  
     else:
@@ -105,6 +102,7 @@ def estudiante(request):
   if request.method=='POST':
       busqueda = request.POST.get('q1', '')
       if busqueda:
+          print busqueda
           results = Estudiante.objects.filter(matricula__contains=busqueda) # busqueda por matricula
           if len(results) < 1:
             results = Estudiante.objects.filter(correo__contains=busqueda) # busqueda por correo
@@ -115,6 +113,17 @@ def estudiante(request):
           if len(results) < 1:
             tmp = EstudianteMuestra.objects.filter(folio__contains=busqueda) # busqueda por folio
             results = map(lambda estudiantemuestra: estudiantemuestra.inscrito.estudiante, tmp)
+          if busqueda == 'verdes':
+            results = Estudiante.objects.filter(color=1)
+          if busqueda == 'amarillos':
+            results = Estudiante.objects.filter(color=2)
+          if busqueda == 'naranjas':
+            results = Estudiante.objects.filter(color=3)
+          if busqueda == 'rojos':
+            results = Estudiante.objects.filter(color=4)
+          if busqueda == 'negros':
+            results = Estudiante.objects.filter(color=5)
+
 
           data = {'results': results,}
       else:
@@ -392,11 +401,11 @@ def seleccion_muestra(request):
 
           # Guardar las personas de la muestra.
           for inscrito in list(muestra_seleccionados):
-            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=1)
+            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=1, resultado=0)
             tmp.save()
 
           for inscrito in list(muestra_aleatorios):
-            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=0)
+            tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=0, resultado=0)
             tmp.save()
 
           respuesta = {

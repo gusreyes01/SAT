@@ -124,7 +124,8 @@ COLOR = (
     ('1','Verde'),
     ('2','Amarillo'),
     ('3','Naranja'),
-    ('4','Negro'),
+    ('4','Rojo'),
+    ('5','Negro'),
 )
 
 DIA_SEMANA = (

@@ -18,15 +18,21 @@
  {% endblock %}
  
  {% block content %}
- 
- <div class="container">
+ <div class="section-header">
+    <h1>Alta Estudiante</h1> 
+</div>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget">
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-       <h3>Alta Estudiante</h3>
         {{ forma.errors }}
        	{% crispy forma %}       	
-      </div>
       <hr>
-    </div> <!-- /container -->
+		    </div> 
+		</div> 
+	</div> 
+</div> 
  
  {% endblock %}
