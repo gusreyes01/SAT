@@ -264,9 +264,10 @@ def seleccion_muestra(request):
           # Verificar la cantidad de la muestra con los alumnos especificados.
           if len(alumnos_seleccionados) > tamano_muestra or tamano_muestra < 3:
             raise Exception("Cantidad de alumnos inconsistente")
-
+          print "Obteniendo grupos seleccionados"
           grupos_seleccionados_filtrados = Grupo.objects.filter(pk__in=grupos_seleccionados)
 
+          print "Buscando grupos que caigan dentro del horario y dia especificado"
           # Modificar si se necesita null.
           if dia == 'lunes':
             semestre = Grupo.objects.filter(anio=anio, semestre=semestre)
@@ -334,7 +335,7 @@ def seleccion_muestra(request):
                 muestra_grupos = muestra_grupos + [gpo]       # Guardar el grupo en una lista.
             grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(horario_6='None')
 
-          
+          print "obtener alumnos que fueron senalados y que se pueden encontrar en los grupos seleccionados."
           # obtener alumnos que fueron senalados y que se pueden encontrar en los grupos seleccionados.        
           total_grupos = muestra_grupos + list(grupos_seleccionados_filtrados)
           total_grupos = list(set(total_grupos))
@@ -348,6 +349,8 @@ def seleccion_muestra(request):
               print tmp[0].grupo_id
 
           grupos_repetidos = []
+          print "Protegemos la identidad del alumno seleccionado agregando otros alumnos."
+
           # Protegemos la identidad del alumno seleccionado agregando otros alumnos.
           for inscrito in muestra_seleccionados:
             muestra_aleatorios = muestra_aleatorios + sample(Inscrito.objects.filter(grupo=inscrito.grupo), randint(2,4))
@@ -357,11 +360,13 @@ def seleccion_muestra(request):
          
           grupos_seleccionados_filtrados = grupos_seleccionados_filtrados.exclude(crn__in=grupos_repetidos)
 
+          print "obtener alumnos que pertenecen a los grupos senalados."
          # obtener alumnos que pertenecen a los grupos senalados.
           for gpo_seleccionado in grupos_seleccionados_filtrados:
             elegir_inscritos = Inscrito.objects.filter(grupo_id=gpo_seleccionado)
             muestra_aleatorios = muestra_aleatorios + sample(elegir_inscritos, randint(3,5))
 
+          print "Barajear a los grupos, para asegurar que el proceso sea aleatorio."
           # Barajear a los grupos, para asegurar que el proceso sea aleatorio.
           shuffle(muestra_grupos)
           cantidad_alumnos_seleccionados = len(muestra_seleccionados)
@@ -369,6 +374,8 @@ def seleccion_muestra(request):
           cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
 
           print cantidad_alumnos_aleatorios,cantidad_alumnos_seleccionados
+          
+          print "Escoger alumnos aleatoriamente hasta que se cumpla el tamano de la muestra."
           # Escoger alumnos aleatoriamente hasta que se cumpla el tamano de la muestra.
           elementos_restantes = tamano_muestra - cantidad_total_muestra
 
@@ -390,6 +397,7 @@ def seleccion_muestra(request):
           cantidad_alumnos_aleatorios = len(muestra_aleatorios)
           cantidad_total_muestra = cantidad_alumnos_aleatorios + cantidad_alumnos_seleccionados
 
+          print "Guardar Antidoping."
           # Guardar antidoping.
           nuevo_antidoping.nombre = forma.cleaned_data['nombre']
           nuevo_antidoping.dia = dia
@@ -401,6 +409,7 @@ def seleccion_muestra(request):
           nuevo_antidoping.notas = forma.cleaned_data['notas']
           nuevo_antidoping.save()
 
+          print "Guardar las personas de la muestra."
           # Guardar las personas de la muestra.
           for inscrito in list(muestra_seleccionados):
             tmp = EstudianteMuestra(inscrito=inscrito, antidoping=nuevo_antidoping, tipo_seleccion=1, resultado=0)
