@@ -603,7 +603,7 @@ def success(request):
     return render_to_response('home/success_muestra.html', context_instance=RequestContext(request))
 
 #Vista que da acceso al alumno a su encuesta correspondiente
-@login_required
+# @login_required
 def autenticacion_encuesta(request):
     if request.method == 'POST':
         folio = request.POST['folio']
@@ -911,7 +911,7 @@ def handle_uploaded_file(f):
         madreNuevo = Padre(nombre=nuevoEst['nombreMadre'], apellido=nuevoEst['apellidoMadre'], correo=nuevoEst['correoMadre'], telefono=nuevoEst['telefonoMadre'], celular=nuevoEst['celularMadre'])
         madreNuevo.save()
 
-        modeloEst = Estudiante (matricula=nuevoEst['matricula'], nombre=nuevoEst['nombre'], apellido=nuevoEst['apellido'], correo=nuevoEst['correo'], telefono=nuevoEst['telefono'], celular=nuevoEst['celular'], padre_id=padreNuevo.id, madre_id=madreNuevo.id, color='0', estado_institucion='1')
+        modeloEst = Estudiante (matricula=nuevoEst['matricula'], nombre=nuevoEst['nombre'], apellido=nuevoEst['apellido'], correo=nuevoEst['correo'], telefono=nuevoEst['telefono'], celular=nuevoEst['celular'], padre_id=padreNuevo.id, madre_id=madreNuevo.id, color='1', estado_institucion='1')
         modeloEst.save()
 
     # Agrega las materias que no estan dadas de alta en la base de datos

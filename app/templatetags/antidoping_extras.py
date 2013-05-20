@@ -50,15 +50,15 @@ def color(color_en_numero):
         return '#989898'
 
 def color_texto(color_en_numero):
-    if color_en_numero == 0:
+    if color_en_numero == 1:
         return 'Verde'  #VERDE
-    elif color_en_numero == 1:
-        return 'Amarillo'  #AMARILLO
     elif color_en_numero == 2:
-        return 'Naranja'  #NARANJA
+        return 'Amarillo'  #AMARILLO
     elif color_en_numero == 3:
-        return 'Rojo'  #ROJO
+        return 'Naranja'  #NARANJA
     elif color_en_numero == 4:
+        return 'Rojo'  #ROJO
+    elif color_en_numero == 5:
         return 'Negro'  #NEGRO
     else:
         return 'No encontrado'

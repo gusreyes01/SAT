@@ -180,7 +180,7 @@ class AltaEstudiante(ModelForm):
   matricula = forms.DecimalField(required = True,label="Matricula")
   nombre = forms.CharField(error_messages=my_default_errors,label="Nombre",required=True)
   apellido = forms.CharField(error_messages=my_default_errors,label="Apellido",required=True)
-  correo = forms.CharField(error_messages=my_default_errors,label="Correo",required=True)
+  correo = forms.CharField(error_messages=my_default_errors,label="Correo",required=False)
   telefono = forms.CharField(required = False,label="Telefono")
   celular = forms.CharField(required = False,label="Celular")
   color = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
