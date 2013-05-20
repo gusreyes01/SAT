@@ -80,7 +80,7 @@
 	<div class="content clearfix">
 	  	<div class="section menu">
 	<ul class="navigation">
-		<li  class="current"  >
+		<li  class="{% block antidoping %}{% endblock %}">
 		  <a href="/">
 			<i class="icon-dashboard"></i>
 			<span>Antidoping</span>
@@ -88,7 +88,7 @@
 		</li>
 		
 		<!-- Reportes -->
-		<li>
+		<li class="{% block reportes %}{% endblock %}">
 		  <a href="/reportes/">
 			<i class="icon-bar-chart"></i>
 			<span>Reportes</span>
@@ -96,7 +96,7 @@
 		</li>
 
 		<!-- Importar -->
-		<li>
+		<li class="{% block importar %}{% endblock %}">
 		  <a href="/subir_csv/">
 			<i class="icon-upload-alt"></i>
 			<span>Importar</span>

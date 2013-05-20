@@ -182,8 +182,8 @@ class AltaEstudiante(ModelForm):
   correo = forms.CharField(error_messages=my_default_errors,label="Correo",required=True)
   telefono = forms.CharField(required = False,label="Telefono")
   celular = forms.CharField(required = False,label="Celular")
-  color = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_INSTITUCION)
-  estado_institucion = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
+  color = forms.ChoiceField(error_messages=my_default_errors,choices=COLOR)
+  estado_institucion = forms.ChoiceField(error_messages=my_default_errors,choices=ESTADO_INSTITUCION)
   
   class Meta:
     model = Estudiante
@@ -279,11 +279,14 @@ class EvaluaEstudiante(ModelForm):
   Div(
       'notificacion',
       'tipo_droga',
+      css_class='span3'),
+  Div(
       'tipo_seleccion',
       'estado',
       'resultado',
+      css_class='span3'),
+  Div(
       'notas',
-
       css_class='span3'),css_class='row-fluid'),
   ButtonHolder(
       Submit('submit', 'Guardar', css_class='btn-success')
@@ -441,9 +444,6 @@ class UploadFileForm(forms.Form):
       self.helper.layout = Layout(
   Div(
   Div('file',
-      css_class='span3'),css_class='row-fluid'),
-  Div(
-  ButtonHolder(
-      Submit('submit', 'Subir', css_class='btn-success'), css_class='row-fluid')
+      css_class='span3'),css_class='row-fluid'
   ))
       super(UploadFileForm, self).__init__(*args, **kwargs)

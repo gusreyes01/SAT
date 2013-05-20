@@ -1,5 +1,6 @@
 {% extends "boardskin/boardskinbase.html" %}
 {% load crispy_forms_tags %}
+{% block importar %}current{% endblock %}
 
 {% block style %}
 <link href="{{ STATIC_URL }}CSS/tag-it.css" rel="stylesheet" type="text/css">
@@ -80,9 +81,7 @@
 		<form action="/subir_csv/" method="post" enctype="multipart/form-data">
 		    {% csrf_token %}
 		    {{ forma }}
-			<div class="buttonHolder">
-				<input id="boton_upload" type="submit" value="Importar CSV" class="btn btn-primary btn-success">
-			</div>
+				<input id="boton_upload" type="submit" value="Subir CSV" class="btn btn-flat no-radius btn-success">
 		</form>
 	</div>
 	
