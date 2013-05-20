@@ -418,7 +418,7 @@ def seleccion_muestra(request):
           print '%s (%s)' % (e.message, type(e))
           respuesta = {
               'error': True
-            }
+          }
 
         return render_to_response('home/verificar_muestra.html',
           respuesta, context_instance=RequestContext(request))
@@ -776,42 +776,19 @@ def reportes(request, anio=2013):
     return render_to_response('home/reportes/reportes.html', {'general': general,'total_alumnos_general': total_alumnos_general,'total_alumnos_color': total_alumnos_color, 'color': color}, context_instance=RequestContext(request))
 
 @login_required
-#@transaction.commit_manually
+@transaction.commit_manually
 def subir_csv(request):
     if request.method == 'POST':
       forma = UploadFileForm(request.POST, request.FILES)
       if forma.is_valid():
         try:
           handle_uploaded_file(request.FILES['file'])
-          #transaction.commit()
+          transaction.commit()
+          return render_to_response('home/upload_csv_success.html', {'error': False, 'mensaje': estado_importacion },context_instance=RequestContext(request))
         except:
-          pass
-          #transaction.rollback()
-        return HttpResponseRedirect('success/')
-    else:
-        forma = UploadFileForm()
-    return render_to_response('home/upload_csv.html', {'forma': forma}, context_instance=RequestContext(request))
-
-def consulta_master(request):
-    if request.is_ajax():
-        q1 = request.GET.get('q1', '')
-        q2 = request.GET.get('q2', '')
-        results = Avaluo.objects.all()
-        if q1:
-            results = results.filter(Q(FolioK__contains=q1) | Q(Referencia__contains=q1))
-        if q2:
-            results = results.filter((Q(Factura__contains=q2)))
-        data = {'results': results}
-        return render_to_response('home/consultas/results.html', data, context_instance=RequestContext(request))
-
-
-@login_required
-def subir_csv_back(request):
-    if request.method == 'POST':
-      forma = UploadFileForm(request.POST, request.FILES)
-      if forma.is_valid():
-        handle_uploaded_file(request.FILES['file'])
-        return HttpResponseRedirect('success/')
+          transaction.rollback()
+          return render_to_response('home/upload_csv_success.html', {'error': True, 'mensaje': estado_importacion }, context_instance=RequestContext(request))
+        #return HttpResponseRedirect('success/')
     else:
         forma = UploadFileForm()
     return render_to_response('home/upload_csv.html', {'forma': forma}, context_instance=RequestContext(request))
@@ -821,6 +798,8 @@ def subir_csv_success(request):
     return render_to_response('home/upload_csv_success.html', context_instance=RequestContext(request))
 
 def handle_uploaded_file(f):
+    global estado_importacion
+
     inicial = datetime.datetime.now()
 
     #Lee el archivo linea por linea y lo almacena en la lista
@@ -832,7 +811,7 @@ def handle_uploaded_file(f):
     contador_lectura = 0;
     for line in f:
       contador_lectura += 1
-      estado_importacion = "Obteniendo linea " + str(contador_lectura) + " del archivo de CSV"
+      estado_importacion = "Lo sentimos hubo un error al procesar la información, favor de verificar que el formato del CSV sea correcto en la linea numero " + str(contador_lectura) 
       print estado_importacion
 
       line = line.replace(",\n", "") # remove bad terminated line with extra comma
@@ -884,8 +863,7 @@ def handle_uploaded_file(f):
     crns = sorted(set(crns))
     claves_mat = sorted(set(claves_mat))
 
-    estado_importacion = "Actualizando estatus en la institución de todos los estudiantes"
-    print "\n\n\n"
+    estado_importacion = "Lo sentimos hubo un error al procesar la información mientras el estatus de la institución de los estudiantes estaba siendo actualizado"
     print estado_importacion
 
     # actualiza el estatus de todos los estudiantes a 0
@@ -893,10 +871,9 @@ def handle_uploaded_file(f):
 
     # Agrega o actualiza los estudiantes
     cont_estudiantes = 0
-    print "\n\n\n"
     for matricula in matriculas:
       cont_estudiantes += 1
-      estado_importacion = "Guardando información del estudiante " +  str(cont_estudiantes) + " de " + str(len(matriculas))
+      estado_importacion = "Lo sentimos hubo un error al procesar la información, favor de verificar los datos del estudiante con matricula " + str(matricula)
       print estado_importacion
 
       # Si el estudiante existe simplemente actualiza el estatus en la institución
@@ -919,11 +896,10 @@ def handle_uploaded_file(f):
 
     # Agrega las materias que no estan dadas de alta en la base de datos
     cont_materias = 0
-    print "\n\n\n"
     materia_claves_id = []
     for clave in claves_mat:
       cont_materias += 1
-      estado_importacion = "Guardando información de la clase " +  str(cont_materias) + " de " + str(len(claves_mat))
+      estado_importacion = "Lo sentimos hubo un error al procesar la información, favor de verificar los datos de la clase con clave " + str(clave)
       print estado_importacion
 
       # Si ya existe solo almacena el valor en la lista materia_claves_id
@@ -956,10 +932,9 @@ def handle_uploaded_file(f):
 
     # Para cada crn unico almacena la información de su grupo en la base de datos
     cont_grupo = 0
-    print "\n\n\n"
     for crn in crns:
       cont_grupo += 1
-      estado_importacion = "Guardando información del grupo " +  str(cont_grupo) + " de " + str(len(crns))
+      estado_importacion = "Lo sentimos hubo un error al procesar la información, favor de verificar los datos del grupo con crn " + str(crn)
       print estado_importacion
 
       arrGrupos = buscaArreglo(crn, 'crn', lista)
@@ -968,15 +943,15 @@ def handle_uploaded_file(f):
       grupoNuevo.save()
 
     # Relaciona a los alumnos actuales con las materias que esta cursando
+    estado_importacion = "Lo sentimos hubo un error al procesar la información mientras se relacionaban los grupos con sus alumnos"
+    print estado_importacion
     inscritos = [Inscrito(estudiante_id=renglon['matricula'], grupo_id=renglon['crn']) for renglon in lista]
     Inscrito.objects.bulk_create(inscritos)
 
     final = datetime.datetime.now()
     diferencia = final - inicial
-    estado_importacion = "Relacionando estudiantes con sus grupos actuales"
-    print "\n\n\n"
-    print estado_importacion
-    print "La importación de datos tardo " + str(diferencia.seconds) + " segundo(s)"
+
+    estado_importacion = "Esta operación tomo un total de " + str(diferencia.seconds) + " segundos"
 
 def buscaArreglo(clave, campo, lista):
     for regresa in lista:
