@@ -624,7 +624,7 @@ def autenticacion_encuesta(request):
         return render_to_response('encuestas/autenticacion.html', context_instance=RequestContext(request))
 
 #Vista de la forma de encuesta a llenar
-@login_required
+# @login_required
 def aplicacion_encuesta(request,id):
     estudiante_muestra = EstudianteMuestra.objects.get(folio = id)
     estudiante = estudiante_muestra.inscrito.estudiante
